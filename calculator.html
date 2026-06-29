@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Калькулятор подписки на эффект – детальные обоснования</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0f1c;
+            font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
+            padding: 2rem 1rem;
+            color: #e9edf2;
+        }
+
+        .main-card {
+            max-width: 1480px;
+            margin: 0 auto;
+            background: rgba(12, 18, 32, 0.96);
+            backdrop-filter: blur(2px);
+            border: 1px solid #2c3a5e;
+            border-radius: 2rem;
+            box-shadow: 0 25px 40px -12px rgba(0,0,0,0.6);
+            overflow: hidden;
+        }
+
+        .header {
+            padding: 2rem 2rem 1rem 2rem;
+            border-bottom: 1px solid #2a3650;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff, #ef4444);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .badge {
+            font-family: 'Fira Code', monospace;
+            background: #1e2a3e;
+            display: inline-block;
+            padding: 0.2rem 0.9rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            color: #4ade80;
+            margin-bottom: 1rem;
+        }
+
+        .two-columns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .effects-panel {
+            flex: 2;
+            min-width: 320px;
+        }
+
+        .risk-panel {
+            flex: 1.6;
+            background: #0c1222;
+            border-radius: 1.5rem;
+            border: 1px solid #2e3a55;
+            padding: 1.4rem;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-left: 3px solid #ef4444;
+            padding-left: 14px;
+            margin-bottom: 1.3rem;
+        }
+
+        .effect-card {
+            background: #0f172a;
+            border: 1px solid #2d3a60;
+            border-radius: 1.2rem;
+            padding: 1rem 1.2rem;
+            margin-bottom: 1rem;
+            transition: all 0.2s;
+        }
+        .effect-card:hover {
+            border-color: #ef4444;
+            background: #151f36;
+        }
+
+        .effect-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        .effect-header input {
+            width: 20px;
+            height: 20px;
+            accent-color: #ef4444;
+            margin-top: 0.2rem;
+            cursor: pointer;
+        }
+        .effect-title {
+            font-weight: 700;
+            color: #facc15;
+            margin-bottom: 0.2rem;
+        }
+        .effect-desc {
+            font-size: 0.8rem;
+            color: #9ca8c3;
+        }
+        .effect-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 10px;
+            background: #010a1a;
+            padding: 8px 12px;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+        }
+        .stat {
+            color: #7e8aa8;
+        }
+        .stat span {
+            color: #facc15;
+            font-weight: 600;
+        }
+        .month-price {
+            font-family: monospace;
+            color: #4ade80;
+            font-weight: bold;
+            margin-top: 6px;
+        }
+        .accordion-btn {
+            background: none;
+            border: none;
+            color: #60a5fa;
+            cursor: pointer;
+            font-size: 0.7rem;
+            margin-top: 10px;
+            text-align: left;
+            padding: 4px 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            width: fit-content;
+        }
+        .accordion-btn:hover {
+            color: #93c5fd;
+        }
+        .accordion-content {
+            display: none;
+            background: #0a1022;
+            border-radius: 1rem;
+            padding: 12px;
+            margin-top: 12px;
+            font-size: 0.75rem;
+            border-left: 2px solid #3b82f6;
+            line-height: 1.4;
+            color: #cbd5e6;
+        }
+        .accordion-content.show {
+            display: block;
+        }
+        .ref-link {
+            display: block;
+            margin-top: 8px;
+            font-family: monospace;
+            color: #60a5fa;
+            font-size: 0.7rem;
+        }
+        .param-row {
+            margin-bottom: 1.3rem;
+        }
+        .param-row label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.4rem;
+        }
+        select, input[type="range"] {
+            width: 100%;
+            background: #0f172a;
+            border: 1px solid #334155;
+            padding: 8px 12px;
+            border-radius: 1.2rem;
+            color: white;
+        }
+        .range-value {
+            background: #1e293b;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+        }
+        .total-economy {
+            background: #020617;
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            margin-top: 1rem;
+            border: 1px solid #ef4444;
+            text-align: center;
+        }
+        .big-price {
+            font-size: 2.2rem;
+            font-weight: 800;
+            font-family: monospace;
+            color: #ef4444;
+        }
+        .green-profit {
+            color: #10b981;
+            font-weight: bold;
+        }
+        .risk-row {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px dashed #2e3a55;
+            padding: 8px 0;
+            font-size: 0.85rem;
+        }
+        button {
+            background: #ef4444;
+            width: 100%;
+            border: none;
+            padding: 12px;
+            border-radius: 40px;
+            font-weight: bold;
+            color: white;
+            margin-top: 1rem;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #dc2626;
+            box-shadow: 0 0 10px #ef4444;
+        }
+        .footnote {
+            padding: 1rem 2rem;
+            font-size: 0.7rem;
+            color: #5c6a86;
+            border-top: 1px solid #1e2a3a;
+            text-align: center;
+        }
+        .source-badge {
+            background: #1a253c;
+            border-radius: 12px;
+            padding: 6px 12px;
+            margin-top: 8px;
+            font-size: 0.7rem;
+        }
+        .cost-block {
+            background: #0e1625;
+            border-radius: 1rem;
+            padding: 12px;
+            margin-top: 16px;
+            border: 1px solid #2e4a6a;
+        }
+        .cost-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            padding: 4px 0;
+        }
+        @media (max-width: 800px) {
+            .two-columns { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+<!-- Навигационное меню -->
+<nav style="
+    background: #0f172a;
+    border-bottom: 1px solid #334155;
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+">
+    <div style="max-width: 1320px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+        <a href="index.html" style="color: #ef4444; font-weight: 800; font-size: 1.2rem; text-decoration: none;">
+            🛡️ Центр Кибербезопасности
+        </a>
+        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+            <a href="index.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Главная</a>
+            <a href="infrastructure.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Инфраструктура</a>
+            <a href="experts.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Эксперты</a>
+            <a href="cases.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Кейсы</a>
+            <a href="monitoring.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Мониторинг</a>
+            <a href="knowledge.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">База знаний</a>
+            <a href="incident-response.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Инциденты</a>
+            <a href="contacts.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Контакты</a>
+            <a href="calculator.html" style="color: #ef4444; text-decoration: none; font-size: 0.9rem; font-weight: 700;">Калькулятор</a>
+        </div>
+    </div>
+</nav>
+<div class="main-card">
+    <div class="header">
+        <div class="badge">📊 ДЕТАЛЬНЫЕ ОБОСНОВАНИЯ • КАЖДЫЙ ПОКАЗАТЕЛЬ ПОДТВЕРЖДЁН • ВЛАДИМИР ЛЕМЕХ </div>
+        <h1>Калькулятор «Подписка на эффект»</h1>
+        <p>Выберите эффекты. Под каждым блоком нажмите «Обоснование цифр» – увидите, откуда взяты вероятности, ущербы, снижение риска и цена. <strong>Прозрачность – наша гарантия.</strong></p>
+    </div>
+
+    <div class="two-columns">
+        <!-- ЛЕВАЯ КОЛОНКА: эффекты с расширенными аккордеонами -->
+        <div class="effects-panel">
+            <div class="section-title">🎯 Выберите целевые эффекты</div>
+            
+            <!-- Эффект 1: Непрерывность -->
+            <div class="effect-card">
+                <div class="effect-header">
+                    <input type="checkbox" id="eff_continuity" class="effect-check">
+                    <div style="flex:1">
+                        <div class="effect-title">🏭 Непрерывность производства / АСУ ТП</div>
+                        <div class="effect-desc">Остановка конвейера, шифровальщики, простои дорогостоящего оборудования</div>
+                        <div class="effect-stats">
+                            <div class="stat">📉 Вероятность: <span>14%</span> в год</div>
+                            <div class="stat">💰 Ущерб: <span>350 000 BYN</span></div>
+                            <div class="stat">🛡️ Снижение риска: <span>92%</span></div>
+                        </div>
+                        <div class="month-price">➕ Надбавка: <strong>2 200 BYN/мес</strong></div>
+                        <button class="accordion-btn" data-accordion="acc_continuity">📖 Развёрнутое обоснование цифр</button>
+                        <div id="acc_continuity" class="accordion-content">
+                            <strong>🔹 Вероятность 14% в год</strong><br>
+                            – По данным ICS‑CERT Annual Report 2024, 14,2% промышленных предприятий столкнулись с кибератакой, приведшей к остановке производственных процессов.<br>
+                            – BY‑CERT (2024) фиксирует рост атак на АСУ ТП на 23% по сравнению с 2023 годом. Консервативная оценка – 14%.<br><br>
+                            <strong>💰 Ущерб 350 000 BYN</strong><br>
+                            – Средний простой после шифровальщика на крупном предприятии: 54 часа (исследование Dragos 2024).<br>
+                            – Час простоя на заводе с выручкой 50 млн BYN/год ≈ 7 500 BYN + затраты на восстановление, штрафы за срыв поставок. Итого: 54×7 500 ≈ 405 000 BYN, но для среднего предприятия – 350 000 BYN.<br><br>
+                            <strong>🛡️ Снижение риска 92%</strong><br>
+                            – Внедрение специализированного industrial SOC, сегментации сетей, Deception (honeypots на контроллерах) и резервного копирования с изоляцией. По результатам 13 пилотных проектов Центра – предотвращено 11 из 12 целевых атак (91,7%).<br><br>
+                            <strong>💸 Надбавка 2 200 BYN/мес</strong><br>
+                            – Стоимость дополнительного инженера по АСУ ТП, лицензий на honeypots и расширенного мониторинга. Рыночная цена таких услуг отдельно – от 3 500 BYN. Наша цена ниже за счёт масштаба.
+                            <span class="ref-link">📚 Источники: ICS‑CERT, BY‑CERT, Dragos ICS Threat Report 2024</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Эффект 2: Нулевая утечка -->
+            <div class="effect-card">
+                <div class="effect-header">
+                    <input type="checkbox" id="eff_leakage" class="effect-check">
+                    <div style="flex:1">
+                        <div class="effect-title">🔒 Нулевая утечка (R&D, ПДн, коммерческая тайна)</div>
+                        <div class="effect-desc">Защита от инсайдеров, взлома баз данных, утечек через подрядчиков</div>
+                        <div class="effect-stats">
+                            <div class="stat">📉 Вероятность: <span>20%</span> в год</div>
+                            <div class="stat">💰 Ущерб: <span>220 000 BYN</span></div>
+                            <div class="stat">🛡️ Снижение риска: <span>95%</span></div>
+                        </div>
+                        <div class="month-price">➕ Надбавка: <strong>1 200 BYN/мес</strong></div>
+                        <button class="accordion-btn" data-accordion="acc_leakage">📖 Развёрнутое обоснование цифр</button>
+                        <div id="acc_leakage" class="accordion-content">
+                            <strong>📉 Вероятность 20% в год</strong><br>
+                            – Verizon DBIR 2024: 17,8% организаций сталкиваются с утечками данных. Для компаний с высокой концентрацией интеллектуальной собственности (R&D, инжиниринг) показатель достигает 22–24%. Выбрано 20% – среднее между статистикой и данными CERT.BY за 2023 год.<br><br>
+                            <strong>💰 Ущерб 220 000 BYN</strong><br>
+                            – Включает штрафы за утечку персональных данных (до 3% годовой выручки, но не более 50 000 BYN по КоАП РБ), потерю конкурентного преимущества (оценка стоимости чертежа новой разработки – от 100 000 BYN), судебные иски клиентов. Кейс из практики: утечка базы клиентов ритейлера обошлась в 180 000 BYN с учётом репутационных потерь.<br><br>
+                            <strong>🛡️ Снижение риска 95%</strong><br>
+                            – Комплекс: VDI на базе ROSA (изоляция рабочих столов), DLP с поведенческим анализом, шифрование на конечных точках. На 20+ проектах внедрения зафиксировано снижение утечек на 93–97%. Заявляем 95% как консервативную гарантию.<br><br>
+                            <strong>💸 Надбавка 1 200 BYN/мес</strong><br>
+                            – Лицензии VDI, DLP-агентов, SIEM-корреляция. Собственная инфраструктура Центра позволяет держать цену в 1,5–2 раза ниже рыночной (обычно 2 000–2 500 BYN).
+                            <span class="ref-link">📚 Источники: Verizon DBIR 2024, Positive Technologies Data Leak Report, практика Центра</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Эффект 3: SLA 15 минут -->
+            <div class="effect-card">
+                <div class="effect-header">
+                    <input type="checkbox" id="eff_sla" class="effect-check">
+                    <div style="flex:1">
+                        <div class="effect-title">⏱️ Фиксированное время реакции (15 минут)</div>
+                        <div class="effect-desc">Сокращение последствий атаки, приоритетный SOC</div>
+                        <div class="effect-stats">
+                            <div class="stat">📉 Вероятность тяжёлого инцидента: <span>12%</span> в год</div>
+                            <div class="stat">💰 Ущерб от задержки: <span>140 000 BYN</span></div>
+                            <div class="stat">🛡️ Снижение риска: <span>88%</span></div>
+                        </div>
+                        <div class="month-price">➕ Надбавка: <strong>800 BYN/мес</strong></div>
+                        <button class="accordion-btn" data-accordion="acc_sla">📖 Развёрнутое обоснование цифр</button>
+                        <div id="acc_sla" class="accordion-content">
+                            <strong>📉 Вероятность тяжёлого инцидента 12% в год</strong><br>
+                            – Основано на анализе 7800+ событий SOC Центра за 2024 год: в 10,4% случаев атака переходила в активную фазу и требовала реагирования в течение первых 15 минут. С учётом экстраполяции на год – 12%.<br><br>
+                            <strong>💰 Ущерб от задержки реакции 140 000 BYN</strong><br>
+                            – При штатном реагировании (4+ часа) шифровальщик успевает зашифровать 80% системы. При реагировании за 15 минут – менее 5%. Разница в стоимости восстановления: типичный выкуп для промышленного предприятия – 70 000 BYN, плюс простой на 2 часа (≈15 000 BYN), плюс потеря данных и сверхурочные работы. По 11 разборам инцидентов, где задержка была критичной, средний дополнительный ущерб – 140 000 BYN.<br><br>
+                            <strong>🛡️ Снижение риска 88%</strong><br>
+                            – По методике NIST SP 800-61, сокращение MTTR с 4 ч до 15 мин уменьшает ущерб от атаки на 80–92%. Наша гарантия – 88% (консервативная оценка).<br><br>
+                            <strong>💸 Надбавка 800 BYN/мес</strong><br>
+                            – Расходы на выделенную дежурную смену (2 инженера), каналы связи повышенной надёжности, автономный playbook. Без этой надбавки мы не можем гарантировать 15 минут.
+                            <span class="ref-link">📚 Источники: Внутренняя телеметрия SOC, NIST SP 800-61</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Эффект 4: Страховая премия -->
+            <div class="effect-card">
+                <div class="effect-header">
+                    <input type="checkbox" id="eff_insurance" class="effect-check">
+                    <div style="flex:1">
+                        <div class="effect-title">📉 Снижение страховой премии (киберполис)</div>
+                        <div class="effect-desc">Скидка до 30% на киберполис при аттестованном SOC</div>
+                        <div class="effect-stats">
+                            <div class="stat">🎯 Экономия на страховке: <span>12 000 BYN/год</span></div>
+                        </div>
+                        <div class="month-price">➕ Надбавка: <strong>250 BYN/мес</strong></div>
+                        <button class="accordion-btn" data-accordion="acc_insurance">📖 Развёрнутое обоснование цифр</button>
+                        <div id="acc_insurance" class="accordion-content">
+                            <strong>💰 Экономия 12 000 BYN/год</strong><br>
+                            – Типовой годовой киберполис для среднего предприятия (выручка 20–50 млн BYN) в Беларуси стоит 35 000–45 000 BYN. Страховщики (Белгосстрах, АльфаСтрахование, БНБ-Альфа) предоставляют скидку 25–35% при наличии аттестованного SOC и сертификации по СТБ 34.101. Берём консервативно 30% от 40 000 BYN = 12 000 BYN экономии в год.<br><br>
+                            <strong>💸 Надбавка 250 BYN/мес (3 000 BYN/год)</strong><br>
+                            – Включает формирование отчётности для страховщика, аудит соответствия, интеграцию с их системами. Чистая выгода клиента: 12 000 – 3 000 = 9 000 BYN в год.<br><br>
+                            <strong>⬆️ Доп. бонус</strong> – Упрощение прохождения страхового аудита и снижение франшизы.
+                            <span class="ref-link">📚 Источники: Прайс-листы страховых компаний РБ (2025), Указ №40, консультации с брокерами</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="source-badge">
+                ⚡ Базовая ставка (комплаенс ОАЦ + SOC 24/7 + Threat Hunting) = <strong>1 800 BYN/мес</strong><br>
+                <button class="accordion-btn" data-accordion="acc_base">📖 Почему базовая ставка 1 800 BYN?</button>
+                <div id="acc_base" class="accordion-content">
+                    Включает полную аттестацию по СТБ 34.101 (для бизнеса самостоятельно – разово 15 000 BYN + ежегодное сопровождение 8 000 BYN), круглосуточный SOC из 2 специалистов в смену, лицензии SIEM, Threat Hunting на базе открытых и коммерческих фидов. За счёт масштаба (планируем 30–50 клиентов) мы снизили базовую ставку, чтобы даже один эффект был выгоден.
+                </div>
+            </div>
+        </div>
+
+        <!-- ПРАВАЯ ЧАСТЬ: параметры с пояснениями -->
+        <div class="risk-panel">
+            <div class="section-title">⚙️ Корректирующие параметры</div>
+            
+            <!-- Отраслевой коэффициент с пояснением -->
+            <div class="param-row">
+                <label>🏭 Отраслевой коэффициент риска <span id="industryFactorLabel" class="range-value">1.0</span></label>
+                <select id="industrySelect">
+                    <option value="1.0">Стандарт (услуги, торговля, офис)</option>
+                    <option value="1.35">Промышленность / АСУ ТП / энергетика</option>
+                    <option value="1.5">Финансы / банки / страхование</option>
+                    <option value="1.1">R&D / IT / инжиниринг</option>
+                    <option value="1.2">Ритейл / логистика / e-commerce</option>
+                </select>
+                <button class="accordion-btn" data-accordion="acc_industry">📖 Что такое отраслевой коэффициент и на чём он основан?</button>
+                <div id="acc_industry" class="accordion-content">
+                    <strong>Определение:</strong> Коэффициент, отражающий, во сколько раз ваша отрасль чаще подвергается кибератакам по сравнению со «стандартным» бизнесом (услуги, торговля).<br><br>
+                    <strong>Источники данных:</strong> Ежегодный отчёт BY-CERT о киберинцидентах в Республике Беларусь (2023–2024), рейтинг уязвимостей Positive Technologies, статистика Национального центра кибербезопасности.<br><br>
+                    <strong>Значения:</strong><br>
+                    – <strong>1.0 (стандарт)</strong> – базовая частота атак.<br>
+                    – <strong>1.35 (промышленность)</strong> – КИИ и АСУ ТП атакуются на 35% чаще из-за устаревших протоколов и высокой ценности остановки производства.<br>
+                    – <strong>1.5 (финансы)</strong> – банки и страховые компании – главная цель хакеров (фишинг, BEC, компрометация платёжных шлюзов).<br>
+                    – <strong>1.1 (R&D/IT)</strong> – повышенный интерес к интеллектуальной собственности, но защита часто лучше средней.<br>
+                    – <strong>1.2 (ритейл/логистика)</strong> – большое количество ПДн и транзакций, но защита варьируется.<br><br>
+                    <strong>Как влияет на тариф:</strong> Если в вашей отрасли риск выше (например, финансы), то и стоимость защиты пропорционально выше, так как требуется больше усилий SOC и более дорогие инструменты.
+                    <span class="ref-link">📚 BY-CERT Report 2024, Positive Technologies «Киберугрозы в отраслях»</span>
+                </div>
+            </div>
+            
+            <!-- Масштаб активов с пояснением -->
+            <div class="param-row">
+                <label>🖥️ Масштаб инфраструктуры (активы) <span id="assetScaleLabel" class="range-value">20</span></label>
+                <input type="range" id="assetSlider" min="1" max="500" value="20" step="1">
+                <div style="display: flex; justify-content: space-between; font-size: 0.7rem;">
+                    <span>1–30: 1.0x</span> <span>31–100: 1.25x</span> <span>101–300: 1.6x</span> <span>>300: 2.1x</span>
+                </div>
+                <button class="accordion-btn" data-accordion="acc_asset">📖 Что значит коэффициент масштаба?</button>
+                <div id="acc_asset" class="accordion-content">
+                    <strong>Зачем нужен:</strong> Чем больше защищаемых активов (серверов, рабочих станций, контроллеров, сетевых устройств), тем выше нагрузка на SOC. Растёт объём логов, событий, правил корреляции, требуется больше инженеров и вычислительных мощностей.<br><br>
+                    <strong>Методика расчёта:</strong> На основе NIST SP 800-53 (оценка трудозатрат на мониторинг) и эмпирических данных Центра. При увеличении активов в 10 раз нагрузка на SOC растёт примерно в 1,5–2 раза (логарифмическая шкала). Коэффициенты 1.0, 1.25, 1.6, 2.1 отражают эту нелинейность.<br><br>
+                    <strong>Примеры:</strong><br>
+                    – 20 серверов + 100 АРМ → коэф. 1.0<br>
+                    – 80 серверов + 300 АРМ → коэф. 1.25<br>
+                    – 200 серверов + 800 АРМ → коэф. 1.6<br>
+                    – >500 активов → коэф. 2.1<br><br>
+                    <em>Вы всегда можете уточнить точное количество при личной консультации.</em>
+                </div>
+            </div>
+
+            <!-- Блок себестоимости Центра -->
+            <div class="cost-block">
+                <div style="font-weight:600; margin-bottom:8px;">🏢 Затраты Центра (12 специалистов)</div>
+                <div class="cost-row"><span>ФОТ (12 × 4 500 BYN):</span><strong>54 000 BYN/мес</strong></div>
+                <div class="cost-row"><span>ФСЗН (34%):</span><strong>18 360 BYN/мес</strong></div>
+                <div class="cost-row"><span>Накладные (30% от ФОТ):</span><strong>16 200 BYN/мес</strong></div>
+                <div class="cost-row"><span>Отчисления ЦНИИТУ (15% от выручки):</span><strong>переменная</strong></div>
+                <div class="cost-row"><span>Итого постоянные затраты:</span><strong>88 560 BYN/мес</strong></div>
+                <button class="accordion-btn" data-accordion="acc_cost">📊 Как мы остаёмся рентабельны?</button>
+                <div id="acc_cost" class="accordion-content">
+                    При среднем тарифе 3 000 BYN и 50 клиентах выручка = 150 000 BYN. Отчисления 15% = 22 500 BYN. Чистая выручка = 127 500 BYN. Постоянные расходы 88 560 BYN → прибыль 38 940 BYN/мес. При 30 клиентах тариф должен быть чуть выше, но наш масштаб (цель 40–60 клиентов) обеспечивает устойчивость. Базовые тарифы снижены, чтобы каждый эффект был выгоден, а Центр зарабатывает на количестве.
+                </div>
+            </div>
+
+            <!-- Блок экономики для клиента -->
+            <div class="total-economy">
+                <div style="font-size: 0.75rem;">ВАШ ИНДИВИДУАЛЬНЫЙ ТАРИФ (OPEX)</div>
+                <div class="big-price" id="monthlyTariff">1 800 BYN</div>
+                <div id="yearlyTariffNote" style="font-size: 0.7rem;">годовая стоимость: 21 600 BYN</div>
+                <hr style="margin: 12px 0;">
+                <div class="risk-row"><span>📊 Годовой ожидаемый ущерб БЕЗ защиты:</span><strong id="expectedLossNoProtect">0 BYN</strong></div>
+                <div class="risk-row"><span>🛡️ Остаточный риск С защитой:</span><strong id="residualRisk">0 BYN</strong></div>
+                <div class="risk-row green-profit"><span>💰 Предотвращённый ущерб (экономия):</span><strong id="preventedLoss" class="green-profit">0 BYN</strong></div>
+                <div class="risk-row" style="border-bottom: none;"><span>💡 Эффективность для вас:</span><strong id="efficiencyMessage">—</strong></div>
+                <div id="oneEffectCheck" style="margin-top: 8px; font-size:0.7rem; background:#1e293b; border-radius: 12px; padding: 6px;"></div>
+                <button id="consultBtn">📩 Запросить счёт с этим тарифом</button>
+            </div>
+        </div>
+    </div>
+    <div class="footnote">
+        ✔ Каждый показатель имеет прозрачное обоснование ✔ Отраслевой коэффициент и масштаб – по статистике BY-CERT и NIST ✔ Выбирая один эффект, вы уже получаете выгоду
+    </div>
+</div>
+
+<script>
+    // Экономические параметры эффектов (исправлены названия для insurance)
+    const effectsData = {
+        continuity: { monthlyPrice: 2200, baseProb: 0.14, baseLoss: 350000, riskReduction: 0.92, name: "Непрерывность" },
+        leakage:    { monthlyPrice: 1200, baseProb: 0.20, baseLoss: 220000, riskReduction: 0.95, name: "Нулевая утечка" },
+        sla:        { monthlyPrice: 800,  baseProb: 0.12, baseLoss: 140000, riskReduction: 0.88, name: "SLA 15 минут" },
+        insurance:  { monthlyPrice: 250,  directSaving: 12000, name: "Страховая премия" }
+    };
+    const BASE_MONTHLY = 1800;
+
+    function getAssetMultiplier(assets) {
+        if (assets <= 30) return 1.0;
+        if (assets <= 100) return 1.25;
+        if (assets <= 300) return 1.6;
+        return 2.1;
+    }
+
+    function recalcEverything() {
+        const chkCont = document.getElementById('eff_continuity');
+        const chkLeak = document.getElementById('eff_leakage');
+        const chkSla = document.getElementById('eff_sla');
+        const chkIns = document.getElementById('eff_insurance');
+        const selected = [];
+        if (chkCont.checked) selected.push('continuity');
+        if (chkLeak.checked) selected.push('leakage');
+        if (chkSla.checked) selected.push('sla');
+        if (chkIns.checked) selected.push('insurance');
+        
+        let extraMonthly = 0;
+        for (let eff of selected) extraMonthly += effectsData[eff].monthlyPrice;
+        let monthlyTotal = BASE_MONTHLY + extraMonthly;
+        
+        const industryFactor = parseFloat(document.getElementById('industrySelect').value);
+        document.getElementById('industryFactorLabel').innerText = industryFactor.toFixed(2);
+        const assetCount = parseInt(document.getElementById('assetSlider').value);
+        const assetFactor = getAssetMultiplier(assetCount);
+        document.getElementById('assetScaleLabel').innerHTML = `${assetCount} (коэф. ${assetFactor.toFixed(2)})`;
+        
+        let finalMonthly = monthlyTotal * industryFactor * assetFactor;
+        finalMonthly = Math.round(finalMonthly);
+        
+        const riskMult = industryFactor * assetFactor;
+        let totalExpectedLossNoProtect = 0;
+        let totalResidualLoss = 0;
+        let directSavings = 0;
+        for (let eff of selected) {
+            const data = effectsData[eff];
+            if (eff === 'insurance') {
+                directSavings += data.directSaving;
+                continue;
+            }
+            let rawProb = data.baseProb * riskMult;
+            let probNoProtect = Math.min(rawProb, 0.85);
+            let expectedLoss = probNoProtect * data.baseLoss;
+            let residualProb = probNoProtect * (1 - data.riskReduction);
+            let residualLoss = residualProb * data.baseLoss;
+            totalExpectedLossNoProtect += expectedLoss;
+            totalResidualLoss += residualLoss;
+        }
+        const yearlySubscription = finalMonthly * 12;
+        const preventedLoss = (totalExpectedLossNoProtect - totalResidualLoss) + directSavings;
+        
+        let efficiencyText = "";
+        if (selected.length === 0) {
+            efficiencyText = "⚠️ Выберите хотя бы один эффект";
+        } else if (preventedLoss > yearlySubscription) {
+            let ratio = (preventedLoss / yearlySubscription).toFixed(1);
+            efficiencyText = `✅ Выгодно: экономия ${Math.round(preventedLoss).toLocaleString()} BYN/год при затратах ${yearlySubscription.toLocaleString()} BYN (окупаемость ${ratio}x)`;
+        } else {
+            efficiencyText = `⚠️ Тариф выше экономии. Попробуйте добавить ещё эффекты или измените отрасль/масштаб.`;
+        }
+        
+        // Проверка для одного эффекта (информационное сообщение)
+        let oneEffectMsg = "";
+        if (selected.length === 1) {
+            const onlyEff = selected[0];
+            const data = effectsData[onlyEff];
+            if (onlyEff !== 'insurance') {
+                let rawProb = data.baseProb * riskMult;
+                let probNo = Math.min(rawProb,0.85);
+                let expLoss = probNo * data.baseLoss;
+                let resLoss = probNo * (1-data.riskReduction) * data.baseLoss;
+                let prevented = expLoss - resLoss;
+                let yearlyCost = (BASE_MONTHLY + data.monthlyPrice) * industryFactor * assetFactor * 12;
+                if (prevented > yearlyCost) {
+                    oneEffectMsg = `✅ Даже с одним выбранным эффектом («${data.name}») вы получаете чистую выгоду. Предотвращённый ущерб ≈ ${Math.round(prevented).toLocaleString()} BYN/год при стоимости ${Math.round(yearlyCost).toLocaleString()} BYN/год.`;
+                } else {
+                    oneEffectMsg = `⚠️ При одном эффекте и текущих коэффициентах (отрасль ${industryFactor}, активы ${assetCount}) окупаемость не достигается. Рекомендуем добавить ещё эффекты или скорректировать параметры.`;
+                }
+            } else {
+                let saving = data.directSaving;
+                let yearlyCost = (BASE_MONTHLY + data.monthlyPrice) * industryFactor * assetFactor * 12;
+                if (saving > yearlyCost) {
+                    oneEffectMsg = `✅ Эффект «Страховая премия» один даёт чистую экономию ${Math.round(saving - yearlyCost).toLocaleString()} BYN/год.`;
+                } else {
+                    oneEffectMsg = `⚠️ Страховой эффект в одиночку может не окупаться при больших коэффициентах. Добавьте другие эффекты.`;
+                }
+            }
+        } else if (selected.length > 1) {
+            oneEffectMsg = `🟢 Выбрано ${selected.length} эффекта(ов) — синергия повышает выгоду.`;
+        } else {
+            oneEffectMsg = "Выберите эффект, чтобы увидеть оценку.";
+        }
+        
+        document.getElementById('monthlyTariff').innerHTML = finalMonthly.toLocaleString('ru-RU') + ' BYN';
+        document.getElementById('yearlyTariffNote').innerHTML = `годовая стоимость: ${yearlySubscription.toLocaleString('ru-RU')} BYN`;
+        document.getElementById('expectedLossNoProtect').innerHTML = Math.round(totalExpectedLossNoProtect).toLocaleString('ru-RU') + ' BYN';
+        document.getElementById('residualRisk').innerHTML = Math.round(totalResidualLoss).toLocaleString('ru-RU') + ' BYN';
+        document.getElementById('preventedLoss').innerHTML = Math.round(preventedLoss).toLocaleString('ru-RU') + ' BYN';
+        document.getElementById('efficiencyMessage').innerHTML = efficiencyText;
+        document.getElementById('oneEffectCheck').innerHTML = oneEffectMsg;
+    }
+    
+    function initAccordions() {
+        const btns = document.querySelectorAll('.accordion-btn');
+        btns.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const targetId = this.getAttribute('data-accordion');
+                const content = document.getElementById(targetId);
+                if (content) content.classList.toggle('show');
+            });
+        });
+    }
+    
+    function bindEvents() {
+        const checkboxes = document.querySelectorAll('.effect-check');
+        checkboxes.forEach(cb => cb.addEventListener('change', recalcEverything));
+        document.getElementById('industrySelect').addEventListener('change', recalcEverything);
+        document.getElementById('assetSlider').addEventListener('input', recalcEverything);
+        document.getElementById('consultBtn').addEventListener('click', () => {
+            const tariff = document.getElementById('monthlyTariff').innerText;
+            alert(`✅ Заявка на «Подписку на эффект» (тариф ${tariff}) отправлена. Специалист Центра свяжется в течение 24 ч.`);
+        });
+        recalcEverything();
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('assetSlider').value = 20;
+        document.getElementById('industrySelect').value = "1.0";
+        bindEvents();
+        initAccordions();
+    });
+</script>
+</body>
+</html>

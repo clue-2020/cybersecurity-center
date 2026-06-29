@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Контакты</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a2e;
+            color: #e0e0e0;
+            line-height: 1.7;
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ===== HEADER ===== */
+        .header-area {
+            position: relative;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .main-title {
+            display: inline-block;
+            color: #ffffff;
+            font-size: 2.2rem;
+            padding: 15px 40px;
+            border-bottom: 3px solid #4a9eff;
+            cursor: default;
+            position: relative;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .main-title:hover {
+            color: #4a9eff;
+            text-shadow: 0 0 20px rgba(74, 158, 255, 0.4);
+        }
+
+        .subtitle {
+            color: #8a9ab0;
+            font-size: 1.05rem;
+            margin-top: 14px;
+            max-width: 720px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* ===== CONTENT AREA ===== */
+        .content-wrapper {
+            background: #16213e;
+            border: 1px solid #2a3a5c;
+            border-radius: 16px;
+            padding: 30px 35px;
+        }
+
+        .content-section {
+            margin-bottom: 32px;
+        }
+
+        .content-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            color: #4a9eff;
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #2a3a5c;
+        }
+
+        .section-label {
+            display: inline-block;
+            background: #4a9eff;
+            color: #1a1a2e;
+            padding: 5px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .section-label-alt { background: #e94560; }
+        .section-label-green { background: #2ecc71; }
+        .section-label-purple { background: #9b59b6; }
+        .section-label-orange { background: #e67e22; }
+        .section-label-teal { background: #1abc9c; }
+
+        p {
+            color: #b8c5d6;
+            margin-bottom: 12px;
+        }
+
+        p strong {
+            color: #ffffff;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            position: relative;
+            padding-left: 22px;
+            margin-bottom: 8px;
+            color: #b8c5d6;
+        }
+
+        ul li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #4a9eff;
+            font-weight: bold;
+        }
+
+        /* ===== HIGHLIGHT BOXES ===== */
+        .highlight-box {
+            background: rgba(74, 158, 255, 0.08);
+            border-left: 4px solid #4a9eff;
+            padding: 16px 20px;
+            border-radius: 0 10px 10px 0;
+            margin: 16px 0;
+        }
+
+        .highlight-box p {
+            margin: 0;
+            color: #d0d8e8;
+        }
+
+        .highlight-box strong {
+            color: #4a9eff;
+        }
+
+        .tariff-note {
+            background: rgba(233, 69, 96, 0.08);
+            border-left: 4px solid #e94560;
+            padding: 16px 20px;
+            border-radius: 0 10px 10px 0;
+            margin: 16px 0;
+        }
+
+        .tariff-note p {
+            margin: 0;
+            color: #d0d8e8;
+        }
+
+        .tariff-note strong {
+            color: #e94560;
+        }
+
+        /* ===== LEADER CARD ===== */
+        .leader-card {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 30px;
+            background: #0f1a30;
+            border: 1px solid #2a3a5c;
+            border-radius: 14px;
+            padding: 28px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .leader-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #4a9eff, #9b59b6, #e94560);
+        }
+
+        .leader-card:hover {
+            border-color: #4a9eff;
+            box-shadow: 0 10px 40px rgba(74, 158, 255, 0.1);
+        }
+
+        .leader-photo {
+            width: 200px;
+            height: 240px;
+            background: linear-gradient(135deg, #1e2a4a, #0f1a30);
+            border: 2px solid #2a3a5c;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a9eff;
+            font-size: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .leader-photo::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(74, 158, 255, 0.1), transparent);
+        }
+
+        .leader-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .leader-name {
+            color: #ffffff;
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+
+        .leader-position {
+            color: #4a9eff;
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 14px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid #2a3a5c;
+        }
+
+        .leader-bio {
+            color: #b8c5d6;
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+
+        .leader-credentials {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        .credential-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            background: rgba(74, 158, 255, 0.1);
+            border: 1px solid rgba(74, 158, 255, 0.25);
+            border-radius: 20px;
+            font-size: 0.82rem;
+            color: #b8c5d6;
+        }
+
+        .credential-badge .badge-icon {
+            color: #4a9eff;
+            font-size: 0.9rem;
+        }
+
+        .leader-contacts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .leader-contact-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(74, 158, 255, 0.08);
+            border: 1px solid rgba(74, 158, 255, 0.2);
+            border-radius: 10px;
+            color: #b8c5d6;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .leader-contact-chip:hover {
+            background: rgba(74, 158, 255, 0.15);
+            border-color: #4a9eff;
+            color: #4a9eff;
+            transform: translateY(-2px);
+        }
+
+        .leader-contact-chip .chip-icon {
+            font-size: 1rem;
+        }
+
+        /* ===== CONTACT CARDS GRID ===== */
+        .contacts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .contact-card {
+            background: #0f1a30;
+            border: 1px solid #2a3a5c;
+            border-radius: 12px;
+            padding: 22px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            display: block;
+        }
+
+        .contact-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+        }
+
+        .contact-card.channel-phone::before { background: #2ecc71; }
+        .contact-card.channel-email::before { background: #4a9eff; }
+        .contact-card.channel-telegram::before { background: #1abc9c; }
+        .contact-card.channel-hours::before { background: #9b59b6; }
+
+        .contact-card:hover {
+            border-color: #4a9eff;
+            background: #131e38;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(74, 158, 255, 0.15);
+        }
+
+        .contact-card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            margin-bottom: 14px;
+        }
+
+        .channel-phone .contact-card-icon { background: rgba(46, 204, 113, 0.15); color: #2ecc71; }
+        .channel-email .contact-card-icon { background: rgba(74, 158, 255, 0.15); color: #4a9eff; }
+        .channel-telegram .contact-card-icon { background: rgba(26, 188, 156, 0.15); color: #1abc9c; }
+        .channel-hours .contact-card-icon { background: rgba(155, 89, 182, 0.15); color: #9b59b6; }
+
+        .contact-card-title {
+            color: #ffffff;
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .contact-card-value {
+            color: #4a9eff;
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            word-break: break-all;
+        }
+
+        .contact-card-desc {
+            color: #8a9ab0;
+            font-size: 0.85rem;
+            margin: 0;
+        }
+
+        .contact-card-hours {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 3px 10px;
+            background: rgba(46, 204, 113, 0.12);
+            border-radius: 10px;
+            font-size: 0.78rem;
+            color: #2ecc71;
+            font-weight: 700;
+        }
+
+        /* ===== MAP & ADDRESS ===== */
+        .location-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .map-container {
+            background: #0f1a30;
+            border: 1px solid #2a3a5c;
+            border-radius: 12px;
+            overflow: hidden;
+            min-height: 380px;
+            position: relative;
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            min-height: 380px;
+            border: 0;
+            display: block;
+            filter: invert(0.9) hue-rotate(180deg) saturate(0.7);
+        }
+
+        .map-overlay {
+            position: absolute;
+            bottom: 14px;
+            left: 14px;
+            background: rgba(15, 26, 48, 0.95);
+            border: 1px solid #2a3a5c;
+            border-radius: 10px;
+            padding: 12px 16px;
+            backdrop-filter: blur(8px);
+        }
+
+        .map-overlay-title {
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+
+        .map-overlay-address {
+            color: #b8c5d6;
+            font-size: 0.85rem;
+        }
+
+        .address-card {
+            background: #0f1a30;
+            border: 1px solid #2a3a5c;
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .address-title {
+            color: #ffffff;
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .address-title-icon {
+            width: 36px;
+            height: 36px;
+            background: rgba(74, 158, 255, 0.15);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a9eff;
+            font-size: 1.1rem;
+        }
+
+        .address-line {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid #2a3a5c;
+        }
+
+        .address-line:last-child {
+            border-bottom: none;
+        }
+
+        .address-line-icon {
+            min-width: 28px;
+            height: 28px;
+            background: rgba(74, 158, 255, 0.1);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a9eff;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .address-line-content {
+            flex: 1;
+        }
+
+        .address-line-label {
+            color: #6a7a9a;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+
+        .address-line-value {
+            color: #e0e0e0;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .address-line-value strong {
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        /* ===== DEMO FORM ===== */
+        .demo-form {
+            background: #0f1a30;
+            border: 1px solid #2a3a5c;
+            border-radius: 14px;
+            padding: 28px;
+            margin: 20px 0;
+        }
+
+        .form-header {
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #2a3a5c;
+        }
+
+        .form-title {
+            color: #ffffff;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .form-subtitle {
+            color: #8a9ab0;
+            font-size: 0.9rem;
+        }
+
+        .request-type-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+            margin-bottom: 22px;
+        }
+
+        .request-type-option {
+            position: relative;
+        }
+
+        .request-type-option input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .request-type-option label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 18px 12px;
+            background: #16213e;
+            border: 1px solid #2a3a5c;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .request-type-option label:hover {
+            border-color: #4a9eff;
+            background: #1a2540;
+        }
+
+        .request-type-option input:checked + label {
+            background: rgba(74, 158, 255, 0.1);
+            border-color: #4a9eff;
+            box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.15);
+        }
+
+        .request-type-icon {
+            font-size: 1.6rem;
+        }
+
+        .request-type-name {
+            color: #ffffff;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .request-type-desc {
+            color: #8a9ab0;
+            font-size: 0.78rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            color: #b8c5d6;
+            font-size: 0.88rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .form-label .required {
+            color: #e94560;
+            font-weight: 800;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            padding: 11px 14px;
+            background: #16213e;
+            border: 1px solid #2a3a5c;
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #4a9eff;
+            background: #1a2540;
+            box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.15);
+        }
+
+        .form-input::placeholder,
+        .form-textarea::placeholder {
+            color: #6a7a9a;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 110px;
+            font-family: inherit;
+        }
+
+        .form-select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234a9eff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+            padding-right: 38px;
+        }
+
+        .form-hint {
+            color: #6a7a9a;
+            font-size: 0.78rem;
+            margin-top: 4px;
+        }
+
+        .consent-block {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px;
+            background: rgba(74, 158, 255, 0.05);
+            border: 1px solid #2a3a5c;
+            border-radius: 10px;
+            margin: 18px 0;
+        }
+
+        .consent-block input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            min-width: 20px;
+            height: 20px;
+            border: 2px solid #4a9eff;
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            margin-top: 2px;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .consent-block input[type="checkbox"]:checked {
+            background: #4a9eff;
+        }
+
+        .consent-block input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #1a1a2e;
+            font-weight: 900;
+            font-size: 0.85rem;
+        }
+
+        .consent-text {
+            color: #8a9ab0;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .consent-text a {
+            color: #4a9eff;
+            text-decoration: none;
+        }
+
+        .consent-text a:hover {
+            text-decoration: underline;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            padding-top: 20px;
+            border-top: 1px solid #2a3a5c;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: #4a9eff;
+            color: #1a1a2e;
+        }
+
+        .btn-primary:hover {
+            background: #5aadff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 158, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #b8c5d6;
+            border: 1px solid #2a3a5c;
+        }
+
+        .btn-secondary:hover {
+            border-color: #4a9eff;
+            color: #4a9eff;
+        }
+
+        .form-success {
+            display: none;
+            background: rgba(46, 204, 113, 0.08);
+            border: 1px solid rgba(46, 204, 113, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .form-success.visible {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .form-success-icon {
+            width: 60px;
+            height: 60px;
+            background: #2ecc71;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.7rem;
+            font-weight: 900;
+            margin: 0 auto 14px;
+        }
+
+        .form-success-title {
+            color: #2ecc71;
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .form-success-text {
+            color: #d0d8e8;
+            font-size: 0.93rem;
+            margin-bottom: 12px;
+        }
+
+        .form-success-id {
+            display: inline-block;
+            padding: 6px 14px;
+            background: rgba(46, 204, 113, 0.12);
+            border-radius: 8px;
+            color: #2ecc71;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== CTA BLOCK ===== */
+        .cta-block {
+            background: linear-gradient(135deg, rgba(74, 158, 255, 0.1), rgba(155, 89, 182, 0.08));
+            border: 1px solid rgba(74, 158, 255, 0.3);
+            border-radius: 14px;
+            padding: 28px;
+            margin-top: 24px;
+            text-align: center;
+        }
+
+        .cta-title {
+            color: #ffffff;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .cta-desc {
+            color: #b8c5d6;
+            font-size: 0.95rem;
+            max-width: 700px;
+            margin: 0 auto 18px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #2a3a5c;
+            color: #6a7a9a;
+            font-size: 0.9rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 900px) {
+            .location-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .leader-card {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .leader-photo {
+                margin: 0 auto;
+            }
+
+            .leader-contacts,
+            .leader-credentials {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 1.5rem;
+                padding: 12px 20px;
+            }
+
+            .content-wrapper {
+                padding: 20px 18px;
+            }
+
+            .leader-name {
+                font-size: 1.3rem;
+            }
+
+            .request-type-selector {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Навигационное меню -->
+<nav style="
+    background: #0f172a;
+    border-bottom: 1px solid #334155;
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+">
+    <div style="max-width: 1320px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+        <a href="index.html" style="color: #ef4444; font-weight: 800; font-size: 1.2rem; text-decoration: none;">
+            🛡️ Центр Кибербезопасности
+        </a>
+        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+            <a href="index.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Главная</a>
+            <a href="infrastructure.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Инфраструктура</a>
+            <a href="experts.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Эксперты</a>
+            <a href="cases.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Кейсы</a>
+            <a href="monitoring.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Мониторинг</a>
+            <a href="knowledge.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">База знаний</a>
+            <a href="incident-response.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Инциденты</a>
+            <a href="contacts.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Контакты</a>
+            <a href="calculator.html" style="color: #ef4444; text-decoration: none; font-size: 0.9rem; font-weight: 700;">Калькулятор</a>
+        </div>
+    </div>
+</nav>
+    <div class="container">
+
+        <!-- ===== HEADER ===== -->
+        <div class="header-area">
+            <h1 class="main-title">Контакты</h1>
+            <p class="subtitle">Свяжитесь с нами удобным способом — мы отвечаем в течение 30 минут в рабочее время и круглосуточно по экстренным вопросам информационной безопасности.</p>
+        </div>
+
+        <!-- ===== CONTENT AREA ===== -->
+        <div class="content-wrapper">
+
+            <!-- ===== LEADER ===== -->
+            <div class="content-section">
+                <h2 class="section-title">Руководитель Центра</h2>
+
+                <div class="leader-card">
+                    <div class="leader-photo">👤</div>
+                    <div class="leader-info">
+                        <div class="leader-name">Тимошенко Виктор Валерьевич</div>
+                        <div class="leader-position">Руководитель Центра мониторинга и реагирования на киберинциденты</div>
+                        <p class="leader-bio">Более 15 лет опыта в сфере информационной безопасности. Специализируется на построении SOC, реагировании на целевые атаки, моделировании угроз для критической информационной инфраструктуры. Сертифицированный эксперт по стандартам ISO/IEC 27001 и национальным стандартам РБ.</p>
+
+                        <div class="leader-credentials">
+                            <span class="credential-badge"><span class="badge-icon">🎓</span> CISSP</span>
+                            <span class="credential-badge"><span class="badge-icon">🎓</span> CISM</span>
+                            <span class="credential-badge"><span class="badge-icon">🏆</span> Эксперт ОАЦ</span>
+                            <span class="credential-badge"><span class="badge-icon">📋</span> ISO 27001 Lead Auditor</span>
+                        </div>
+
+                        <div class="leader-contacts">
+                            <a href="mailto:v.timoshenko@center.by" class="leader-contact-chip">
+                                <span class="chip-icon">✉</span>
+                                v.timoshenko@center.by
+                            </a>
+                            <a href="tel:+375291234567" class="leader-contact-chip">
+                                <span class="chip-icon">📱</span>
+                                +375 29 123-45-67
+                            </a>
+                            <a href="https://t.me/v_timoshenko" class="leader-contact-chip" target="_blank" rel="noopener">
+                                <span class="chip-icon">✈</span>
+                                @v_timoshenko
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <p><strong>Прямое обращение к руководителю:</strong> Виктор Валерьевич лично рассматривает обращения по стратегическим вопросам: построение SOC с нуля, комплексные проекты по защите КИИ, партнёрские программы. Для операционных вопросов и экстренных сообщений об инцидентах используйте контакты дежурной смены SOC.</p>
+                </div>
+            </div>
+
+            <!-- ===== CONTACT CHANNELS ===== -->
+            <div class="content-section">
+                <h2 class="section-title">Каналы связи</h2>
+
+                <span class="section-label">Выберите удобный способ</span>
+                <p>Все каналы работают круглосуточно для экстренных сообщений. Для плановых вопросов — в рабочее время (пн-пт, 9:00-18:00).</p>
+
+                <div class="contacts-grid">
+                    <a href="tel:+375171234567" class="contact-card channel-phone">
+                        <div class="contact-card-icon">📞</div>
+                        <div class="contact-card-title">Горячая линия</div>
+                        <div class="contact-card-value">+375 17 123-45-67</div>
+                        <p class="contact-card-desc">Для экстренных сообщений об инцидентах и срочных консультаций.</p>
+                        <span class="contact-card-hours">24/7/365</span>
+                    </a>
+
+                    <a href="mailto:info@center.by" class="contact-card channel-email">
+                        <div class="contact-card-icon">✉</div>
+                        <div class="contact-card-title">Электронная почта</div>
+                        <div class="contact-card-value">info@center.by</div>
+                        <p class="contact-card-desc">Для официальных обращений, коммерческих запросов, отправки документов с PGP-шифрованием.</p>
+                        <span class="contact-card-hours">Ответ в течение 2 часов</span>
+                    </a>
+
+                    <a href="https://t.me/CenterSOC" class="contact-card channel-telegram" target="_blank" rel="noopener">
+                        <div class="contact-card-icon">✈</div>
+                        <div class="contact-card-title">Telegram</div>
+                        <div class="contact-card-value">@CenterSOC</div>
+                        <p class="contact-card-desc">Быстрые консультации, отправка скриншотов и артефактов, уведомления об инцидентах.</p>
+                        <span class="contact-card-hours">24/7/365</span>
+                    </a>
+
+                    <a href="#demo-form" class="contact-card channel-hours">
+                        <div class="contact-card-icon">🕐</div>
+                        <div class="contact-card-title">Режим работы офиса</div>
+                        <div class="contact-card-value">Пн-Пт: 9:00 — 18:00</div>
+                        <p class="contact-card-desc">Приём по предварительной записи. SOC работает круглосуточно.</p>
+                        <span class="contact-card-hours">Без выходных (SOC)</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- ===== ADDRESS & MAP ===== -->
+            <div class="content-section">
+                <h2 class="section-title">Адрес и реквизиты</h2>
+
+                <div class="location-grid">
+                    <div class="map-container">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2350.0!2d27.5615!3d53.9045!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2z0JzQvtGB0LrQstCwINCy0LDRgNGC0LDQvdCx0L3QutCwINCy0LDRgNGC0LDQvdC4!5e0!3m2!1sru!2sby!4v1700000000000" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                        <div class="map-overlay">
+                            <div class="map-overlay-title">📍 Центр мониторинга и реагирования</div>
+                            <div class="map-overlay-address">Минск, пр. Партизанский, 2/4</div>
+                        </div>
+                    </div>
+
+                    <div class="address-card">
+                        <div class="address-title">
+                            <span class="address-title-icon">🏢</span>
+                            Почтовый и юридический адрес
+                        </div>
+
+                        <div class="address-line">
+                            <div class="address-line-icon">📍</div>
+                            <div class="address-line-content">
+                                <div class="address-line-label">Адрес офиса</div>
+                                <div class="address-line-value"><strong>220033, Республика Беларусь,<br>г. Минск, пр. Партизанский, д. 2/4</strong></div>
+                            </div>
+                        </div>
+
+                        <div class="address-line">
+                            <div class="address-line-icon">🚇</div>
+                            <div class="address-line-content">
+                                <div class="address-line-label">Как добраться</div>
+                                <div class="address-line-value">Ст. метро «Тракторный завод», далее 5 минут пешком. Наземный транспорт: автобусы 7, 18, 47 — остановка «Партизанский проспект».</div>
+                            </div>
+                        </div>
+
+                        <div class="address-line">
+                            <div class="address-line-icon">🅿</div>
+                            <div class="address-line-content">
+                                <div class="address-line-label">Парковка</div>
+                                <div class="address-line-value">Бесплатная парковка для посетителей на территории бизнес-центра (вход со стороны двора).</div>
+                            </div>
+                        </div>
+
+                        <div class="address-line">
+                            <div class="address-line-icon">🏛</div>
+                            <div class="address-line-content">
+                                <div class="address-line-label">УНП</div>
+                                <div class="address-line-value"><strong>100123456</strong></div>
+                            </div>
+                        </div>
+
+                        <div class="address-line">
+                            <div class="address-line-icon">📄</div>
+                            <div class="address-line-content">
+                                <div class="address-line-label">Расчётный счёт</div>
+                                <div class="address-line-value">BY12 AKBB 3012 0000 0000 0000 0000<br>в ОАО «АСБ Беларусбанк», БИК AKBBBY2X</div>
+                            </div>
+                        </div>
+
+                        <div class="address-line">
+                            <div class="address-line-icon">📋</div>
+                            <div class="address-line-content">
+                                <div class="address-line-label">Лицензия ОАЦ</div>
+                                <div class="address-line-value">№ 01234/ИС от 15.03.2023 — на деятельность по защите информации</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== DEMO FORM ===== -->
+            <div class="content-section" id="demo-form">
+                <h2 class="section-title">Запрос на демодоступ или консультацию</h2>
+
+                <div class="demo-form">
+                    <form id="demoForm">
+                        <div class="form-header">
+                            <div class="form-title">💡 Выберите тип обращения</div>
+                            <div class="form-subtitle">Мы свяжемся с вами в течение 30 минут в рабочее время и предложим удобное время для встречи или демонстрации</div>
+                        </div>
+
+                        <div class="request-type-selector">
+                            <div class="request-type-option">
+                                <input type="radio" name="request_type" id="type-demo" value="demo" required>
+                                <label for="type-demo">
+                                    <span class="request-type-icon">🖥</span>
+                                    <span class="request-type-name">Демодоступ</span>
+                                    <span class="request-type-desc">Личный кабинет, дашборд, отчёты</span>
+                                </label>
+                            </div>
+                            <div class="request-type-option">
+                                <input type="radio" name="request_type" id="type-consult" value="consult">
+                                <label for="type-consult">
+                                    <span class="request-type-icon">💬</span>
+                                    <span class="request-type-name">Консультация</span>
+                                    <span class="request-type-desc">Экспертная беседа с аналитиком</span>
+                                </label>
+                            </div>
+                            <div class="request-type-option">
+                                <input type="radio" name="request_type" id="type-audit" value="audit">
+                                <label for="type-audit">
+                                    <span class="request-type-icon">🔍</span>
+                                    <span class="request-type-name">Экспресс-аудит</span>
+                                    <span class="request-type-desc">Оценка текущей защищённости</span>
+                                </label>
+                            </div>
+                            <div class="request-type-option">
+                                <input type="radio" name="request_type" id="type-offer" value="offer">
+                                <label for="type-offer">
+                                    <span class="request-type-icon">📄</span>
+                                    <span class="request-type-name">Коммерческое предложение</span>
+                                    <span class="request-type-desc">Расчёт стоимости подписки</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <span class="required">*</span> Ваше имя
+                                </label>
+                                <input type="text" class="form-input" name="name" placeholder="Иванов Иван Иванович" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <span class="required">*</span> Должность
+                                </label>
+                                <input type="text" class="form-input" name="position" placeholder="CIO / Руководитель ИБ / ИТ-директор" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <span class="required">*</span> Организация
+                                </label>
+                                <input type="text" class="form-input" name="company" placeholder="Название предприятия" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Отрасль</label>
+                                <select class="form-select" name="industry">
+                                    <option value="">— Выберите отрасль —</option>
+                                    <option value="industry">Промышленность / Производство</option>
+                                    <option value="finance">Финансовый сектор</option>
+                                    <option value="government">Государственный сектор</option>
+                                    <option value="telecom">Телекоммуникации</option>
+                                    <option value="energy">Энергетика</option>
+                                    <option value="transport">Транспорт и логистика</option>
+                                    <option value="retail">Ритейл и услуги</option>
+                                    <option value="it">ИТ-сектор</option>
+                                    <option value="other">Другое</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <span class="required">*</span> Телефон
+                                </label>
+                                <input type="tel" class="form-input" name="phone" placeholder="+375 (__) ___-__-__" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <span class="required">*</span> Email
+                                </label>
+                                <input type="email" class="form-input" name="email" placeholder="name@company.by" required>
+                                <span class="form-hint">Для отправки материалов и подтверждения записи</span>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label class="form-label">Комментарий</label>
+                                <textarea class="form-textarea" name="comment" placeholder="Опишите кратко вашу задачу или вопрос: какая инфраструктура, какие задачи по ИБ, интересующие сервисы. Это поможет подготовить персональное предложение."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="consent-block">
+                            <input type="checkbox" id="consent" name="consent" required>
+                            <label for="consent" class="consent-text">
+                                Я даю согласие на обработку моих персональных данных в соответствии с <a href="#">Политикой конфиденциальности</a> и Законом Республики Беларусь «О персональных данных». Согласен на получение информационных сообщений от Центра.
+                            </label>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="document.getElementById('demoForm').reset()">Очистить форму</button>
+                            <button type="submit" class="btn btn-primary">📩 Отправить запрос</button>
+                        </div>
+
+                        <div class="form-success" id="formSuccess">
+                            <div class="form-success-icon">✓</div>
+                            <div class="form-success-title">Запрос успешно отправлен</div>
+                            <div class="form-success-text">Наш специалист свяжется с вами в течение 30 минут в рабочее время. Номер обращения:</div>
+                            <div class="form-success-id" id="requestId">REQ-2026-000000</div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="cta-block">
+                    <div class="cta-title">Не уверены, что именно вам нужно?</div>
+                    <p class="cta-desc">Запишитесь на бесплатную 30-минутную ознакомительную встречу с экспертом Центра. Мы обсудим вашу ситуацию, покажем возможности платформы и ответим на любые вопросы — без обязательств с вашей стороны.</p>
+                    <div class="cta-buttons">
+                        <a href="tel:+375171234567" class="btn btn-primary">📞 Позвонить сейчас</a>
+                        <a href="https://t.me/CenterSOC" class="btn btn-secondary" target="_blank" rel="noopener">✈ Написать в Telegram</a>
+                    </div>
+                </div>
+
+                <div class="tariff-note">
+                    <p><strong>Гарантия конфиденциальности:</strong> Вся информация, полученная в рамках консультаций и экспресс-аудита, обрабатывается в режиме строгой конфиденциальности. По запросу подписывается NDA до начала любых обсуждений. Результаты экспресс-аудита передаются только вам и не используются в маркетинговых целях.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            Центр кибербезопасности · Минск, пр. Партизанский, 2/4 · 24/7/365
+        </div>
+    </div>
+
+    <script>
+        // Demo form submission
+        const form = document.getElementById('demoForm');
+        const formSuccess = document.getElementById('formSuccess');
+        const requestIdEl = document.getElementById('requestId');
+
+        function generateRequestId() {
+            const year = new Date().getFullYear();
+            const num = String(Math.floor(Math.random() * 999999)).padStart(6, '0');
+            return `REQ-${year}-${num}`;
+        }
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            // Валидация
+            const required = form.querySelectorAll('[required]');
+            let valid = true;
+            required.forEach(field => {
+                if (field.type === 'checkbox' && !field.checked) {
+                    valid = false;
+                    field.style.borderColor = '#e94560';
+                } else if (field.type === 'radio') {
+                    if (!form.querySelector(`input[name="${field.name}"]:checked`)) {
+                        valid = false;
+                    }
+                } else if (!field.value.trim()) {
+                    valid = false;
+                    field.style.borderColor = '#e94560';
+                }
+            });
+
+            // Проверка radio
+            const typeChecked = form.querySelector('input[name="request_type"]:checked');
+            if (!typeChecked) {
+                valid = false;
+                alert('Пожалуйста, выберите тип обращения');
+                return;
+            }
+
+            if (!valid) {
+                alert('Пожалуйста, заполните все обязательные поля и дайте согласие на обработку данных');
+                return;
+            }
+
+            // Генерация номера
+            const requestId = generateRequestId();
+            requestIdEl.textContent = requestId;
+
+            // Показ сообщения об успехе
+            formSuccess.classList.add('visible');
+            formSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            // Отправка формы (имитация)
+            setTimeout(() => {
+                // Здесь должен быть реальный запрос на сервер
+                console.log('Form submitted:', {
+                    type: typeChecked.value,
+                    name: form.name.value,
+                    email: form.email.value,
+                    phone: form.phone.value,
+                    company: form.company.value
+                });
+            }, 500);
+        });
+
+        // Сброс подсветки ошибок при вводе
+        form.querySelectorAll('input, select, textarea').forEach(field => {
+            field.addEventListener('input', () => {
+                field.style.borderColor = '';
+            });
+            field.addEventListener('change', () => {
+                field.style.borderColor = '';
+            });
+        });
+
+        // Плавная прокрутка к форме при клике на якорь
+        document.querySelectorAll('a[href="#demo-form"]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('demo-form').scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>

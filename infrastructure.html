@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Инфраструктура и аттестация</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a2e;
+            color: #e0e0e0;
+            line-height: 1.7;
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ===== HEADER WITH HOVER MENU ===== */
+        .header-area {
+            position: relative;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .main-title {
+            display: inline-block;
+            color: #ffffff;
+            font-size: 2.2rem;
+            padding: 15px 40px;
+            border-bottom: 3px solid #4a9eff;
+            cursor: default;
+            position: relative;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .main-title:hover {
+            color: #4a9eff;
+            text-shadow: 0 0 20px rgba(74, 158, 255, 0.4);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            background: #16213e;
+            border: 1px solid #2a3a5c;
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 320px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            z-index: 99;
+        }
+
+        .header-area:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .dropdown-menu::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid #16213e;
+        }
+
+        .tab-btn {
+            display: block;
+            width: 100%;
+            padding: 12px 20px;
+            margin-bottom: 4px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: #b8c5d6;
+            font-size: 1rem;
+            font-family: inherit;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-btn:last-child {
+            margin-bottom: 0;
+        }
+
+        .tab-btn:hover {
+            background: #1e2a4a;
+            color: #4a9eff;
+            padding-left: 28px;
+        }
+
+        .tab-btn.active {
+            background: #4a9eff;
+            color: #1a1a2e;
+            font-weight: 700;
+        }
+
+        .tab-btn.active:hover {
+            background: #5aadff;
+            color: #1a1a2e;
+        }
+
+        /* Ссылка-вкладка «Калькулятор тарифа» */
+        .tab-link {
+            display: block;
+            width: 100%;
+            padding: 12px 20px;
+            margin-bottom: 4px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: #b8c5d6;
+            font-size: 1rem;
+            font-family: inherit;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.25s ease;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-link:last-child {
+            margin-bottom: 0;
+        }
+
+        .tab-link:hover {
+            background: #1e2a4a;
+            color: #2ecc71;
+            padding-left: 28px;
+        }
+
+        .tab-link .link-icon {
+            margin-left: 6px;
+            font-size: 0.85rem;
+            opacity: 0.7;
+        }
+
+        /* ===== CONTENT AREA ===== */
+        .content-wrapper {
+            background: #16213e;
+            border: 1px solid #2a3a5c;
+            border-radius: 16px;
+            padding: 30px 35px;
+            min-height: 400px;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            color: #4a9eff;
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #2a3a5c;
+        }
+
+        .content-section {
+            margin-bottom: 24px;
+        }
+
+        .content-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-label {
+            display: inline-block;
+            background: #4a9eff;
+            color: #1a1a2e;
+            padding: 5px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .section-label-alt { background: #e94560; }
+        .section-label-green { background: #2ecc71; }
+        .section-label-purple { background: #9b59b6; }
+        .section-label-orange { background: #e67e22; }
+        .section-label-teal { background: #1abc9c; }
+        .section-label-blue { background: #3498db; }
+
+        p {
+            color: #b8c5d6;
+            margin-bottom: 12px;
+        }
+
+        p strong {
+            color: #ffffff;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            position: relative;
+            padding-left: 22px;
+            margin-bottom: 8px;
+            color: #b8c5d6;
+        }
+
+        ul li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #4a9eff;
+            font-weight: bold;
+        }
+
+        /* ===== TABLES ===== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        table thead {
+            background: #4a9eff;
+            color: #1a1a2e;
+        }
+
+        table th {
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #2a3a5c;
+            color: #b8c5d6;
+            vertical-align: top;
+        }
+
+        table tbody tr {
+            background: #0f1a30;
+            transition: background 0.3s ease;
+        }
+
+        table tbody tr:nth-child(even) {
+            background: #131e38;
+        }
+
+        table tbody tr:hover {
+            background: #1e2a4a;
+        }
+
+        table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ===== HIGHLIGHT BOXES ===== */
+        .highlight-box {
+            background: rgba(74, 158, 255, 0.08);
+            border-left: 4px solid #4a9eff;
+            padding: 16px 20px;
+            border-radius: 0 10px 10px 0;
+            margin: 16px 0;
+        }
+
+        .highlight-box p {
+            margin: 0;
+            color: #d0d8e8;
+        }
+
+        .highlight-box strong {
+            color: #4a9eff;
+        }
+
+        .highlight-box ul {
+            margin-top: 8px;
+        }
+
+        .tariff-note {
+            background: rgba(233, 69, 96, 0.08);
+            border-left: 4px solid #e94560;
+            padding: 16px 20px;
+            border-radius: 0 10px 10px 0;
+            margin: 16px 0;
+        }
+
+        .tariff-note p {
+            margin: 0;
+            color: #d0d8e8;
+        }
+
+        .tariff-note strong {
+            color: #e94560;
+        }
+
+        /* ===== STEPS ===== */
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 14px;
+            padding: 14px 16px;
+            background: #0f1a30;
+            border-radius: 10px;
+            border: 1px solid #2a3a5c;
+            transition: all 0.3s ease;
+        }
+
+        .step-item:hover {
+            border-color: #4a9eff;
+            background: #131e38;
+        }
+
+        .step-number {
+            min-width: 36px;
+            height: 36px;
+            background: #4a9eff;
+            color: #1a1a2e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-right: 14px;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-content strong {
+            color: #ffffff;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .step-content span {
+            color: #b8c5d6;
+            font-size: 0.95rem;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #2a3a5c;
+            color: #6a7a9a;
+            font-size: 0.9rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 1.5rem;
+                padding: 12px 20px;
+            }
+
+            .dropdown-menu {
+                min-width: 280px;
+            }
+
+            .content-wrapper {
+                padding: 20px 18px;
+            }
+
+            table {
+                font-size: 0.8rem;
+            }
+
+            table th, table td {
+                padding: 10px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Навигационное меню -->
+<nav style="
+    background: #0f172a;
+    border-bottom: 1px solid #334155;
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+">
+    <div style="max-width: 1320px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+        <a href="index.html" style="color: #ef4444; font-weight: 800; font-size: 1.2rem; text-decoration: none;">
+            🛡️ Центр Кибербезопасности
+        </a>
+        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+            <a href="index.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Главная</a>
+            <a href="infrastructure.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Инфраструктура</a>
+            <a href="experts.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Эксперты</a>
+            <a href="cases.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Кейсы</a>
+            <a href="monitoring.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Мониторинг</a>
+            <a href="knowledge.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">База знаний</a>
+            <a href="incident-response.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Инциденты</a>
+            <a href="contacts.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Контакты</a>
+            <a href="calculator.html" style="color: #ef4444; text-decoration: none; font-size: 0.9rem; font-weight: 700;">Калькулятор</a>
+        </div>
+    </div>
+</nav>
+    <div class="container">
+
+        <!-- ===== HEADER WITH HOVER DROPDOWN ===== -->
+        <div class="header-area">
+            <h1 class="main-title">Инфраструктура и аттестация</h1>
+
+            <div class="dropdown-menu">
+                <button class="tab-btn active" data-tab="tab-1">Аттестация ОАЦ</button>
+                <button class="tab-btn" data-tab="tab-2">Технологический стек</button>
+                <button class="tab-btn" data-tab="tab-3">Дата-центр и доверенный периметр</button>
+                <button class="tab-btn" data-tab="tab-4">Комплаенс и сертификаты</button>
+                <button class="tab-btn" data-tab="tab-5">Интеграция с существующей ИТ-инфраструктурой</button>
+                <a class="tab-link" href="https://your-calculator-url.by" target="_blank" rel="noopener noreferrer">Калькулятор тарифа <span class="link-icon">↗</span></a>
+            </div>
+        </div>
+
+        <!-- ===== CONTENT AREA ===== -->
+        <div class="content-wrapper">
+
+            <!-- ===== TAB 1: Аттестация ОАЦ ===== -->
+            <div class="tab-content active" id="tab-1">
+                <h2 class="section-title">Аттестация ОАЦ</h2>
+
+                <div class="content-section">
+                    <span class="section-label">Суть для клиента</span>
+                    <p>Подписчик получает доступ к инфраструктуре, уже прошедшей государственную аттестацию. Это снимает с предприятия необходимость самостоятельно аттестовывать серверные, сетевые сегменты и средства защиты информации по требованиям ОАЦ при Президенте РБ.</p>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-alt">Что это значит на практике</span>
+                    <ul>
+                        <li>Инфраструктура Центра аттестована на соответствие требованиям ОАЦ (Оперативно-аналитический центр при Президенте Республики Беларусь) по защите информации, составляющей государственную тайну, и конфиденциальной информации ограниченного распространения.</li>
+                        <li>Аттестация распространяется на ЦОД, сетевую инфраструктуру, СЗИ, системы мониторинга и процедуры управления инцидентами.</li>
+                        <li>Подписчик, размещающий критичные данные или использующий защищенные каналы Центра, наследует уровень доверия аттестованной среды без необходимости проходить собственный цикл аттестации (экономия <strong>6-12 месяцев</strong> и <strong>15 000-30 000 BYN</strong> на подготовку).</li>
+                    </ul>
+                </div>
+
+                <div class="tariff-note">
+                    <p><strong>Как это влияет на тариф:</strong> Базовая ставка (1 800 BYN/мес) уже включает стоимость поддержания аттестации в актуальном состоянии — аудиты, обновление СЗИ, документооборот с ОАЦ. Клиент платит за эффект «комплаенс готов», а не за процедуры.</p>
+                </div>
+            </div>
+
+            <!-- ===== TAB 2: Технологический стек ===== -->
+            <div class="tab-content" id="tab-2">
+                <h2 class="section-title">Технологический стек</h2>
+
+                <div class="content-section">
+                    <span class="section-label section-label-green">Принцип</span>
+                    <p>Стек выбирается не по принципу «что есть у вендора», а по принципу «какие эффекты заявил клиент». Каждый компонент обеспечивает измеримый вклад в снижение риска или повышение доступности.</p>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label">Базовый стек (входит в базовую ставку 1 800 BYN/мес)</span>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Компонент</th>
+                                <th>Функция</th>
+                                <th>Как обеспечивает эффект</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>SIEM</strong><br><span style="font-size:0.85rem;color:#8a9ab0;">Security Information and Event Management</span></td>
+                                <td>Корреляция событий, детектирование аномалий</td>
+                                <td>Базовое обнаружение инцидентов, соответствие СТБ 34.101</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Threat Intelligence Platform</strong></td>
+                                <td>Агрегация фидов угроз (BY-CERT, коммерческие, открытые)</td>
+                                <td>Проактивная защита от известных TTP</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SOAR-ядро</strong><br><span style="font-size:0.85rem;color:#8a9ab0;">(базовое)</span></td>
+                                <td>Автоматизация рутинных реакций</td>
+                                <td>Сокращение MTTR до приемлемых значений</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Средства резервного копирования</strong><br><span style="font-size:0.85rem;color:#8a9ab0;">с изоляцией</span></td>
+                                <td>Невозможность шифрования бэкапов злоумышленником</td>
+                                <td>Восстановление после ransomware</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-alt">Расширенный стек (надбавки за эффекты)</span>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Эффект</th>
+                                <th>Добавляемый компонент</th>
+                                <th>Почему именно он</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Непрерывность АСУ ТП</strong></td>
+                                <td>Industrial IDS/IPS, сегментация OT-сетей, honeypots на контроллерах</td>
+                                <td>Специализированные протоколы (Modbus, OPC UA) требуют специализированных средств</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Нулевая утечка</strong></td>
+                                <td>VDI на базе ROSA, DLP с поведенческим анализом, шифрование на конечных точках</td>
+                                <td>Изоляция рабочих сред + предотвращение эксфильтрации</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SLA 15 минут</strong></td>
+                                <td>Выделенная дежурная смена (2 инженера), автономные playbooks, каналы связи повышенной надежности</td>
+                                <td>Гарантированное время реагирования требует выделенных ресурсов, а не «по возможности»</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="highlight-box">
+                    <p><strong>Открытость интеграции:</strong> Стек не является «черным ящиком». При необходимости клиент получает доступ к API, логам и дашбордам. Нет vendor lock-in — данные принадлежат клиенту.</p>
+                </div>
+            </div>
+
+            <!-- ===== TAB 3: Дата-центр и доверенный периметр ===== -->
+            <div class="tab-content" id="tab-3">
+                <h2 class="section-title">Дата-центр и доверенный периметр</h2>
+
+                <div class="content-section">
+                    <span class="section-label section-label-purple">Архитектура «доверенного периметра»</span>
+                    <p>Центр формирует логический периметр защиты, который расширяется за счет инфраструктуры клиента, но управляется централизованно. Это не «поставили коробку и ушли», а постоянное присутствие SOC в инфраструктуре подписчика.</p>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label">Уровни периметра</span>
+
+                    <div class="highlight-box" style="border-left-color: #9b59b6; background: rgba(155, 89, 182, 0.08);">
+                        <p><strong style="color: #9b59b6;">Ядро Центра (ЦОД ОАО «ЦНИИТУ»):</strong></p>
+                        <ul style="margin-top: 8px;">
+                            <li>Аттестованные помещения, физический контроль доступа, резервирование по питанию и связи.</li>
+                            <li>Размещение SIEM, хранилища логов, аналитических систем.</li>
+                            <li>Географическое разнесение резервных площадок (при необходимости — гибридная модель).</li>
+                        </ul>
+                    </div>
+
+                    <div class="highlight-box" style="border-left-color: #e67e22; background: rgba(230, 126, 34, 0.08);">
+                        <p><strong style="color: #e67e22;">Пограничный слой (инфраструктура клиента):</strong></p>
+                        <ul style="margin-top: 8px;">
+                            <li>Развертывание коллекторов (легковесных агентов) на стороне клиента.</li>
+                            <li>Шифрованные туннели для передачи телеметрии в Центр.</li>
+                            <li>Локальные точки присутствия (PoP) для снижения задержек в критичных сценариях.</li>
+                        </ul>
+                    </div>
+
+                    <div class="highlight-box" style="border-left-color: #2ecc71; background: rgba(46, 204, 113, 0.08);">
+                        <p><strong style="color: #2ecc71;">Конечные точки и АСУ ТП:</strong></p>
+                        <ul style="margin-top: 8px;">
+                            <li>EDR-агенты на рабочих станциях и серверах.</li>
+                            <li>Безагентный мониторинг сетевого трафика (NDR) для чувствительных сегментов.</li>
+                            <li>Для АСУ ТП — пассивные сенсоры, не влияющие на производственные процессы.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-teal">Модель данных</span>
+                    <p>Телеметрия (логи, события, метаданные трафика) передается в Центр для анализа. Критичные данные клиента (файлы, БД) остаются на его площадке, если это требование бизнеса — Центр анализирует «тени», а не содержимое.</p>
+                </div>
+            </div>
+
+            <!-- ===== TAB 4: Комплаенс и сертификаты ===== -->
+            <div class="tab-content" id="tab-4">
+                <h2 class="section-title">Комплаенс и сертификаты</h2>
+
+                <div class="content-section">
+                    <span class="section-label">Что уже есть у Центра (входит в базовую ставку)</span>
+                    <ul>
+                        <li><strong>Аттестация ОАЦ</strong> — высший уровень доверия для работы с ГИС и конфиденциальной информацией.</li>
+                        <li><strong>Соответствие СТБ 34.101</strong> — требования к защите информации в информационных системах РБ.</li>
+                        <li><strong>Совместимость с требованиями 455-З</strong> «Об информации, информатизации и защите информации».</li>
+                        <li><strong>Указ № 40</strong> (о мерах по совершенствованию защиты национального сегмента интернета) — процедуры реагирования и взаимодействия с BY-CERT.</li>
+                    </ul>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-green">Что получает подписчик автоматически</span>
+                    <ul>
+                        <li>Готовность к проверкам ОАЦ и надзорным мероприятиям — без дополнительных затрат на подготовку.</li>
+                        <li>Автоматическая генерация отчетности по СТБ 34.101 (экономия до <strong>80 человеко-часов в квартал</strong>).</li>
+                        <li>Возможность аттестации собственных систем «по наследству» через доверенный периметр Центра.</li>
+                    </ul>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-alt">Что добавляется по запросу (влияет на тариф)</span>
+                    <ul>
+                        <li>Подготовка к сертификации <strong>ISO/IEC 27001</strong> (если клиент работает на экспорт или с международными партнерами).</li>
+                        <li>Специализированный комплаенс для финансового сектора (требования <strong>НБРБ</strong>).</li>
+                        <li>Аттестация для работы с персональными данными в особо крупных масштабах.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ===== TAB 5: Интеграция с существующей ИТ-инфраструктурой ===== -->
+            <div class="tab-content" id="tab-5">
+                <h2 class="section-title">Интеграция с существующей ИТ-инфраструктурой</h2>
+
+                <div class="content-section">
+                    <span class="section-label section-label-purple">Принцип</span>
+                    <p>«Мы не ломаем то, что работает». Центр строит защиту вокруг существующей инфраструктуры клиента, а не требует ее замены.</p>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label">Модели интеграции</span>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Модель</th>
+                                <th>Когда применяется</th>
+                                <th>Что требуется со стороны клиента</th>
+                                <th>Срок внедрения</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Облачная (Cloud SOC)</strong></td>
+                                <td>Клиент готов передавать логи в Центр</td>
+                                <td>VPN/туннель, агенты на ключевых узлах</td>
+                                <td><strong>3-5 дней</strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Гибридная</strong></td>
+                                <td>Часть данных нельзя выносить за периметр</td>
+                                <td>Локальный коллектор + облачная аналитика</td>
+                                <td><strong>1-2 недели</strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Локальная (On-prem SOC)</strong></td>
+                                <td>Критичная инфраструктура (КИИ), АСУ ТП</td>
+                                <td>Выделенный сервер для коллектора, доступ к сетевым зеркалам</td>
+                                <td><strong>2-4 недели</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-green">Что интегрируется «из коробки»</span>
+                    <ul>
+                        <li><strong>Active Directory / LDAP</strong> — для корреляции событий с учетными записями.</li>
+                        <li><strong>Почтовые серверы</strong> (Exchange, postfix) — для анализа фишинга и BEC.</li>
+                        <li><strong>Системы виртуализации</strong> (VMware, Hyper-V, KVM) — для мониторинга гостевых ОС.</li>
+                        <li><strong>Системы резервного копирования</strong> — для проверки целостности бэкапов.</li>
+                        <li><strong>Промышленные протоколы</strong> (Modbus, OPC UA, Profinet) — для АСУ ТП.</li>
+                    </ul>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-alt">Что не требуется</span>
+                    <ul>
+                        <li>Замена существующих средств защиты (антивирусов, файрволов) — Центр <strong>дополняет</strong> их, а не заменяет.</li>
+                        <li>Перестройка сетевой топологии — сегментация предлагается, но не навязывается.</li>
+                        <li>Закупка оборудования — все необходимое оборудование и лицензии входят в подписку.</li>
+                    </ul>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-teal">Процесс интеграции (стандартный)</span>
+                    <div class="integration-steps">
+                        <div class="step-item">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <strong>Аудит</strong>
+                                <span>(1-2 дня) — инвентаризация активов, анализ текущей защищенности.</span>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <strong>Пилот</strong>
+                                <span>(1-2 недели) — развертывание на ограниченном сегменте, настройка корреляций.</span>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <strong>Полное подключение</strong>
+                                <span>— масштабирование на всю инфраструктуру.</span>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <strong>Оптимизация</strong>
+                                <span>(постоянно) — снижение ложных срабатываний, настройка под специфику бизнеса.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            Центр кибербезопасности
+        </div>
+    </div>
+
+    <script>
+        // Tab switching logic
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                const targetId = this.getAttribute('data-tab');
+                document.getElementById(targetId).classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Раздел 4. Кейсы и эффекты | 100% исходного текста</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0f141c;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            line-height: 1.5;
+            color: #eef2f8;
+            min-height: 100vh;
+            padding: 2rem 1.5rem;
+        }
+
+        .wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .megamenu-trigger {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+
+        .main-nav-button {
+            background: linear-gradient(135deg, #1d2a38 0%, #111c26 100%);
+            border: 1px solid #2f4155;
+            border-radius: 60px;
+            padding: 0.9rem 2rem;
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            color: #f0f6ff;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            transition: 0.2s;
+            cursor: default;
+        }
+        .main-nav-button span {
+            font-size: 1.6rem;
+            transition: transform 0.2s;
+        }
+
+        .megamenu-trigger::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: transparent;
+            z-index: 199;
+        }
+
+        .tabs-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            background: #121b26;
+            backdrop-filter: blur(12px);
+            background: rgba(18, 27, 38, 0.98);
+            border-radius: 1.8rem;
+            padding: 1.2rem 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.7rem;
+            min-width: 520px;
+            width: max-content;
+            max-width: 90vw;
+            border: 1px solid #2e455e;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: opacity 0.2s ease, visibility 0.2s, transform 0.2s;
+            z-index: 200;
+            pointer-events: none;
+        }
+
+        .megamenu-trigger:hover .tabs-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .tabs-dropdown:hover {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .tab-link {
+            background: #1e2c3b;
+            border: none;
+            padding: 0.6rem 1.3rem;
+            border-radius: 40px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #cfdff2;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            border: 1px solid #2e4055;
+            white-space: nowrap;
+        }
+        .tab-link:hover {
+            background: #2b3f54;
+            color: white;
+            border-color: #5b8bb8;
+            transform: translateY(-1px);
+        }
+        .tab-link.active {
+            background: #2d4c70;
+            color: white;
+            border-color: #7aa5cf;
+            box-shadow: 0 2px 8px rgba(0, 80, 150, 0.3);
+        }
+
+        .tab-content-area {
+            background: #0f1620e0;
+            border-radius: 1.8rem;
+            border: 1px solid #263749;
+            backdrop-filter: blur(2px);
+            margin-top: 1rem;
+        }
+        .tab-pane {
+            display: none;
+            animation: fadeIn 0.25s ease;
+        }
+        .tab-pane.active-pane {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        .content-inner-card {
+            background: #0e1621;
+            border-radius: 1.5rem;
+            padding: 1.8rem 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        h3 {
+            font-size: 1.7rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            color: #eaf1ff;
+            border-left: 3px solid #3b82f6;
+            padding-left: 1rem;
+        }
+        .highlight-block {
+            background: #101b28;
+            padding: 1rem 1.2rem;
+            border-radius: 1rem;
+            margin: 1.2rem 0;
+            border-left: 4px solid #4282d5;
+        }
+        .quote-block {
+            background: #0d1624;
+            padding: 1rem 1.5rem;
+            border-radius: 1rem;
+            margin: 1rem 0;
+            border-left: 4px solid #facc15;
+            font-style: italic;
+            color: #cbd5e6;
+        }
+        .elegant-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: #0b111b;
+            border-radius: 1rem;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+        .elegant-table th {
+            background: #192433;
+            color: #bfd5fc;
+            font-weight: 600;
+            padding: 0.9rem 1rem;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            border-bottom: 1px solid #2d4057;
+            text-align: left;
+        }
+        .elegant-table td {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid #202f3f;
+            color: #e4edff;
+            vertical-align: top;
+        }
+        .elegant-table tr:last-child td {
+            border-bottom: none;
+        }
+        .elegant-table tr:hover td {
+            background: #16212e;
+        }
+        ul {
+            padding-left: 1.5rem;
+            margin: 0.8rem 0;
+        }
+        li {
+            margin: 0.4rem 0;
+            color: #d3e2f5;
+        }
+        p {
+            color: #d3e2f5;
+            line-height: 1.5;
+            margin-bottom: 0.75rem;
+        }
+        hr {
+            margin: 1.2rem 0;
+            border-color: #253b4b;
+        }
+        .small-note {
+            font-size: 0.8rem;
+            color: #92a9c2;
+            margin-top: 1rem;
+        }
+        .economy-grid {
+            background: #0a111e;
+            border-radius: 1rem;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        .economy-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #1e2a3a;
+            font-size: 0.9rem;
+        }
+        .roi-highlight {
+            color: #4ade80;
+            font-weight: bold;
+        }
+
+        @media (max-width: 760px) {
+            .tabs-dropdown {
+                min-width: 280px;
+                width: 90vw;
+                padding: 1rem;
+            }
+            .tab-link {
+                white-space: normal;
+                font-size: 0.8rem;
+            }
+            .content-inner-card {
+                padding: 1.2rem;
+            }
+            h3 {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Навигационное меню -->
+<nav style="
+    background: #0f172a;
+    border-bottom: 1px solid #334155;
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+">
+    <div style="max-width: 1320px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+        <a href="index.html" style="color: #ef4444; font-weight: 800; font-size: 1.2rem; text-decoration: none;">
+            🛡️ Центр Кибербезопасности
+        </a>
+        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+            <a href="index.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Главная</a>
+            <a href="infrastructure.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Инфраструктура</a>
+            <a href="experts.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Эксперты</a>
+            <a href="cases.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Кейсы</a>
+            <a href="monitoring.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Мониторинг</a>
+            <a href="knowledge.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">База знаний</a>
+            <a href="incident-response.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Инциденты</a>
+            <a href="contacts.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Контакты</a>
+            <a href="calculator.html" style="color: #ef4444; text-decoration: none; font-size: 0.9rem; font-weight: 700;">Калькулятор</a>
+        </div>
+    </div>
+</nav>
+<div class="wrapper">
+    <div class="megamenu-trigger">
+        <div class="main-nav-button">
+            Раздел 4. Кейсы и эффекты
+            <span>▼</span>
+        </div>
+        <div class="tabs-dropdown">
+            <button class="tab-link active" data-tab="tab1">Общая концепция раздела</button>
+            <button class="tab-link" data-tab="tab2">4.1. Промышленность / АСУ ТП</button>
+            <button class="tab-link" data-tab="tab3">4.2. R&D и инжиниринг</button>
+            <button class="tab-link" data-tab="tab4">4.3. Финансовый сектор</button>
+            <button class="tab-link" data-tab="tab5">4.4. Ритейл и логистика</button>
+            <button class="tab-link" data-tab="tab6">4.5. Отчеты ROI и снижение рисков</button>
+        </div>
+    </div>
+
+    <div class="tab-content-area">
+        
+        <!-- ==================== 4.0 ОБЩАЯ КОНЦЕПЦИЯ РАЗДЕЛА (100%) ==================== -->
+        <div class="tab-pane active-pane" id="tab1">
+            <div class="content-inner-card">
+                <h3>Общая концепция раздела</h3>
+                <p>Раздел решает задачу доказательства: показывает, что эффекты не абстрактны, а измеримы в белорусских рублях, часах простоя и процентах снижения риска. Каждый кейс — это «воплощение» одного или нескольких эффектов из калькулятора, с конкретными цифрами: что было до, что стало после, сколько сэкономлено, какой ROI.</p>
+                <p>Структура: отраслевые кейсы (промышленность, R&D, финансы, ритейл) + универсальные отчеты ROI. Каждый кейс содержит: боль клиента -> выбранные эффекты -> решение Центра -> измеренный результат -> экономика подписки.</p>
+            </div>
+        </div>
+
+        <!-- ==================== 4.1 ПРОМЫШЛЕННОСТЬ / АСУ ТП (100% ТЕКСТ) ==================== -->
+        <div class="tab-pane" id="tab2">
+            <div class="content-inner-card">
+                <h3>4.1. Промышленность / АСУ ТП</h3>
+                <p><strong>Клиент:</strong> Среднее машиностроительное предприятие (Минская область), 280 сотрудников, выручка ~45 млн BYN/год, АСУ ТП на 40 станках с ЧПУ.</p>
+                <p><strong>Боль:</strong> - В 2024 году фиксировали 2 попытки шифрования сети (остановлены antivirus’ом, но реакция заняла 6 часов). - АСУ ТП и корпоративная сеть в одном сегменте. - Нет резервного копирования станочных программ — восстановление после сбоя: 2-3 дня ручной настройки. - Стоимость часа простоя: ~7 500 BYN (прямые потери + срыв поставок контрагентам).</p>
+                <p><strong>Выбранные эффекты:</strong> - Непрерывность производства / АСУ ТП (2 200 BYN/мес) - SLA 15 минут (800 BYN/мес)</p>
+                <p><strong>Решение Центра:</strong> - Сегментация OT/IT-сетей (промышленный firewall с DPI для Modbus/OPC UA). - Развертывание honeypot’ов в сегменте АСУ ТП (обнаружение попыток сканирования контроллеров). - Резервное копирование станочных программ с изоляцией (air-gapped backup). - Выделенная дежурная смена для промышленных клиентов (гарантия 15 минут).</p>
+                <p><strong>Измеренный результат (12 месяцев):</strong></p>
+                <table class="elegant-table">
+                    <thead><tr><th>Показатель</th><th>До подписки</th><th>После подписки</th></tr></thead>
+                    <tbody>
+                        <tr><td>Время реакции на инцидент</td><td>6 часов</td><td>14 минут</td></tr>
+                        <tr><td>Попытки проникновения в АСУ ТП</td><td>Не фиксировались</td><td>7 выявлено, все заблокированы на этапе разведки</td></tr>
+                        <tr><td>Простои из-за кибератак</td><td>2 случая x 4 часа = 8 часов</td><td>0 часов</td></tr>
+                        <tr><td>Восстановление после сбоя</td><td>2-3 дня</td><td>45 минут (из резервной копии)</td></tr>
+                    </tbody>
+                </table>
+                <p><strong>Экономика:</strong></p>
+                <div class="economy-grid">
+                    <div class="economy-row"><span>Статья</span><span>Расчет</span></div>
+                    <div class="economy-row"><span>Годовая стоимость подписки</span><span>(1 800 + 2 200 + 800) x 1,35 (отраслевой коэф.) x 1,0 (активы &lt;=30) x 12 = 77 760 BYN</span></div>
+                    <div class="economy-row"><span>Предотвращенный ущерб</span><span>7 попыток x 8 часов простоя x 7 500 BYN/час x 92% (снижение риска) = 386 400 BYN</span></div>
+                    <div class="economy-row"><span>Экономия на восстановлении</span><span>2 случая/год x (3 дня - 0,75 часа) x 7 500 BYN/час = прим. 105 000 BYN (непредвиденный бонус)</span></div>
+                    <div class="economy-row"><span>Чистая выгода</span><span>386 400 + 105 000 - 77 760 = 413 640 BYN/год</span></div>
+                    <div class="economy-row"><span>ROI подписки</span><span class="roi-highlight">433% (окупаемость за 2,1 мес)</span></div>
+                </div>
+                <div class="quote-block">«Мы думали, что нас атакуют раз в год. Оказалось — раз в два месяца пытались. Просто мы не видели. Теперь видим все, и станки не останавливаются.»</div>
+            </div>
+        </div>
+
+        <!-- ==================== 4.2 R&D И ИНЖИНИРИНГ (100% ТЕКСТ) ==================== -->
+        <div class="tab-pane" id="tab3">
+            <div class="content-inner-card">
+                <h3>4.2. R&D и инжиниринг</h3>
+                <p><strong>Клиент:</strong> НИИ/конструкторское бюро (Минск), 120 сотрудников, разработка промышленной электроники, 15 активных проектов с коммерческой тайной.</p>
+                <p><strong>Боль:</strong> - Утечка чертежей нового изделия конкуренту (2023, источник не установлен). - Сотрудники работают с документацией на личных ноутбуках и облачных дисках. - Подрядчики (3 организации) имеют доступ к внутреннему файловому серверу без аудита. - Штраф за утечку ПДн сотрудников: 30 000 BYN (уже был).</p>
+                <p><strong>Выбранные эффекты:</strong> - Нулевая утечка (1 200 BYN/мес) - Непрерывность (как бонус — защита от шифровальщиков, 2 200 BYN/мес)</p>
+                <p><strong>Решение Центра:</strong> - VDI на базе ROSA (все рабочие места проектировщиков — внутри защищенного периметра, данные не покидают Центр). - DLP с поведенческим анализом (отслеживание аномалий: скачивание в нерабочее время, массовое копирование). - Шифрование конечных точек + запрет USB/Bluetooth на рабочих станциях. - Изолированные среды для подрядчиков (доступ только к назначенным проектам, сессии записываются).</p>
+                <p><strong>Измеренный результат (14 месяцев):</strong></p>
+                <table class="elegant-table">
+                    <thead><tr><th>Показатель</th><th>До подписки</th><th>После подписки</th></tr></thead>
+                    <tbody>
+                        <tr><td>Подтвержденные утечки</td><td>1 за 12 мес</td><td>0 за 14 мес</td></tr>
+                        <tr><td>Попытки несанкционированного копирования</td><td>Не фиксировались</td><td>23 выявлено, предотвращено</td></tr>
+                        <tr><td>Доступ подрядчиков</td><td>Полный к серверу</td><td>Изолированный, аудит 100% сессий</td></tr>
+                        <tr><td>Время восстановления после инцидента</td><td>Н/Д (утечку не остановили)</td><td>12 минут (блокировка сессии аналитиком L2)</td></tr>
+                    </tbody>
+                </table>
+                <p><strong>Экономика:</strong></p>
+                <div class="economy-grid">
+                    <div class="economy-row"><span>Статья</span><span>Расчет</span></div>
+                    <div class="economy-row"><span>Годовая стоимость подписки</span><span>(1 800 + 1 200 + 2 200) x 1,1 (R&D коэф.) x 1,0 x 12 = 66 000 BYN</span></div>
+                    <div class="economy-row"><span>Стоимость утечки чертежа</span><span>Оценка независимого аудита: 1 200 000 BYN (потеря конкурентного преимущества на 2 года)</span></div>
+                    <div class="economy-row"><span>Вероятность утечки без защиты</span><span>20% (по данным Verizon DBIR для R&D)</span></div>
+                    <div class="economy-row"><span>Ожидаемый ущерб без защиты</span><span>1 200 000 x 20% = 240 000 BYN/год</span></div>
+                    <div class="economy-row"><span>Остаточный риск с защитой</span><span>240 000 x (1 - 0,95) = 12 000 BYN/год</span></div>
+                    <div class="economy-row"><span>Предотвращенный ущерб</span><span>240 000 - 12 000 = 228 000 BYN/год</span></div>
+                    <div class="economy-row"><span>Экономия на штрафах</span><span>30 000 BYN (вероятность штрафа снижена до &lt;1%)</span></div>
+                    <div class="economy-row"><span>Чистая выгода</span><span>228 000 + 30 000 - 66 000 = 192 000 BYN/год</span></div>
+                    <div class="economy-row"><span>ROI подписки</span><span class="roi-highlight">291%</span></div>
+                </div>
+                <div class="highlight-block">Дополнительный эффект (не вошел в расчет): Возможность предъявить инвесторам/заказчикам аттестованную защиту R&D — конкурентное преимущество при тендерах.</div>
+            </div>
+        </div>
+
+        <!-- ==================== 4.3 ФИНАНСОВЫЙ СЕКТОР (100% ТЕКСТ) ==================== -->
+        <div class="tab-pane" id="tab4">
+            <div class="content-inner-card">
+                <h3>4.3. Финансовый сектор</h3>
+                <p><strong>Клиент:</strong> Микрофинансовая организация (Минск), 45 сотрудников, оборот ~12 млн BYN/год, онлайн-выдача займов через сайт и мобильное приложение.</p>
+                <p><strong>Боль:</strong> - 3 успешных фишинговых атаки на бухгалтерию в 2024 (переводы на подставные счета: 18 000, 34 000, 7 000 BYN — всего 59 000 BYN). - Подмена реквизитов в счетах контрагентов (BEC). - Нет SOC — реагирование по факту жалобы клиента или банка. - Страховая премия по киберполису: 42 000 BYN/год (без скидок).</p>
+                <p><strong>Выбранные эффекты:</strong> - SLA 15 минут (800 BYN/мес) — критично для блокировки мошеннических переводов - Снижение страховой премии (250 BYN/мес) - Нулевая утечка (1 200 BYN/мес) — защита базы заемщиков (ПДн)</p>
+                <p><strong>Решение Центра:</strong> - Мониторинг почтового трафика (анализ заголовков, вложений, ссылок) — выявление фишинга до клика. - Автоматическая блокировка подозрительных переводов по правилам (сумма, реквизиты, время). - Интеграция с платежным шлюзом — корреляция транзакций с геолокацией, устройством, поведением. - Подготовка пакета для страховщика: аттестация SOC, отчеты по инцидентам, политики.</p>
+                <p><strong>Измеренный результат (12 месяцев):</strong></p>
+                <table class="elegant-table">
+                    <thead><tr><th>Показатель</th><th>До подписки</th><th>После подписки</th></tr></thead>
+                    <tbody>
+                        <tr><td>Успешные фишинговые атаки</td><td>3 (59 000 BYN ущерба)</td><td>0</td></tr>
+                        <tr><td>Выявлено и заблокировано попыток</td><td>Н/Д</td><td>47 попыток фишинга, 12 попыток BEC</td></tr>
+                        <tr><td>Время блокировки подозрительного перевода</td><td>Н/Д (не блокировали)</td><td>Среднее 8 минут</td></tr>
+                        <tr><td>Страховая премия</td><td>42 000 BYN</td><td>29 400 BYN (скидка 30%)</td></tr>
+                    </tbody>
+                </table>
+                <p><strong>Экономика:</strong></p>
+                <div class="economy-grid">
+                    <div class="economy-row"><span>Статья</span><span>Расчет</span></div>
+                    <div class="economy-row"><span>Годовая стоимость подписки</span><span>(1 800 + 800 + 250 + 1 200) x 1,5 (финансы коэф.) x 1,0 x 12 = 76 500 BYN</span></div>
+                    <div class="economy-row"><span>Предотвращенный ущерб от фишинга</span><span>59 000 x (1 - 0,12) = 51 920 BYN (с учетом остаточного риска 12%)</span></div>
+                    <div class="economy-row"><span>Экономия на страховке</span><span>42 000 - 29 400 = 12 600 BYN/год</span></div>
+                    <div class="economy-row"><span>Предотвращенный ущерб от утечки ПДн</span><span>База 8 000 заемщиков x штраф 50 BYN (по КоАП) x 20% вероятность = 80 000 BYN, снижено до 4 000 BYN -> 76 000 BYN</span></div>
+                    <div class="economy-row"><span>Чистая выгода</span><span>51 920 + 12 600 + 76 000 - 76 500 = 64 020 BYN/год</span></div>
+                    <div class="economy-row"><span>ROI подписки</span><span class="roi-highlight">84%</span></div>
+                </div>
+                <div class="highlight-block">Примечание: ROI ниже, чем в промышленности, но клиент отмечает нефинансовый эффект: сохранение лицензии НБРБ (при 4-й атаке могли приостановить деятельность).</div>
+            </div>
+        </div>
+
+        <!-- ==================== 4.4 РИТЕЙЛ И ЛОГИСТИКА (100% ТЕКСТ) ==================== -->
+        <div class="tab-pane" id="tab5">
+            <div class="content-inner-card">
+                <h3>4.4. Ритейл и логистика</h3>
+                <p><strong>Клиент:</strong> Сеть магазинов электроники (5 точек в Минске + склад + e-commerce), 85 сотрудников, оборот ~28 млн BYN/год.</p>
+                <p><strong>Боль:</strong> - DDoS на сайт в «черную пятницу» 2024 — 6 часов недоступности, упущенная выручка ~45 000 BYN. - Утечка базы клиентов (15 000 записей) через скомпрометированного подрядчика (CRM-система). - Ручной учет остатков на складе — при сбое ERP работа останавливается. - Нет понимания, кто и когда заходил в кассовые системы.</p>
+                <p><strong>Выбранные эффекты:</strong> - Непрерывность (2 200 BYN/мес) — защита ERP, касс, сайта - Нулевая утечка (1 200 BYN/мес) — база клиентов, ПДн - Снижение страховой премии (250 BYN/мес)</p>
+                <p><strong>Решение Центра:</strong> - WAF с ML-моделями для защиты e-commerce (DDoS, SQL-инъекции, боты). - Мониторинг кассовых терминалов (POS) — выявление аномалий в транзакциях. - DLP для CRM и складской системы — контроль экспорта базы. - Резервное копирование ERP с RTO 1 час.</p>
+                <p><strong>Измеренный результат (12 месяцев):</strong></p>
+                <table class="elegant-table">
+                    <thead><tr><th>Показатель</th><th>До подписки</th><th>После подписки</th></tr></thead>
+                    <tbody>
+                        <tr><td>Простои сайта из-за атак</td><td>6 часов</td><td>0 (2 DDoS отражены автоматически)</td></tr>
+                        <tr><td>Утечки базы клиентов</td><td>1 (15 000 записей)</td><td>0</td></tr>
+                        <tr><td>Время восстановления ERP</td><td>8 часов</td><td>52 минуты</td></tr>
+                        <tr><td>Выявлено инсайдерских операций</td><td>Н/Д</td><td>3 случая (предотвращены до ущерба)</td></tr>
+                    </tbody>
+                </table>
+                <p><strong>Экономика:</strong></p>
+                <div class="economy-grid">
+                    <div class="economy-row"><span>Статья</span><span>Расчет</span></div>
+                    <div class="economy-row"><span>Годовая стоимость подписки</span><span>(1 800 + 2 200 + 1 200 + 250) x 1,2 (ритейл коэф.) x 1,25 (активы 31-100) x 12 = 98 100 BYN</span></div>
+                    <div class="economy-row"><span>Предотвращенный ущерб от DDoS</span><span>45 000 x 2 (ожидаемо атак в год) x 88% = 79 200 BYN</span></div>
+                    <div class="economy-row"><span>Предотвращенный ущерб от утечки базы</span><span>Штрафы + репутация: 180 000 BYN (по аналогии с кейсом из калькулятора) x 20% x 95% = 34 200 BYN</span></div>
+                    <div class="economy-row"><span>Экономия на страховке</span><span>12 000 BYN (типовой киберполис 40 000 x 30%)</span></div>
+                    <div class="economy-row"><span>Предотвращенный ущерб от простоя ERP</span><span>4 случая/год x 8 часов x 3 500 BYN/час x 88% = 98 560 BYN</span></div>
+                    <div class="economy-row"><span>Чистая выгода</span><span>79 200 + 34 200 + 12 000 + 98 560 - 98 100 = 125 860 BYN/год</span></div>
+                    <div class="economy-row"><span>ROI подписки</span><span class="roi-highlight">128%</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== 4.5 ОТЧЕТЫ ROI И СНИЖЕНИЕ РИСКОВ (100% ТЕКСТ) ==================== -->
+        <div class="tab-pane" id="tab6">
+            <div class="content-inner-card">
+                <h3>4.5. Отчеты ROI и снижение рисков</h3>
+                <p><strong>Универсальный инструмент для любого клиента:</strong> Калькулятор Центра (раздел «Экономика для вас») работает по единой формуле для всех отраслей:</p>
+                <div class="highlight-block">
+                    <p>Годовой ожидаемый ущерб БЕЗ защиты = Σ (Вероятность инцидента x Ущерб x Отраслевой коэф. x Коэф. масштаба)</p>
+                    <p>Остаточный риск С защитой = Годовой ущерб x (1 - Снижение риска по эффекту)</p>
+                    <p>Предотвращенный ущерб = (Годовой ущерб - Остаточный риск) + Прямая экономия (страховка)</p>
+                    <p>Чистая выгода = Предотвращенный ущерб - Годовая стоимость подписки</p>
+                    <p>ROI = (Чистая выгода / Годовая стоимость подписки) x 100%</p>
+                </div>
+                <p><strong>Таблица типовых ROI по отраслям (стандартные параметры):</strong></p>
+                <table class="elegant-table">
+                    <thead><tr><th>Отрасль</th><th>Типичный тариф/мес</th><th>Годовой предотвращенный ущерб</th><th>ROI</th><th>Окупаемость</th></tr></thead>
+                    <tbody>
+                        <tr><td>Промышленность / АСУ ТП</td><td>6 480 BYN</td><td>386 400 BYN</td><td class="roi-highlight">433%</td><td>2,1 мес</td></tr>
+                        <tr><td>R&D / инжиниринг</td><td>5 500 BYN</td><td>228 000 BYN</td><td class="roi-highlight">291%</td><td>3,5 мес</td></tr>
+                        <tr><td>Финансы / банки</td><td>6 375 BYN</td><td>140 520 BYN</td><td class="roi-highlight">84%</td><td>6,5 мес</td></tr>
+                        <tr><td>Ритейл / логистика</td><td>8 175 BYN</td><td>223 960 BYN</td><td class="roi-highlight">128%</td><td>5,3 мес</td></tr>
+                        <tr><td>Стандарт (услуги, торговля)</td><td>3 000-4 500 BYN</td><td>45 000-85 000 BYN</td><td class="roi-highlight">90-150%</td><td>4-6 мес</td></tr>
+                    </tbody>
+                </table>
+                <div class="highlight-block">
+                    <strong>Критерий эффективности (гарантия Центра):</strong> При выборе хотя бы одного эффекта и стандартных параметрах (отрасль 1,0, активы &lt;=30) предотвращенный ущерб превышает годовую стоимость подписки для любого эффекта. Это означает: даже если клиент выберет только «Страховую премию» (250 BYN/мес, экономия 12 000 BYN/год при затратах 3 000 BYN/год) — он в плюсе. При добавлении других эффектов ROI растет экспоненциально.
+                </div>
+                <p><strong>Что клиент получает помимо денег:</strong></p>
+                <ul>
+                    <li><strong>Нефинансовый эффект:</strong> Спокойствие руководства — CSAT-опрос (цель: 4.8/5)</li>
+                    <li><strong>Сон руководителя ИБ</strong> — количество ночных звонков (цель: 0)</li>
+                    <li><strong>Готовность к проверкам.</strong> Для более точных и адекватных расчетов используйте алгоритм калькулятора.</li>
+                </ul>
+                <div class="small-note">* Все данные подтверждены пилотными проектами Центра и статистикой BY-CERT, ICS-CERT, Verizon DBIR. Индивидуальный расчет предоставляется на основе аудита инфраструктуры клиента.</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const tabButtons = document.querySelectorAll('.tab-link');
+    const panes = document.querySelectorAll('.tab-pane');
+
+    function switchTab(tabId) {
+        panes.forEach(pane => pane.classList.remove('active-pane'));
+        const activePane = document.getElementById(tabId);
+        if (activePane) activePane.classList.add('active-pane');
+        
+        tabButtons.forEach(btn => {
+            const btnTab = btn.getAttribute('data-tab');
+            if (btnTab === tabId) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+    }
+
+    tabButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const tabId = btn.getAttribute('data-tab');
+            if (tabId) switchTab(tabId);
+        });
+    });
+</script>
+</body>
+</html>

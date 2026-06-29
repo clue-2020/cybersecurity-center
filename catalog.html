@@ -1,0 +1,2052 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>База знаний</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a2e;
+            color: #e0e0e0;
+            line-height: 1.7;
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ===== HEADER WITH HOVER MENU ===== */
+        .header-area {
+            position: relative;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .main-title {
+            display: inline-block;
+            color: #ffffff;
+            font-size: 2.2rem;
+            padding: 15px 40px;
+            border-bottom: 3px solid #4a9eff;
+            cursor: default;
+            position: relative;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .main-title:hover {
+            color: #4a9eff;
+            text-shadow: 0 0 20px rgba(74, 158, 255, 0.4);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            background: #16213e;
+            border: 1px solid #2a3a5c;
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 360px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            z-index: 99;
+        }
+
+        .header-area:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .dropdown-menu::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid #16213e;
+        }
+
+        .tab-btn {
+            display: block;
+            width: 100%;
+            padding: 12px 20px;
+            margin-bottom: 4px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: #b8c5d6;
+            font-size: 1rem;
+            font-family: inherit;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-btn:last-child {
+            margin-bottom: 0;
+        }
+
+        .tab-btn:hover {
+            background: #1e2a4a;
+            color: #4a9eff;
+            padding-left: 28px;
+        }
+
+        .tab-btn.active {
+            background: #4a9eff;
+            color: #1a1a2e;
+            font-weight: 700;
+        }
+
+        .tab-btn.active:hover {
+            background: #5aadff;
+            color: #1a1a2e;
+        }
+
+        .tab-link {
+            display: block;
+            width: 100%;
+            padding: 12px 20px;
+            margin-bottom: 4px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: #b8c5d6;
+            font-size: 1rem;
+            font-family: inherit;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.25s ease;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-link:last-child {
+            margin-bottom: 0;
+        }
+
+        .tab-link:hover {
+            background: #1e2a4a;
+            color: #2ecc71;
+            padding-left: 28px;
+        }
+
+        .tab-link .link-icon {
+            margin-left: 6px;
+            font-size: 0.85rem;
+            opacity: 0.7;
+        }
+
+        /* ===== CONTENT AREA ===== */
+        .content-wrapper {
+            background: #16213e;
+            border: 1px solid #2a3a5c;
+            border-radius: 16px;
+            padding: 30px 35px;
+            min-height: 400px;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            color: #4a9eff;
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #2a3a5c;
+        }
+
+        .content-section {
+            margin-bottom: 24px;
+        }
+
+        .content-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-label {
+            display: inline-block;
+            background: #4a9eff;
+            color: #1a1a2e;
+            padding: 5px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .section-label-alt { background: #e94560; }
+        .section-label-green { background: #2ecc71; }
+        .section-label-purple { background: #9b59b6; }
+        .section-label-orange { background: #e67e22; }
+        .section-label-teal { background: #1abc9c; }
+        .section-label-blue { background: #3498db; }
+
+        p {
+            color: #b8c5d6;
+            margin-bottom: 12px;
+        }
+
+        p strong {
+            color: #ffffff;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            position: relative;
+            padding-left: 22px;
+            margin-bottom: 8px;
+            color: #b8c5d6;
+        }
+
+        ul li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #4a9eff;
+            font-weight: bold;
+        }
+
+        /* ===== TABLES ===== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        table thead {
+            background: #4a9eff;
+            color: #1a1a2e;
+        }
+
+        table th {
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #2a3a5c;
+            color: #b8c5d6;
+            vertical-align: top;
+        }
+
+        table tbody tr {
+            background: #0f1a30;
+            transition: background 0.3s ease;
+        }
+
+        table tbody tr:nth-child(even) {
+            background: #131e38;
+        }
+
+        table tbody tr:hover {
+            background: #1e2a4a;
+        }
+
+        table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ===== HIGHLIGHT BOXES ===== */
+        .highlight-box {
+            background: rgba(74, 158, 255, 0.08);
+            border-left: 4px solid #4a9eff;
+            padding: 16px 20px;
+            border-radius: 0 10px 10px 0;
+            margin: 16px 0;
+        }
+
+        .highlight-box p {
+            margin: 0;
+            color: #d0d8e8;
+        }
+
+        .highlight-box strong {
+            color: #4a9eff;
+        }
+
+        .highlight-box ul {
+            margin-top: 8px;
+        }
+
+        .tariff-note {
+            background: rgba(233, 69, 96, 0.08);
+            border-left: 4px solid #e94560;
+            padding: 16px 20px;
+            border-radius: 0 10px 10px 0;
+            margin: 16px 0;
+        }
+
+        .tariff-note p {
+            margin: 0;
+            color: #d0d8e8;
+        }
+
+        .tariff-note strong {
+            color: #e94560;
+        }
+
+        /* ===== DOCUMENT CARDS (Нормативная база) ===== */
+        .doc-category {
+            margin-bottom: 24px;
+        }
+
+        .doc-category-title {
+            color: #ffffff;
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            padding-left: 14px;
+            border-left: 3px solid #4a9eff;
+        }
+
+        .doc-card {
+            background: #0f1a30;
+            border: 1px solid #2a3a5c;
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            cursor: pointer;
+        }
+
+        .doc-card:hover {
+            border-color: #4a9eff;
+            background: #131e38;
+            transform: translateX(4px);
+        }
+
+        .doc-icon {
+            min-width: 42px;
+            height: 42px;
+            background: rgba(74, 158, 255, 0.15);
+            border: 1px solid rgba(74, 158, 255, 0.3);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: #4a9eff;
+            flex-shrink: 0;
+        }
+
+        .doc-icon.law { background: rgba(233, 69, 96, 0.15); border-color: rgba(233, 69, 96, 0.3); color: #e94560; }
+        .doc-icon.stb { background: rgba(46, 204, 113, 0.15); border-color: rgba(46, 204, 113, 0.3); color: #2ecc71; }
+        .doc-icon.decree { background: rgba(155, 89, 182, 0.15); border-color: rgba(155, 89, 182, 0.3); color: #9b59b6; }
+        .doc-icon.guide { background: rgba(230, 126, 34, 0.15); border-color: rgba(230, 126, 34, 0.3); color: #e67e22; }
+
+        .doc-body {
+            flex: 1;
+        }
+
+        .doc-title {
+            color: #ffffff;
+            font-weight: 700;
+            margin-bottom: 4px;
+            font-size: 1rem;
+        }
+
+        .doc-desc {
+            color: #8a9ab0;
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+        }
+
+        .doc-meta {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            font-size: 0.8rem;
+        }
+
+        .doc-tag {
+            padding: 2px 8px;
+            background: rgba(74, 158, 255, 0.12);
+            border-radius: 6px;
+            color: #4a9eff;
+        }
+
+        /* ===== ARTICLE CARDS ===== */
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .article-card {
+            background: #0f1a30;
+            border: 1px solid #2a3a5c;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .article-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #4a9eff, #9b59b6);
+        }
+
+        .article-card:hover {
+            border-color: #4a9eff;
+            background: #131e38;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(74, 158, 255, 0.15);
+        }
+
+        .article-type {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 10px;
+        }
+
+        .type-methodology { background: #9b59b6; color: #fff; }
+        .type-practice { background: #2ecc71; color: #1a1a2e; }
+        .type-research { background: #e67e22; color: #fff; }
+        .type-guide { background: #3498db; color: #fff; }
+
+        .article-title {
+            color: #ffffff;
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .article-desc {
+            color: #b8c5d6;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+
+        .article-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: #6a7a9a;
+            padding-top: 10px;
+            border-top: 1px solid #2a3a5c;
+        }
+
+        .article-read-time {
+            color: #4a9eff;
+        }
+
+        /* ===== VIDEO CARDS ===== */
+        .video-card {
+            background: #0f1a30;
+            border: 1px solid #2a3a5c;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 14px;
+            transition: all 0.3s ease;
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 0;
+        }
+
+        .video-card:hover {
+            border-color: #4a9eff;
+            background: #131e38;
+        }
+
+        .video-thumbnail {
+            background: linear-gradient(135deg, #1e2a4a, #0f1a30);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            min-height: 130px;
+        }
+
+        .play-btn {
+            width: 54px;
+            height: 54px;
+            background: rgba(74, 158, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(74, 158, 255, 0.4);
+        }
+
+        .video-card:hover .play-btn {
+            transform: scale(1.1);
+            background: #4a9eff;
+        }
+
+        .video-duration {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: rgba(0, 0, 0, 0.75);
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .video-body {
+            padding: 18px 20px;
+        }
+
+        .video-title {
+            color: #ffffff;
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .video-desc {
+            color: #b8c5d6;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .video-meta {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            font-size: 0.8rem;
+        }
+
+        .video-badge {
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+
+        .level-beginner { background: rgba(46, 204, 113, 0.15); color: #2ecc71; }
+        .level-intermediate { background: rgba(230, 126, 34, 0.15); color: #e67e22; }
+        .level-advanced { background: rgba(233, 69, 96, 0.15); color: #e94560; }
+
+        /* ===== CHECKLIST ===== */
+        .checklist-container {
+            background: #0f1a30;
+            border: 1px solid #2a3a5c;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .checklist-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .checklist-title {
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .checklist-progress {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .progress-counter {
+            color: #4a9eff;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .progress-bar-small {
+            width: 120px;
+            height: 6px;
+            background: #16213e;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4a9eff, #2ecc71);
+            transition: width 0.4s ease;
+            border-radius: 3px;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            transition: background 0.2s ease;
+            cursor: pointer;
+            margin-bottom: 4px;
+        }
+
+        .checklist-item:hover {
+            background: #131e38;
+        }
+
+        .checklist-item input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            min-width: 20px;
+            height: 20px;
+            border: 2px solid #4a9eff;
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            margin-top: 3px;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .checklist-item input[type="checkbox"]:checked {
+            background: #4a9eff;
+        }
+
+        .checklist-item input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #1a1a2e;
+            font-weight: 900;
+            font-size: 0.85rem;
+        }
+
+        .checklist-text {
+            flex: 1;
+            color: #b8c5d6;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .checklist-item input[type="checkbox"]:checked + .checklist-text {
+            color: #6a7a9a;
+            text-decoration: line-through;
+        }
+
+        .checklist-ref {
+            font-size: 0.8rem;
+            color: #4a9eff;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .checklist-result {
+            margin-top: 16px;
+            padding: 14px 18px;
+            background: rgba(46, 204, 113, 0.08);
+            border-left: 4px solid #2ecc71;
+            border-radius: 0 10px 10px 0;
+            display: none;
+        }
+
+        .checklist-result.visible {
+            display: block;
+        }
+
+        .checklist-result p {
+            margin: 0;
+            color: #d0d8e8;
+        }
+
+        .checklist-result strong {
+            color: #2ecc71;
+        }
+
+        /* ===== GLOSSARY ===== */
+        .glossary-controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 240px;
+            padding: 12px 16px;
+            background: #0f1a30;
+            border: 1px solid #2a3a5c;
+            border-radius: 10px;
+            color: #e0e0e0;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #4a9eff;
+            box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.15);
+        }
+
+        .search-input::placeholder {
+            color: #6a7a9a;
+        }
+
+        .alpha-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-bottom: 20px;
+        }
+
+        .alpha-btn {
+            min-width: 34px;
+            height: 34px;
+            padding: 0 8px;
+            background: #0f1a30;
+            border: 1px solid #2a3a5c;
+            border-radius: 6px;
+            color: #b8c5d6;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .alpha-btn:hover {
+            border-color: #4a9eff;
+            color: #4a9eff;
+        }
+
+        .alpha-btn.active {
+            background: #4a9eff;
+            color: #1a1a2e;
+            border-color: #4a9eff;
+        }
+
+        .alpha-btn.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .term-card {
+            background: #0f1a30;
+            border: 1px solid #2a3a5c;
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .term-card:hover {
+            border-color: #4a9eff;
+            background: #131e38;
+        }
+
+        .term-card.hidden {
+            display: none;
+        }
+
+        .term-letter {
+            display: inline-block;
+            min-width: 32px;
+            height: 32px;
+            background: #4a9eff;
+            color: #1a1a2e;
+            border-radius: 6px;
+            text-align: center;
+            line-height: 32px;
+            font-weight: 800;
+            margin-right: 10px;
+            font-size: 0.95rem;
+        }
+
+        .term-name {
+            color: #ffffff;
+            font-size: 1.05rem;
+            font-weight: 700;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .term-definition {
+            color: #b8c5d6;
+            font-size: 0.93rem;
+            margin-top: 8px;
+            padding-left: 42px;
+        }
+
+        .term-related {
+            padding-left: 42px;
+            margin-top: 6px;
+            font-size: 0.82rem;
+            color: #6a7a9a;
+        }
+
+        .term-related span {
+            color: #4a9eff;
+            cursor: pointer;
+        }
+
+        .term-related span:hover {
+            text-decoration: underline;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6a7a9a;
+            font-size: 1rem;
+            display: none;
+        }
+
+        .no-results.visible {
+            display: block;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #2a3a5c;
+            color: #6a7a9a;
+            font-size: 0.9rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 1.5rem;
+                padding: 12px 20px;
+            }
+
+            .dropdown-menu {
+                min-width: 280px;
+            }
+
+            .content-wrapper {
+                padding: 20px 18px;
+            }
+
+            table {
+                font-size: 0.8rem;
+            }
+
+            table th, table td {
+                padding: 10px 10px;
+            }
+
+            .video-card {
+                grid-template-columns: 1fr;
+            }
+
+            .video-thumbnail {
+                min-height: 140px;
+            }
+
+            .articles-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Навигационное меню -->
+<nav style="
+    background: #0f172a;
+    border-bottom: 1px solid #334155;
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+">
+    <div style="max-width: 1320px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+        <a href="index.html" style="color: #ef4444; font-weight: 800; font-size: 1.2rem; text-decoration: none;">
+            🛡️ Центр Кибербезопасности
+        </a>
+        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+            <a href="index.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Главная</a>
+            <a href="infrastructure.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Инфраструктура</a>
+            <a href="experts.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Эксперты</a>
+            <a href="cases.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Кейсы</a>
+            <a href="monitoring.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Мониторинг</a>
+            <a href="knowledge.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">База знаний</a>
+            <a href="incident-response.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Инциденты</a>
+            <a href="contacts.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Контакты</a>
+            <a href="calculator.html" style="color: #ef4444; text-decoration: none; font-size: 0.9rem; font-weight: 700;">Калькулятор</a>
+        </div>
+    </div>
+</nav>
+    <div class="container">
+
+        <!-- ===== HEADER WITH HOVER DROPDOWN ===== -->
+        <div class="header-area">
+            <h1 class="main-title">База знаний</h1>
+
+            <div class="dropdown-menu">
+                <button class="tab-btn active" data-tab="tab-1">Нормативная база</button>
+                <button class="tab-btn" data-tab="tab-2">Статьи и методички</button>
+                <button class="tab-btn" data-tab="tab-3">Видеолекции и вебинары</button>
+                <button class="tab-btn" data-tab="tab-4">Чек-листы самодиагностики</button>
+                <button class="tab-btn" data-tab="tab-5">Словарь терминов ИБ</button>
+                <a class="tab-link" href="https://your-calculator-url.by" target="_blank" rel="noopener noreferrer">Калькулятор тарифа <span class="link-icon">↗</span></a>
+            </div>
+        </div>
+
+        <!-- ===== CONTENT AREA ===== -->
+        <div class="content-wrapper">
+
+            <!-- ===== TAB 1: Нормативная база ===== -->
+            <div class="tab-content active" id="tab-1">
+                <h2 class="section-title">Нормативная база</h2>
+
+                <div class="content-section">
+                    <span class="section-label">Суть раздела</span>
+                    <p>Собрание действующих нормативных правовых актов, технических нормативных правовых актов и методических документов Республики Беларусь в сфере защиты информации. Все документы структурированы по уровню значимости и снабжены краткими комментариями Центра о том, как они применяются на практике.</p>
+                </div>
+
+                <div class="content-section">
+                    <div class="doc-category">
+                        <h3 class="doc-category-title">Законы Республики Беларусь</h3>
+
+                        <div class="doc-card">
+                            <div class="doc-icon law">§</div>
+                            <div class="doc-body">
+                                <div class="doc-title">Закон «Об информации, информатизации и защите информации» (455-З)</div>
+                                <div class="doc-desc">Базовый закон, определяющий правовые основы работы с информацией, классификацию, требования к защите конфиденциальной информации и государственных информационных ресурсов.</div>
+                                <div class="doc-meta">
+                                    <span class="doc-tag">Основа регулирования</span>
+                                    <span class="doc-tag">Обязателен для всех</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="doc-card">
+                            <div class="doc-icon law">§</div>
+                            <div class="doc-body">
+                                <div class="doc-title">Закон «О государственных секретах Республики Беларусь»</div>
+                                <div class="doc-desc">Регулирует отнесение сведений к государственным секретам, работу с гостайной, требования к аттестации организаций и лиц, допускаемых к работе.</div>
+                                <div class="doc-meta">
+                                    <span class="doc-tag">Гостайна</span>
+                                    <span class="doc-tag">Специальный режим</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="doc-card">
+                            <div class="doc-icon law">§</div>
+                            <div class="doc-body">
+                                <div class="doc-title">Закон «О персональных данных»</div>
+                                <div class="doc-desc">Устанавливает требования к обработке, хранению и защите персональных данных, права субъектов данных, обязанности операторов.</div>
+                                <div class="doc-meta">
+                                    <span class="doc-tag">Персональные данные</span>
+                                    <span class="doc-tag">Операторы ПДн</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="doc-category">
+                        <h3 class="doc-category-title">Декреты и Указы Президента РБ</h3>
+
+                        <div class="doc-card">
+                            <div class="doc-icon decree">У</div>
+                            <div class="doc-body">
+                                <div class="doc-title">Указ № 40 «О мерах по совершенствованию защиты национального сегмента сети Интернет»</div>
+                                <div class="doc-desc">Определяет порядок взаимодействия с ОАЦ при Президенте РБ, требования к критической информационной инфраструктуре, порядок реагирования на киберинциденты.</div>
+                                <div class="doc-meta">
+                                    <span class="doc-tag">Кибербезопасность</span>
+                                    <span class="doc-tag">КИИ</span>
+                                    <span class="doc-tag">BY-CERT</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="doc-card">
+                            <div class="doc-icon decree">У</div>
+                            <div class="doc-body">
+                                <div class="doc-title">Указ № 60 «О мерах по совершенствованию использования национального сегмента сети Интернет»</div>
+                                <div class="doc-desc">Устанавливает требования к обеспечению безопасного функционирования интернета на территории РБ, обязанности владельцев информационных ресурсов.</div>
+                                <div class="doc-meta">
+                                    <span class="doc-tag">Интернет</span>
+                                    <span class="doc-tag">Владельцы ресурсов</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="doc-category">
+                        <h3 class="doc-category-title">Технические нормативные правовые акты (ТНПА)</h3>
+
+                        <div class="doc-card">
+                            <div class="doc-icon stb">С</div>
+                            <div class="doc-body">
+                                <div class="doc-title">СТБ 34.101.1-20XX / СТБ 34.101.XX — Серия стандартов по защите информации</div>
+                                <div class="doc-desc">Технические требования к средствам криптографической защиты информации, алгоритмам шифрования, электронным цифровым подписям, протоколам аутентификации.</div>
+                                <div class="doc-meta">
+                                    <span class="doc-tag">Криптография</span>
+                                    <span class="doc-tag">BelT</span>
+                                    <span class="doc-tag">ЭЦП</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="doc-card">
+                            <div class="doc-icon stb">С</div>
+                            <div class="doc-body">
+                                <div class="doc-title">СТБ 34.101.27 — Защита информации. Процессы управления ИБ</div>
+                                <div class="doc-desc">Национальный стандарт, гармонизированный с ISO/IEC 27001. Определяет требования к системе менеджмента информационной безопасности (СМИБ).</div>
+                                <div class="doc-meta">
+                                    <span class="doc-tag">СМИБ</span>
+                                    <span class="doc-tag">ISO 27001</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="doc-card">
+                            <div class="doc-icon stb">С</div>
+                            <div class="doc-body">
+                                <div class="doc-title">ТКП 34.101-XX — Технические кодексы установившейся практики</div>
+                                <div class="doc-desc">Практические рекомендации по реализации требований стандартов: аттестация объектов информатизации, защита персональных данных, организация режима защиты.</div>
+                                <div class="doc-meta">
+                                    <span class="doc-tag">Аттестация</span>
+                                    <span class="doc-tag">Практика</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="doc-category">
+                        <h3 class="doc-category-title">Методические документы ОАЦ при Президенте РБ</h3>
+
+                        <div class="doc-card">
+                            <div class="doc-icon guide">М</div>
+                            <div class="doc-body">
+                                <div class="doc-title">Методика определения угроз национальной безопасности в информационной сфере</div>
+                                <div class="doc-desc">Описывает порядок идентификации актуальных угроз, оценки их критичности, формирования модели угроз для информационных систем различных классов.</div>
+                                <div class="doc-meta">
+                                    <span class="doc-tag">Модель угроз</span>
+                                    <span class="doc-tag">ОАЦ</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="doc-card">
+                            <div class="doc-icon guide">М</div>
+                            <div class="doc-body">
+                                <div class="doc-title">Руководство по аттестации объектов информатизации</div>
+                                <div class="doc-desc">Порядок проведения аттестации, перечень документов, требования к испытательным лабораториям, критерии соответствия.</div>
+                                <div class="doc-meta">
+                                    <span class="doc-tag">Аттестация</span>
+                                    <span class="doc-tag">ОИ</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <p><strong>Обновления:</strong> Нормативная база обновляется Центром в течение <strong>5 рабочих дней</strong> после вступления в силу нового документа. Подписчики получают уведомление с кратким анализом того, как изменения влияют на их инфраструктуру.</p>
+                </div>
+            </div>
+
+            <!-- ===== TAB 2: Статьи и методички ===== -->
+            <div class="tab-content" id="tab-2">
+                <h2 class="section-title">Статьи и методички по моделированию угроз</h2>
+
+                <div class="content-section">
+                    <span class="section-label">Суть раздела</span>
+                    <p>Практические материалы от аналитиков Центра: методологии построения моделей угроз, разбор реальных инцидентов, рекомендации по адаптации международных стандартов под белорусскую специфику. Материалы разделены по типу и уровню сложности.</p>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-purple">Методологии</span>
+                    <div class="articles-grid">
+                        <div class="article-card">
+                            <span class="article-type type-methodology">Методология</span>
+                            <div class="article-title">Построение модели угроз по методике ОАЦ: пошаговое руководство</div>
+                            <div class="article-desc">Как идентифицировать активы, определить класс защищаемой информации, сформировать актуальный профиль угроз и выбрать средства защиты в соответствии с национальными требованиями.</div>
+                            <div class="article-footer">
+                                <span>Автор: SOC-аналитика Центра</span>
+                                <span class="article-read-time">25 мин чтения</span>
+                            </div>
+                        </div>
+
+                        <div class="article-card">
+                            <span class="article-type type-methodology">Методология</span>
+                            <div class="article-title">STRIDE в контексте белорусской ИТ-инфраструктуры</div>
+                            <div class="article-desc">Адаптация международной методологии Microsoft STRIDE к реалиям РБ: примеры для ERP-систем, АСУ ТП, веб-приложений госсектора. Таблица соответствия техникам MITRE ATT&CK.</div>
+                            <div class="article-footer">
+                                <span>Автор: Threat Intelligence</span>
+                                <span class="article-read-time">30 мин чтения</span>
+                            </div>
+                        </div>
+
+                        <div class="article-card">
+                            <span class="article-type type-methodology">Методология</span>
+                            <div class="article-title">MITRE ATT&CK: от матрицы к правилам детектирования</div>
+                            <div class="article-desc">Практическое руководство по использованию фреймворка MITRE ATT&CK для построения правил SIEM, оценки покрытия мониторинга и проведения threat hunting.</div>
+                            <div class="article-footer">
+                                <span>Автор: SOC-инженеры</span>
+                                <span class="article-read-time">40 мин чтения</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-green">Практика и разборы</span>
+                    <div class="articles-grid">
+                        <div class="article-card">
+                            <span class="article-type type-practice">Разбор</span>
+                            <div class="article-title">Анализ атаки на промышленное предприятие РБ: цепочка kill chain</div>
+                            <div class="article-desc">Детальный разбор реального инцидента (с обезличенными данными): от фишингового письма до попытки шифрования АСУ ТП. Какие средства защиты сработали, какие — нет.</div>
+                            <div class="article-footer">
+                                <span>Автор: Incident Response</span>
+                                <span class="article-read-time">20 мин чтения</span>
+                            </div>
+                        </div>
+
+                        <div class="article-card">
+                            <span class="article-type type-practice">Практика</span>
+                            <div class="article-title">Модель угроз для веб-приложения: от ТЗ до аттестации</div>
+                            <div class="article-desc">Пошаговый процесс построения модели угроз для типового веб-приложения: идентификация нарушителей, сценариев атак, выбор класса защищённости, подготовка к аттестации.</div>
+                            <div class="article-footer">
+                                <span>Автор: Методология</span>
+                                <span class="article-read-time">35 мин чтения</span>
+                            </div>
+                        </div>
+
+                        <div class="article-card">
+                            <span class="article-type type-practice">Практика</span>
+                            <div class="article-title">Защита АСУ ТП: специфика OT-среды и модель угроз</div>
+                            <div class="article-desc">Особенности моделирования угроз для промышленных систем: протоколы Modbus/OPC UA, требования к доступности, ограничения на активное сканирование, сегментация IT/OT.</div>
+                            <div class="article-footer">
+                                <span>Автор: ICS Security</span>
+                                <span class="article-read-time">28 мин чтения</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-orange">Исследования и аналитика</span>
+                    <div class="articles-grid">
+                        <div class="article-card">
+                            <span class="article-type type-research">Исследование</span>
+                            <div class="article-title">Ландшафт киберугроз для РБ: итоги полугодия</div>
+                            <div class="article-desc">Аналитический отчёт на основе данных SOC Центра: топ-векторов атак, наиболее эксплуатируемых уязвимостей, отраслевая статистика, прогноз на следующий период.</div>
+                            <div class="article-footer">
+                                <span>Автор: Threat Intelligence</span>
+                                <span class="article-read-time">45 мин чтения</span>
+                            </div>
+                        </div>
+
+                        <div class="article-card">
+                            <span class="article-type type-research">Исследование</span>
+                            <div class="article-title">Сравнение ISO 27001 и СТБ 34.101.27: точки пересечения и различия</div>
+                            <div class="article-desc">Детальное сопоставление международного и национального стандартов СМИБ. Таблица соответствия, рекомендации по гармонизации для экспортно-ориентированных компаний.</div>
+                            <div class="article-footer">
+                                <span>Автор: Комплаенс</span>
+                                <span class="article-read-time">30 мин чтения</span>
+                            </div>
+                        </div>
+
+                        <div class="article-card">
+                            <span class="article-type type-research">Исследование</span>
+                            <div class="article-title">Экономика киберинцидента: как считать предотвращённый ущерб</div>
+                            <div class="article-desc">Методика расчёта ROI от подписки на SOC: прямые убытки, репутационные потери, штрафы регуляторов, стоимость простоя. Практические примеры для предприятий РБ.</div>
+                            <div class="article-footer">
+                                <span>Автор: Бизнес-аналитика</span>
+                                <span class="article-read-time">22 мин чтения</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-blue">Инструкции и руководства</span>
+                    <div class="articles-grid">
+                        <div class="article-card">
+                            <span class="article-type type-guide">Руководство</span>
+                            <div class="article-title">Подготовка к аттестации ОАЦ: чек-лист и дорожная карта</div>
+                            <div class="article-desc">Пошаговая инструкция по подготовке объекта информатизации к аттестации: от инвентаризации до получения аттестата соответствия. Типовые ошибки и как их избежать.</div>
+                            <div class="article-footer">
+                                <span>Автор: Комплаенс</span>
+                                <span class="article-read-time">18 мин чтения</span>
+                            </div>
+                        </div>
+
+                        <div class="article-card">
+                            <span class="article-type type-guide">Руководство</span>
+                            <div class="article-title">Настройка SIEM под белорусскую специфику</div>
+                            <div class="article-desc">Практические рекомендации по адаптации правил корреляции SIEM: учёт локальных учётных систем, интеграция с AD/LDAP, обработка кириллицы в логах, национальные форматы отчётности.</div>
+                            <div class="article-footer">
+                                <span>Автор: SOC-инженеры</span>
+                                <span class="article-read-time">32 мин чтения</span>
+                            </div>
+                        </div>
+
+                        <div class="article-card">
+                            <span class="article-type type-guide">Руководство</span>
+                            <div class="article-title">Реагирование на инцидент: playbook для ИТ-службы заказчика</div>
+                            <div class="article-desc">Что делать в первые 15 минут после обнаружения инцидента: кому звонить, что сохранять, чего не делать. Готовый шаблон для включения в внутренний регламент.</div>
+                            <div class="article-footer">
+                                <span>Автор: Incident Response</span>
+                                <span class="article-read-time">15 мин чтения</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tariff-note">
+                    <p><strong>Доступ подписчиков:</strong> Полный архив материалов (более <strong>120 статей</strong>) доступен в личном кабинете. Новые материалы публикуются еженедельно. Подписчики премиального тарифа получают персональные аналитические записки по запросу.</p>
+                </div>
+            </div>
+
+            <!-- ===== TAB 3: Видеолекции и вебинары ===== -->
+            <div class="tab-content" id="tab-3">
+                <h2 class="section-title">Видеолекции и вебинары по цифровой гигиене</h2>
+
+                <div class="content-section">
+                    <span class="section-label">Суть раздела</span>
+                    <p>Обучающие материалы для сотрудников предприятий-подписчиков: от базовой цифровой гигиены для рядовых пользователей до специализированных курсов для ИТ-специалистов. Все материалы структурированы по уровню подготовки и тематике.</p>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-green">Базовый уровень (для всех сотрудников)</span>
+
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <div class="play-btn">▶</div>
+                            <div class="video-duration">12:45</div>
+                        </div>
+                        <div class="video-body">
+                            <div class="video-title">Парольная гигиена: как не стать лёгкой добычей</div>
+                            <div class="video-desc">Почему «123456» — это не пароль, как создавать устойчивые парольные фразы, зачем нужен менеджер паролей и двухфакторная аутентификация. Практические примеры взлома.</div>
+                            <div class="video-meta">
+                                <span class="video-badge level-beginner">Начальный</span>
+                                <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">Аутентификация</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <div class="play-btn">▶</div>
+                            <div class="video-duration">18:20</div>
+                        </div>
+                        <div class="video-body">
+                            <div class="video-title">Фишинг и социальная инженерия: как распознать обман</div>
+                            <div class="video-desc">Анатомия фишингового письма, признаки поддельных сайтов, методы социальной инженерии по телефону и в мессенджерах. Разбор реальных кейсов атак на предприятия РБ.</div>
+                            <div class="video-meta">
+                                <span class="video-badge level-beginner">Начальный</span>
+                                <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">Фишинг</span>
+                                <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">Social Engineering</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <div class="play-btn">▶</div>
+                            <div class="video-duration">15:10</div>
+                        </div>
+                        <div class="video-body">
+                            <div class="video-title">Безопасная работа с электронной почтой и документами</div>
+                            <div class="video-desc">Правила обработки вложений, признаки BEC-атак (компрометация корпоративной почты), шифрование конфиденциальных документов, безопасный обмен файлами.</div>
+                            <div class="video-meta">
+                                <span class="video-badge level-beginner">Начальный</span>
+                                <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">Почта</span>
+                                <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">Документооборот</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <div class="play-btn">▶</div>
+                            <div class="video-duration">20:35</div>
+                        </div>
+                        <div class="video-body">
+                            <div class="video-title">Мобильные устройства и удалённая работа: зоны риска</div>
+                            <div class="video-desc">Безопасное использование смартфонов в рабочих целях, риски публичных Wi-Fi, настройка VPN, защита корпоративных данных на личных устройствах (BYOD).</div>
+                            <div class="video-meta">
+                                <span class="video-badge level-beginner">Начальный</span>
+                                <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">Mobile</span>
+                                <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">Remote Work</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-orange">Средний уровень (для ИТ-специалистов)</span>
+
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <div class="play-btn">▶</div>
+                            <div class="video-duration">42:15</div>
+                        </div>
+                        <div class="video-body">
+                            <div class="video-title">Основы работы с SIEM: что видит аналитик SOC</div>
+                            <div class="video-desc">Архитектура SIEM-системы, типы событий, принципы корреляции, как читать алерты, отличие ложных срабатываний от реальных инцидентов. Демонстрация на реальных логах.</div>
+                            <div class="video-meta">
+                                <span class="video-badge level-intermediate">Средний</span>
+                                <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">SIEM</span>
+                                <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">SOC</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <div class="play-btn">▶</div>
+                            <div class="video-duration">38:50</div>
+                        </div>
+                        <div class="video-body">
+                            <div class="video-title">Анализ вредоносного ПО: что делать при подозрении на заражение</div>
+                            <div class="video-desc">Первичные действия при обнаружении подозрительной активности, изоляция заражённой системы, сбор артефактов для анализа, взаимодействие с SOC Центра.</div>
+                            <div class="video-meta">
+                                <span class="video-badge level-intermediate">Средний</span>
+                                <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">Malware</span>
+                                <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">IR</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <div class="play-btn">▶</div>
+                            <div class="video-duration">45:30</div>
+                        </div>
+                        <div class="video-body">
+                            <div class="video-title">Сетевая безопасность: сегментация, VLAN, микросегментация</div>
+                            <div class="video-desc">Практические подходы к сегментации корпоративной сети, изоляция критичных систем, настройка межсетевого экранирования, мониторинг сетевого трафика.</div>
+                            <div class="video-meta">
+                                <span class="video-badge level-intermediate">Средний</span>
+                                <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">Network</span>
+                                <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">Firewall</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-alt">Продвинутый уровень (для CISO и руководителей ИБ)</span>
+
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <div class="play-btn">▶</div>
+                            <div class="video-duration">58:20</div>
+                        </div>
+                        <div class="video-body">
+                            <div class="video-title">Построение СМИБ по СТБ 34.101.27: от политики до аудита</div>
+                            <div class="video-desc">Пошаговое построение системы менеджмента информационной безопасности: контекст организации, оценка рисков, выбор мер контроля, внутренний аудит, непрерывное улучшение.</div>
+                            <div class="video-meta">
+                                <span class="video-badge level-advanced">Продвинутый</span>
+                                <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">СМИБ</span>
+                                <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">ISO 27001</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <div class="play-btn">▶</div>
+                            <div class="video-duration">52:40</div>
+                        </div>
+                        <div class="video-body">
+                            <div class="video-title">Управление инцидентами ИБ: от обнаружения до lessons learned</div>
+                            <div class="video-desc">Полный цикл управления инцидентами: классификация, приоритизация, реагирование, форензик, восстановление, пост-анализ. Метрики эффективности (MTTD, MTTR, MTTD).</div>
+                            <div class="video-meta">
+                                <span class="video-badge level-advanced">Продвинутый</span>
+                                <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">IR</span>
+                                <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">Forensics</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <div class="play-btn">▶</div>
+                            <div class="video-duration">47:15</div>
+                        </div>
+                        <div class="video-body">
+                            <div class="video-title">Моделирование угроз для критической информационной инфраструктуры</div>
+                            <div class="video-desc">Специфика моделирования угроз для КИИ: отраслевые особенности, требования регулятора, интеграция с физическими системами защиты, сценарии целевых атак APT.</div>
+                            <div class="video-meta">
+                                <span class="video-badge level-advanced">Продвинутый</span>
+                                <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">КИИ</span>
+                                <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">APT</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <p><strong>Формат обучения:</strong> Все видео доступны в личном кабинете 24/7. После просмотра — короткий тест для закрепления. По итогам обучения сотрудник получает <strong>сертификат Центра</strong> установленного образца. Для корпоративных клиентов — возможность организации закрытых вебинаров под специфику предприятия.</p>
+                </div>
+            </div>
+
+            <!-- ===== TAB 4: Чек-листы самодиагностики ===== -->
+            <div class="tab-content" id="tab-4">
+                <h2 class="section-title">Чек-листы самодиагностики по СТБ</h2>
+
+                <div class="content-section">
+                    <span class="section-label">Суть раздела</span>
+                    <p>Интерактивные чек-листы для самостоятельной оценки уровня защищённости информационной системы в соответствии с требованиями СТБ. Отметьте выполненные пункты — система рассчитает текущий уровень соответствия и укажет на критические пробелы.</p>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-purple">Чек-лист №1: Соответствие СТБ 34.101.27 (СМИБ)</span>
+
+                    <div class="checklist-container" data-checklist="1">
+                        <div class="checklist-header">
+                            <div class="checklist-title">Система менеджмента информационной безопасности</div>
+                            <div class="checklist-progress">
+                                <span class="progress-counter">0 / 10</span>
+                                <div class="progress-bar-small">
+                                    <div class="progress-bar-fill" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <label class="checklist-item">
+                            <input type="checkbox">
+                            <span class="checklist-text">
+                                Определён контекст организации: внутренние и внешние факторы, влияющие на ИБ
+                                <span class="checklist-ref">п. 4.1 СТБ 34.101.27</span>
+                            </span>
+                        </label>
+                        <label class="checklist-item">
+                            <input type="checkbox">
+                            <span class="checklist-text">
+                                Определены заинтересованные стороны и их требования к ИБ
+                                <span class="checklist-ref">п. 4.2 СТБ 34.101.27</span>
+                            </span>
+                        </label>
+                        <label class="checklist-item">
+                            <input type="checkbox">
+                            <span class="checklist-text">
+                                Утверждена политика информационной безопасности высшим руководством
+                                <span class="checklist-ref">п. 5.2 СТБ 34.101.27</span>
+                            </span>
+                        </label>
+                        <label class="checklist-item">
+                            <input type="checkbox">
+                            <span class="checklist-text">
+                                Назначены ответственные за ИБ с чётким распределением ролей
+                                <span class="checklist-ref">п. 5.3 СТБ 34.101.27</span>
+                            </span>
+                        </label>
+                        <label class="checklist-item">
+                            <input type="checkbox">
+                            <span class="checklist-text">
+                                Проведена оценка рисков ИБ с документированными результатами
+                                <span class="checklist-ref">п. 6.1.2 СТБ 34.101.27</span>
+                            </span>
+                        </label>
+                        <label class="checklist-item">
+                            <input type="checkbox">
+                            <span class="checklist-text">
+                                Сформирован план обработки рисков с указанием сроков и ответственных
+                                <span class="checklist-ref">п. 6.1.3 СТБ 34.101.27</span>
+                            </span>
+                        </label>
+                        <label class="checklist-item">
+                            <input type="checkbox">
+                            <span class="checklist-text">
+                                Проводится обучение и повышение осведомлённости сотрудников в области ИБ
+                                <span class="checklist-ref">п. 7.2 СТБ 34.101.27</span>
+                            </span>
+                        </label>
+                        <label class="checklist-item">
+                            <input type="checkbox">
+                            <span class="checklist-text">
+                                Ведётся учёт документов и записей СМИБ, контролируются версии
+                                <span class="checklist-ref">п. 7.5 СТБ 34.101.27</span>
+                            </span>
+                        </label>
+                        <label class="checklist-item">
+                            <input type="checkbox">
+                            <span class="checklist-text">
+                                Проводятся внутренние аудиты СМИБ не реже 1 раза в год
+                                <span class="checklist-ref">п. 9.2 СТБ 34.101.27</span>
+                            </span>
+                        </label>
+                        <label class="checklist-item">
+                            <input type="checkbox">
+                            <span class="checklist-text">
+                                Высшее руководство проводит анализ СМИБ и принимает решения по её улучшению
+                                <span class="checklist-ref">п. 9.3 СТБ 34.101.27</span>
+                            </span>
+                        </label>
+
+                        <div class="checklist-result">
+                            <p><strong>Результат самодиагностики:</strong> <span class="result-text"></span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-green">Чек-лист №2: Защита персональных данных</span>
+
+                    <div class="checklist-container" data-checklist="2">
+                        <div class="checklist-header">
+                            <div class="checklist-title">Соответствие требованиям по защите персональных данных</div>
+                            <div class="checklist-progress">
+                                <span class="progress-counter">0 / 8</span>
+                                <div class="progress-bar-small">
+                                    <div class="progress-bar-fill" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <label class="checklist-item">
+                            <input type="checkbox">
+                            <span class="checklist-text">
+                                Определён правовой основ обработки персональных данных (согласие, договор, закон)
+                                <span class="checklist-ref">Закон «О персональных данных»</span>
+                            </span>
+                        </label>
+                        <label class="checklist-item">
+                            <input type="checkbox">
+                            <span class="checklist-text">
+                                Ведётся реестр операций обработки персональных данных
+                                <span class="checklist-ref">ст. 8 Закона</span>
+                            </span>
+                        </label>
+                        <label class="checklist-item">
+                            <input type="checkbox">
+                            <span class="checklist-text">
+                                Реализованы организационные меры защиты (инструкции, регламенты, назначение ответственных)
+                                <span class="checklist-ref">ст. 10 Закона</span>
+                            </span>
+                        </label>
+                        <label class="checklist-item">
+                            <input type="checkbox">
+                            <span class="checklist-text">
+                                Реализованы технические меры защиты (шифрование, разграничение доступа, журналирование)
+                                <span class="checklist-ref">ст. 10 Закона</span>
+                            </span>
+                        </label>
+                        <label class="checklist-item">
+                            <input type="checkbox">
+                            <span class="checklist-text">
+                                Обеспечена возможность реализации прав субъекта ПДн (доступ, исправление, удаление)
+                                <span class="checklist-ref">ст. 7 Закона</span>
+                            </span>
+                        </label>
+                        <label class="checklist-item">
+                            <input type="checkbox">
+                            <span class="checklist-text">
+                                Налажен порядок уведомления регулятора и субъектов об утечках ПДн
+                                <span class="checklist-ref">ст. 13 Закона</span>
+                            </span>
+                        </label>
+                        <label class="checklist-item">
+                            <input type="checkbox">
+                            <span class="checklist-text">
+                                Регулярно проводится оценка вреда субъектам ПДн в случае нарушения защиты
+                                <span class="checklist-ref">ст. 5 Закона</span>
+                            </span>
+                        </label>
+                        <label class="checklist-item">
+                            <input type="checkbox">
+                            <span class="checklist-text">
+                                Заключены соглашения с обработчиками ПДн (третьими сторонами) с требованиями ИБ
+                                <span class="checklist-ref">ст. 9 Закона</span>
+                            </span>
+                        </label>
+
+                        <div class="checklist-result">
+                            <p><strong>Результат самодиагностики:</strong> <span class="result-text"></span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-orange">Чек-лист №3: Готовность к инцидентам ИБ</span>
+
+                    <div class="checklist-container" data-checklist="3">
+                        <div class="checklist-header">
+                            <div class="checklist-title">Операционная готовность к киберинцидентам</div>
+                            <div class="checklist-progress">
+                                <span class="progress-counter">0 / 9</span>
+                                <div class="progress-bar-small">
+                                    <div class="progress-bar-fill" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <label class="checklist-item">
+                            <input type="checkbox">
+                            <span class="checklist-text">
+                                Утверждён регламент реагирования на инциденты ИБ с ролями и ответственностью
+                            </span>
+                        </label>
+                        <label class="checklist-item">
+                            <input type="checkbox">
+                            <span class="checklist-text">
+                                Сформирована команда реагирования (внутренняя или контракт с внешним SOC)
+                            </span>
+                        </label>
+                        <label class="checklist-item">
+                            <input type="checkbox">
+                            <span class="checklist-text">
+                                Внедрены средства мониторинга и детектирования (SIEM, EDR, NDR)
+                            </span>
+                        </label>
+                        <label class="checklist-item">
+                            <input type="checkbox">
+                            <span class="checklist-text">
+                                Настроены каналы экстренной связи с командой реагирования (24/7)
+                            </span>
+                        </label>
+                        <label class="checklist-item">
+                            <input type="checkbox">
+                            <span class="checklist-text">
+                                Ведётся инвентаризация критичных активов с определением приоритетов восстановления
+                            </span>
+                        </label>
+                        <label class="checklist-item">
+                            <input type="checkbox">
+                            <span class="checklist-text">
+                                Регулярно создаются и тестируются резервные копии критичных данных
+                            </span>
+                        </label>
+                        <label class="checklist-item">
+                            <input type="checkbox">
+                            <span class="checklist-text">
+                                Проводятся учебные тревоги (tabletop exercises) не реже 2 раз в год
+                            </span>
+                        </label>
+                        <label class="checklist-item">
+                            <input type="checkbox">
+                            <span class="checklist-text">
+                                Налажено взаимодействие с ОАЦ / BY-CERT по обмену информацией об угрозах
+                            </span>
+                        </label>
+                        <label class="checklist-item">
+                            <input type="checkbox">
+                            <span class="checklist-text">
+                                Проводится post-mortem анализ каждого значимого инцидента с фиксацией уроков
+                            </span>
+                        </label>
+
+                        <div class="checklist-result">
+                            <p><strong>Результат самодиагностики:</strong> <span class="result-text"></span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <p><strong>Что дальше:</strong> Если по результатам самодиагностики выявлены критические пробелы — Центр готов провести <strong>бесплатную экспресс-оценку</strong> для подписчиков и подготовить дорожную карту устранения недостатков с приоритизацией по рискам и стоимости.</p>
+                </div>
+            </div>
+
+            <!-- ===== TAB 5: Словарь терминов ===== -->
+            <div class="tab-content" id="tab-5">
+                <h2 class="section-title">Словарь терминов ИБ</h2>
+
+                <div class="content-section">
+                    <span class="section-label">Суть раздела</span>
+                    <p>Алфавитный указатель терминов в сфере информационной безопасности с пояснениями на русском языке, привязкой к национальным и международным стандартам, ссылками на связанные понятия. Поиск работает по названию и определению.</p>
+                </div>
+
+                <div class="content-section">
+                    <div class="glossary-controls">
+                        <input type="text" class="search-input" id="glossarySearch" placeholder="🔍 Поиск термина или определения...">
+                    </div>
+
+                    <div class="alpha-nav" id="alphaNav">
+                        <button class="alpha-btn active" data-letter="all">Все</button>
+                        <button class="alpha-btn" data-letter="А">А</button>
+                        <button class="alpha-btn" data-letter="Б">Б</button>
+                        <button class="alpha-btn" data-letter="В">В</button>
+                        <button class="alpha-btn" data-letter="Г">Г</button>
+                        <button class="alpha-btn" data-letter="Д">Д</button>
+                        <button class="alpha-btn" data-letter="З">З</button>
+                        <button class="alpha-btn" data-letter="И">И</button>
+                        <button class="alpha-btn" data-letter="К">К</button>
+                        <button class="alpha-btn" data-letter="М">М</button>
+                        <button class="alpha-btn" data-letter="О">О</button>
+                        <button class="alpha-btn" data-letter="П">П</button>
+                        <button class="alpha-btn" data-letter="Р">Р</button>
+                        <button class="alpha-btn" data-letter="С">С</button>
+                        <button class="alpha-btn" data-letter="Т">Т</button>
+                        <button class="alpha-btn" data-letter="У">У</button>
+                        <button class="alpha-btn" data-letter="Ф">Ф</button>
+                        <button class="alpha-btn" data-letter="Х">Х</button>
+                        <button class="alpha-btn" data-letter="Ц">Ц</button>
+                        <button class="alpha-btn" data-letter="Э">Э</button>
+                    </div>
+
+                    <div id="glossaryList">
+                        <div class="term-card" data-letter="А" data-term="Аутентификация" data-def="Процесс проверки подлинности субъекта доступа">
+                            <div><span class="term-letter">А</span><span class="term-name">Аутентификация</span></div>
+                            <div class="term-definition">Процесс проверки подлинности субъекта доступа (пользователя, устройства, процесса) путём сравнения предъявленного идентификатора с эталоном. Отличается от авторизации — проверки прав доступа.</div>
+                            <div class="term-related">Связанные: <span>Авторизация</span>, <span>Идентификация</span>, <span>MFA</span></div>
+                        </div>
+
+                        <div class="term-card" data-letter="А" data-term="Авторизация" data-def="Предоставление прав доступа">
+                            <div><span class="term-letter">А</span><span class="term-name">Авторизация</span></div>
+                            <div class="term-definition">Процесс предоставления субъекту доступа к определённым ресурсам и определения объёма полномочий (чтение, запись, выполнение) на основе заданных правил и политик.</div>
+                            <div class="term-related">Связанные: <span>Аутентификация</span>, <span>RBAC</span>, <span>Политика доступа</span></div>
+                        </div>
+
+                        <div class="term-card" data-letter="А" data-term="APT" data-def="Целевая атака высокого уровня">
+                            <div><span class="term-letter">А</span><span class="term-name">APT (Advanced Persistent Threat)</span></div>
+                            <div class="term-definition">Продвинутая устойчивая угроза — комплексная целевая атака, осуществляемая квалифицированными противниками (часто государственными) с длительным пребыванием в сети жертвы для кражи информации или нарушения процессов.</div>
+                            <div class="term-related">Связанные: <span>Targeted Attack</span>, <span>Kill Chain</span>, <span>MITRE ATT&CK</span></div>
+                        </div>
+
+                        <div class="term-card" data-letter="Б" data-term="Бэкдор" data-def="Скрытый механизм обхода аутентификации">
+                            <div><span class="term-letter">Б</span><span class="term-name">Бэкдор (Backdoor)</span></div>
+                            <div class="term-definition">Скрытый механизм в программном обеспечении или системе, позволяющий обойти штатные средства аутентификации и получить доступ к ресурсам. Может быть заложен намеренно или создан злоумышленником после компрометации.</div>
+                            <div class="term-related">Связанные: <span>Уязвимость</span>, <span>Persistence</span></div>
+                        </div>
+
+                        <div class="term-card" data-letter="В" data-term="Вредоносное ПО" data-def="Программное обеспечение для нанесения ущерба">
+                            <div><span class="term-letter">В</span><span class="term-name">Вредоносное ПО (Malware)</span></div>
+                            <div class="term-definition">Программное обеспечение, предназначенное для нанесения ущерба компьютерным системам, пользователям или сетям. Включает вирусы, черви, трояны, ransomware, шпионское ПО, adware и другие классы.</div>
+                            <div class="term-related">Связанные: <span>Ransomware</span>, <span>Троян</span>, <span>EDR</span></div>
+                        </div>
+
+                        <div class="term-card" data-letter="Г" data-term="Государственная тайна" data-def="Защищаемые сведения особой важности">
+                            <div><span class="term-letter">Г</span><span class="term-name">Государственная тайна</span></div>
+                            <div class="term-definition">Защищаемые государством сведения в области его военной, внешнеполитической, экономической, разведывательной и контрразведывательной деятельности, распространение которых может нанести ущерб национальной безопасности.</div>
+                            <div class="term-related">Связанные: <span>ОАЦ</span>, <span>Аттестация</span>, <span>КСЗ</span></div>
+                        </div>
+
+                        <div class="term-card" data-letter="Д" data-term="DLP" data-def="Предотвращение утечек данных">
+                            <div><span class="term-letter">Д</span><span class="term-name">DLP (Data Loss Prevention)</span></div>
+                            <div class="term-definition">Класс технологий и процессов для предотвращения несанкционированной передачи конфиденциальной информации за пределы корпоративной сети. Включает контроль каналов передачи, анализ содержимого, поведенческую аналитику.</div>
+                            <div class="term-related">Связанные: <span>Эксфильтрация</span>, <span>Конфиденциальность</span></div>
+                        </div>
+
+                        <div class="term-card" data-letter="З" data-term="Защищённость информации" data-def="Состояние защищённости от угроз">
+                            <div><span class="term-letter">З</span><span class="term-name">Защищённость информации</span></div>
+                            <div class="term-definition">Состояние информатизированной системы, при котором обеспечена конфиденциальность, целостность и доступность информации с учётом актуальных угроз и применяемых средств защиты.</div>
+                            <div class="term-related">Связанные: <span>КИА-триада</span>, <span>СЗИ</span>, <span>Модель угроз</span></div>
+                        </div>
+
+                        <div class="term-card" data-letter="И" data-term="Инцидент ИБ" data-def="Нарушение политик безопасности">
+                            <div><span class="term-letter">И</span><span class="term-name">Инцидент информационной безопасности</span></div>
+                            <div class="term-definition">Событие, приводящее к нарушению конфиденциальности, целостности или доступности информации, либо к отклонению от установленных политик безопасности. Требует реагирования и расследования.</div>
+                            <div class="term-related">Связанные: <span>SOC</span>, <span>Incident Response</span>, <span>MTTR</span></div>
+                        </div>
+
+                        <div class="term-card" data-letter="К" data-term="Конфиденциальность" data-def="Защита от несанкционированного раскрытия">
+                            <div><span class="term-letter">К</span><span class="term-name">Конфиденциальность</span></div>
+                            <div class="term-definition">Свойство информации быть доступной только авторизованным субъектам. Один из трёх базовых принципов ИБ (наряду с целостностью и доступностью). Обеспечивается шифрованием, разграничением доступа, DLP.</div>
+                            <div class="term-related">Связанные: <span>Целостность</span>, <span>Доступность</span>, <span>Шифрование</span></div>
+                        </div>
+
+                        <div class="term-card" data-letter="К" data-term="Киберугроза" data-def="Потенциальная опасность в киберпространстве">
+                            <div><span class="term-letter">К</span><span class="term-name">Киберугроза</span></div>
+                            <div class="term-definition">Потенциальная опасность нанесения ущерба информационным системам, сетям или данным посредством кибератак. Классифицируется по источнику, мотивации, методам реализации и целевому воздействию.</div>
+                            <div class="term-related">Связанные: <span>Threat Intelligence</span>, <span>Модель угроз</span>, <span>IoC</span></div>
+                        </div>
+
+                        <div class="term-card" data-letter="К" data-term="КСЗ" data-def="Комплекс средств защиты">
+                            <div><span class="term-letter">К</span><span class="term-name">КСЗ (Комплекс средств защиты)</span></div>
+                            <div class="term-definition">Совокупность организационных и технических мер, а также программно-аппаратных средств, обеспечивающих защиту информации в информационной системе в соответствии с установленными требованиями.</div>
+                            <div class="term-related">Связанные: <span>СЗИ</span>, <span>Аттестация</span>, <span>ОАЦ</span></div>
+                        </div>
+
+                        <div class="term-card" data-letter="М" data-term="MITRE ATT&CK" data-def="База тактик и техник противников">
+                            <div><span class="term-letter">М</span><span class="term-name">MITRE ATT&CK</span></div>
+                            <div class="term-definition">Глобальная база знаний о тактиках и техниках кибератак, основанная на реальных наблюдениях. Используется для построения моделей угроз, разработки правил детектирования, оценки покрытия мониторинга.</div>
+                            <div class="term-related">Связанные: <span>TTP</span>, <span>Threat Hunting</span>, <span>SOC</span></div>
+                        </div>
+
+                        <div class="term-card" data-letter="М" data-term="Модель угроз" data-def="Формализованное описание угроз">
+                            <div><span class="term-letter">М</span><span class="term-name">Модель угроз</span></div>
+                            <div class="term-definition">Формализованное описание актуальных для конкретной информационной системы угроз безопасности с указанием источников, векторов атак, уязвимостей и потенциального ущерба. Основа для выбора средств защиты.</div>
+                            <div class="term-related">Связанные: <span>STRIDE</span>, <span>MITRE ATT&CK</span>, <span>Оценка рисков</span></div>
+                        </div>
+
+                        <div class="term-card" data-letter="О" data-term="ОАЦ" data-def="Оперативно-аналитический центр">
+                            <div><span class="term-letter">О</span><span class="term-name">ОАЦ (Оперативно-аналитический центр при Президенте РБ)</span></div>
+                            <div class="term-definition">Государственный орган, уполномоченный в сфере защиты информации, обеспечения безопасности и устойчивого функционирования сегмента сети Интернет Республики Беларусь. Включает BY-CERT.</div>
+                            <div class="term-related">Связанные: <span>BY-CERT</span>, <span>Аттестация</span>, <span>КИИ</span></div>
+                        </div>
+
+                        <div class="term-card" data-letter="П" data-term="Пентест" data-def="Тестирование на проникновение">
+                            <div><span class="term-letter">П</span><span class="term-name">Пентест (Penetration Testing)</span></div>
+                            <div class="term-definition">Легитимная имитация действий злоумышленника для выявления уязвимостей в информационных системах, сетях и приложениях с последующей разработкой рекомендаций по их устранению.</div>
+                            <div class="term-related">Связанные: <span>Уязвимость</span>, <span>Red Team</span>, <span>Vulnerability Assessment</span></div>
+                        </div>
+
+                        <div class="term-card" data-letter="Р" data-term="Ransomware" data-def="Программы-вымогатели">
+                            <div><span class="term-letter">Р</span><span class="term-name">Ransomware</span></div>
+                            <div class="term-definition">Класс вредоносного ПО, осуществляющего шифрование данных жертвы с требованием выкупа за расшифровку. Современные варианты комбинируют шифрование с кражей данных (double extortion).</div>
+                            <div class="term-related">Связанные: <span>Malware</span>, <span>Резервное копирование</span>, <span>Incident Response</span></div>
+                        </div>
+
+                        <div class="term-card" data-letter="С" data-term="SIEM" data-def="Управление событиями безопасности">
+                            <div><span class="term-letter">С</span><span class="term-name">SIEM (Security Information and Event Management)</span></div>
+                            <div class="term-definition">Класс систем для сбора, агрегации, корреляции и анализа событий безопасности из различных источников в реальном времени. Основа для мониторинга и реагирования на инциденты в SOC.</div>
+                            <div class="term-related">Связанные: <span>SOC</span>, <span>SOAR</span>, <span>Корреляция</span></div>
+                        </div>
+
+                        <div class="term-card" data-letter="С" data-term="SOC" data-def="Центр мониторинга и реагирования">
+                            <div><span class="term-letter">С</span><span class="term-name">SOC (Security Operations Center)</span></div>
+                            <div class="term-definition">Центр кибербезопасности. Объединяет людей, процессы и технологии для круглосуточного наблюдения за ИТ-инфраструктурой, детектирования угроз и реагирования на инциденты.</div>
+                            <div class="term-related">Связанные: <span>SIEM</span>, <span>Incident Response</span>, <span>Threat Hunting</span></div>
+                        </div>
+
+                        <div class="term-card" data-letter="С" data-term="СЗИ" data-def="Средство защиты информации">
+                            <div><span class="term-letter">С</span><span class="term-name">СЗИ (Средство защиты информации)</span></div>
+                            <div class="term-definition">Программное, аппаратное или программно-аппаратное средство, предназначенное для защиты информации от угроз конфиденциальности, целостности и доступности. В РБ подлежит сертификации ОАЦ.</div>
+                            <div class="term-related">Связанные: <span>КСЗ</span>, <span>Сертификация</span>, <span>ОАЦ</span></div>
+                        </div>
+
+                        <div class="term-card" data-letter="С" data-term="СТБ" data-def="Стандарт Республики Беларусь">
+                            <div><span class="term-letter">С</span><span class="term-name">СТБ (Стандарт Республики Беларусь)</span></div>
+                            <div class="term-definition">Национальный стандарт, устанавливающий технические требования в различных областях, включая защиту информации. Серия СТБ 34.101 регулирует вопросы криптографии и СМИБ.</div>
+                            <div class="term-related">Связанные: <span>ТНПА</span>, <span>ISO 27001</span>, <span>Комплаенс</span></div>
+                        </div>
+
+                        <div class="term-card" data-letter="Т" data-term="Threat Hunting" data-def="Проактивный поиск угроз">
+                            <div><span class="term-letter">Т</span><span class="term-name">Threat Hunting</span></div>
+                            <div class="term-definition">Проактивный процесс поиска скрытых угроз в ИТ-инфраструктуре, которые не были обнаружены автоматическими средствами. Основан на гипотезах, анализе поведения и использовании Threat Intelligence.</div>
+                            <div class="term-related">Связанные: <span>SOC</span>, <span>MITRE ATT&CK</span>, <span>IoC</span></div>
+                        </div>
+
+                        <div class="term-card" data-letter="Т" data-term="TTP" data-def="Тактики, техники и процедуры">
+                            <div><span class="term-letter">Т</span><span class="term-name">TTP (Tactics, Techniques, Procedures)</span></div>
+                            <div class="term-definition">Тактики, техники и процедуры — характеристика поведения противника в кибератаке. Используется для классификации действий по фреймворку MITRE ATT&CK и построения правил детектирования.</div>
+                            <div class="term-related">Связанные: <span>MITRE ATT&CK</span>, <span>Threat Intelligence</span></div>
+                        </div>
+
+                        <div class="term-card" data-letter="У" data-term="Уязвимость" data-def="Слабое место в системе">
+                            <div><span class="term-letter">У</span><span class="term-name">Уязвимость</span></div>
+                            <div class="term-definition">Слабое место в информационной системе, её компонентах, процессах или средствах контроля, которое может быть использовано угрозой для нарушения безопасности. Измеряется по шкале CVSS.</div>
+                            <div class="term-related">Связанные: <span>CVSS</span>, <span>Эксплойт</span>, <span>Zero-day</span></div>
+                        </div>
+
+                        <div class="term-card" data-letter="Ф" data-term="Фишинг" data-def="Кража данных через обман">
+                            <div><span class="term-letter">Ф</span><span class="term-name">Фишинг (Phishing)</span></div>
+                            <div class="term-definition">Вид мошенничества, заключающийся в получении конфиденциальных данных (учётных данных, платежной информации) путём обмана пользователей через поддельные сообщения, сайты или звонки.</div>
+                            <div class="term-related">Связанные: <span>Spear Phishing</span>, <span>BEC</span>, <span>Social Engineering</span></div>
+                        </div>
+
+                        <div class="term-card" data-letter="Х" data-term="Хакер" data-def="Специалист по компьютерной безопасности">
+                            <div><span class="term-letter">Х</span><span class="term-name">Хакер</span></div>
+                            <div class="term-definition">Специалист, обладающий глубокими знаниями в области компьютерных систем и сетей. Различают «белых» (этичных), «серых» и «чёрных» хакеров в зависимости от целей и законности действий.</div>
+                            <div class="term-related">Связанные: <span>Pentest</span>, <span>Red Team</span>, <span>Эксплойт</span></div>
+                        </div>
+
+                        <div class="term-card" data-letter="Ц" data-term="Целостность" data-def="Защита от несанкционированного изменения">
+                            <div><span class="term-letter">Ц</span><span class="term-name">Целостность</span></div>
+                            <div class="term-definition">Свойство информации быть защищённой от несанкционированного изменения или уничтожения. Обеспечивается контрольными суммами, ЭЦП, журналированием изменений, резервным копированием.</div>
+                            <div class="term-related">Связанные: <span>Конфиденциальность</span>, <span>Доступность</span>, <span>ЭЦП</span></div>
+                        </div>
+
+                        <div class="term-card" data-letter="Э" data-term="ЭЦП" data-def="Электронная цифровая подпись">
+                            <div><span class="term-letter">Э</span><span class="term-name">ЭЦП (Электронная цифровая подпись)</span></div>
+                            <div class="term-definition">Реквизит электронного документа, полученный в результате криптографического преобразования и позволяющий установить отсутствие искажений и авторство. В РБ регулируется СТБ 34.101.31.</div>
+                            <div class="term-related">Связанные: <span>СТБ 34.101</span>, <span>Криптография</span>, <span>Целостность</span></div>
+                        </div>
+
+                        <div class="term-card" data-letter="Э" data-term="Эксфильтрация" data-def="Несанкционированный вывоз данных">
+                            <div><span class="term-letter">Э</span><span class="term-name">Эксфильтрация данных</span></div>
+                            <div class="term-definition">Несанкционированная передача конфиденциальной информации за пределы контролируемой среды. Может осуществляться через сетевые каналы, съёмные носители, облачные сервисы, стеганографию.</div>
+                            <div class="term-related">Связанные: <span>DLP</span>, <span>Конфиденциальность</span>, <span>APT</span></div>
+                        </div>
+                    </div>
+
+                    <div class="no-results" id="noResults">
+                        По вашему запросу ничего не найдено. Попробуйте изменить поисковый запрос или выбрать другую букву.
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <p><strong>Дополнительно:</strong> Словарь постоянно пополняется. Если вы не нашли нужный термин — сообщите в поддержку Центра, и он будет добавлен в течение <strong>3 рабочих дней</strong>. Подписчики премиального тарифа получают доступ к расширенной версии с примерами из практики SOC.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            Центр мониторинга и реагирования на киберинциденты
+        </div>
+    </div>
+
+    <script>
+        // Tab switching logic
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                const targetId = this.getAttribute('data-tab');
+                document.getElementById(targetId).classList.add('active');
+            });
+        });
+
+        // Checklist logic
+        document.querySelectorAll('.checklist-container').forEach(container => {
+            const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+            const total = checkboxes.length;
+            const counter = container.querySelector('.progress-counter');
+            const fill = container.querySelector('.progress-bar-fill');
+            const resultBlock = container.querySelector('.checklist-result');
+            const resultText = container.querySelector('.result-text');
+
+            const updateProgress = () => {
+                const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
+                counter.textContent = `${checked} / ${total}`;
+                fill.style.width = `${(checked / total) * 100}%`;
+
+                if (checked > 0) {
+                    resultBlock.classList.add('visible');
+                    const percent = Math.round((checked / total) * 100);
+                    let message = '';
+                    if (percent < 40) {
+                        message = `Уровень соответствия: ${percent}%. Выявлены критические пробелы. Рекомендуется обратиться к специалистам Центра для проведения аудита.`;
+                    } else if (percent < 70) {
+                        message = `Уровень соответствия: ${percent}%. Базовые требования выполнены, но есть зоны для улучшения. Центр готов помочь с приоритизацией доработок.`;
+                    } else if (percent < 90) {
+                        message = `Уровень соответствия: ${percent}%. Хороший уровень защиты. Оставшиеся пробелы желательно закрыть для достижения полного соответствия.`;
+                    } else {
+                        message = `Уровень соответствия: ${percent}%. Отличный результат! Рекомендуется поддерживать достигнутый уровень и готовиться к официальной аттестации.`;
+                    }
+                    resultText.textContent = message;
+                } else {
+                    resultBlock.classList.remove('visible');
+                }
+            };
+
+            checkboxes.forEach(cb => cb.addEventListener('change', updateProgress));
+        });
+
+        // Glossary: alphabetical filter
+        const alphaNav = document.getElementById('alphaNav');
+        const termCards = document.querySelectorAll('.term-card');
+        const searchInput = document.getElementById('glossarySearch');
+        const noResults = document.getElementById('noResults');
+
+        const filterTerms = () => {
+            const activeLetter = alphaNav.querySelector('.alpha-btn.active').dataset.letter;
+            const query = searchInput.value.trim().toLowerCase();
+            let visibleCount = 0;
+
+            termCards.forEach(card => {
+                const letter = card.dataset.letter;
+                const term = card.dataset.term.toLowerCase();
+                const def = card.dataset.def.toLowerCase();
+                const fullText = (term + ' ' + def + ' ' + card.textContent).toLowerCase();
+
+                const matchesLetter = (activeLetter === 'all' || letter === activeLetter);
+                const matchesQuery = !query || fullText.includes(query);
+
+                if (matchesLetter && matchesQuery) {
+                    card.classList.remove('hidden');
+                    visibleCount++;
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+
+            noResults.classList.toggle('visible', visibleCount === 0);
+        };
+
+        alphaNav.addEventListener('click', (e) => {
+            if (e.target.classList.contains('alpha-btn')) {
+                alphaNav.querySelectorAll('.alpha-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                filterTerms();
+            }
+        });
+
+        searchInput.addEventListener('input', filterTerms);
+
+        // Related terms click (scroll to term)
+        document.querySelectorAll('.term-related span').forEach(span => {
+            span.addEventListener('click', () => {
+                const targetName = span.textContent.trim();
+                searchInput.value = targetName;
+                alphaNav.querySelectorAll('.alpha-btn').forEach(b => b.classList.remove('active'));
+                alphaNav.querySelector('[data-letter="all"]').classList.add('active');
+                filterTerms();
+                const target = document.querySelector(`.term-card[data-term="${targetName}"]`);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    target.style.transition = 'background 0.3s';
+                    target.style.background = 'rgba(74, 158, 255, 0.15)';
+                    setTimeout(() => { target.style.background = ''; }, 1500);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

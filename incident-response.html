@@ -1,0 +1,1995 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Реагирование на инциденты</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a2e;
+            color: #e0e0e0;
+            line-height: 1.7;
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ===== HEADER WITH HOVER MENU ===== */
+        .header-area {
+            position: relative;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .main-title {
+            display: inline-block;
+            color: #ffffff;
+            font-size: 2.2rem;
+            padding: 15px 40px;
+            border-bottom: 3px solid #4a9eff;
+            cursor: default;
+            position: relative;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .main-title:hover {
+            color: #4a9eff;
+            text-shadow: 0 0 20px rgba(74, 158, 255, 0.4);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            background: #16213e;
+            border: 1px solid #2a3a5c;
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 360px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            z-index: 99;
+        }
+
+        .header-area:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .dropdown-menu::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid #16213e;
+        }
+
+        .tab-btn {
+            display: block;
+            width: 100%;
+            padding: 12px 20px;
+            margin-bottom: 4px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: #b8c5d6;
+            font-size: 1rem;
+            font-family: inherit;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-btn:last-child {
+            margin-bottom: 0;
+        }
+
+        .tab-btn:hover {
+            background: #1e2a4a;
+            color: #4a9eff;
+            padding-left: 28px;
+        }
+
+        .tab-btn.active {
+            background: #4a9eff;
+            color: #1a1a2e;
+            font-weight: 700;
+        }
+
+        .tab-btn.active:hover {
+            background: #5aadff;
+            color: #1a1a2e;
+        }
+
+        .tab-link {
+            display: block;
+            width: 100%;
+            padding: 12px 20px;
+            margin-bottom: 4px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: #b8c5d6;
+            font-size: 1rem;
+            font-family: inherit;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.25s ease;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-link:last-child {
+            margin-bottom: 0;
+        }
+
+        .tab-link:hover {
+            background: #1e2a4a;
+            color: #2ecc71;
+            padding-left: 28px;
+        }
+
+        .tab-link .link-icon {
+            margin-left: 6px;
+            font-size: 0.85rem;
+            opacity: 0.7;
+        }
+
+        /* ===== CONTENT AREA ===== */
+        .content-wrapper {
+            background: #16213e;
+            border: 1px solid #2a3a5c;
+            border-radius: 16px;
+            padding: 30px 35px;
+            min-height: 400px;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            color: #4a9eff;
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #2a3a5c;
+        }
+
+        .content-section {
+            margin-bottom: 24px;
+        }
+
+        .content-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-label {
+            display: inline-block;
+            background: #4a9eff;
+            color: #1a1a2e;
+            padding: 5px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .section-label-alt { background: #e94560; }
+        .section-label-green { background: #2ecc71; }
+        .section-label-purple { background: #9b59b6; }
+        .section-label-orange { background: #e67e22; }
+        .section-label-teal { background: #1abc9c; }
+        .section-label-blue { background: #3498db; }
+
+        p {
+            color: #b8c5d6;
+            margin-bottom: 12px;
+        }
+
+        p strong {
+            color: #ffffff;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            position: relative;
+            padding-left: 22px;
+            margin-bottom: 8px;
+            color: #b8c5d6;
+        }
+
+        ul li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #4a9eff;
+            font-weight: bold;
+        }
+
+        /* ===== TABLES ===== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        table thead {
+            background: #4a9eff;
+            color: #1a1a2e;
+        }
+
+        table th {
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #2a3a5c;
+            color: #b8c5d6;
+            vertical-align: top;
+        }
+
+        table tbody tr {
+            background: #0f1a30;
+            transition: background 0.3s ease;
+        }
+
+        table tbody tr:nth-child(even) {
+            background: #131e38;
+        }
+
+        table tbody tr:hover {
+            background: #1e2a4a;
+        }
+
+        table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ===== HIGHLIGHT BOXES ===== */
+        .highlight-box {
+            background: rgba(74, 158, 255, 0.08);
+            border-left: 4px solid #4a9eff;
+            padding: 16px 20px;
+            border-radius: 0 10px 10px 0;
+            margin: 16px 0;
+        }
+
+        .highlight-box p {
+            margin: 0;
+            color: #d0d8e8;
+        }
+
+        .highlight-box strong {
+            color: #4a9eff;
+        }
+
+        .highlight-box ul {
+            margin-top: 8px;
+        }
+
+        .tariff-note {
+            background: rgba(233, 69, 96, 0.08);
+            border-left: 4px solid #e94560;
+            padding: 16px 20px;
+            border-radius: 0 10px 10px 0;
+            margin: 16px 0;
+        }
+
+        .tariff-note p {
+            margin: 0;
+            color: #d0d8e8;
+        }
+
+        .tariff-note strong {
+            color: #e94560;
+        }
+
+        /* ===== EMERGENCY BANNER ===== */
+        .emergency-banner {
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.15), rgba(233, 69, 96, 0.05));
+            border: 1px solid rgba(233, 69, 96, 0.4);
+            border-radius: 12px;
+            padding: 18px 24px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .emergency-icon {
+            width: 54px;
+            height: 54px;
+            background: #e94560;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: 900;
+            flex-shrink: 0;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(233, 69, 96, 0.6); }
+            50% { box-shadow: 0 0 0 12px rgba(233, 69, 96, 0); }
+        }
+
+        .emergency-content {
+            flex: 1;
+        }
+
+        .emergency-title {
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .emergency-desc {
+            color: #d0d8e8;
+            font-size: 0.93rem;
+            margin: 0;
+        }
+
+        .emergency-phone {
+            background: #e94560;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .emergency-phone:hover {
+            background: #ff5577;
+            transform: scale(1.05);
+        }
+
+        /* ===== WORKFLOW PHASES ===== */
+        .workflow-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .phase-card {
+            background: #0f1a30;
+            border: 1px solid #2a3a5c;
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .phase-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+        }
+
+        .phase-card.phase-1::before { background: #4a9eff; }
+        .phase-card.phase-2::before { background: #e67e22; }
+        .phase-card.phase-3::before { background: #e94560; }
+        .phase-card.phase-4::before { background: #9b59b6; }
+        .phase-card.phase-5::before { background: #2ecc71; }
+        .phase-card.phase-6::before { background: #1abc9c; }
+
+        .phase-card:hover {
+            border-color: #4a9eff;
+            background: #131e38;
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(74, 158, 255, 0.15);
+        }
+
+        .phase-number {
+            display: inline-block;
+            min-width: 36px;
+            height: 36px;
+            background: #4a9eff;
+            color: #1a1a2e;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 36px;
+            font-weight: 800;
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+        }
+
+        .phase-card.phase-2 .phase-number { background: #e67e22; }
+        .phase-card.phase-3 .phase-number { background: #e94560; }
+        .phase-card.phase-4 .phase-number { background: #9b59b6; }
+        .phase-card.phase-5 .phase-number { background: #2ecc71; }
+        .phase-card.phase-6 .phase-number { background: #1abc9c; }
+
+        .phase-title {
+            color: #ffffff;
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .phase-desc {
+            color: #b8c5d6;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .phase-time {
+            display: inline-block;
+            padding: 3px 10px;
+            background: rgba(74, 158, 255, 0.12);
+            border-radius: 10px;
+            font-size: 0.8rem;
+            color: #4a9eff;
+            font-weight: 700;
+        }
+
+        .phase-card.phase-2 .phase-time { background: rgba(230, 126, 34, 0.12); color: #e67e22; }
+        .phase-card.phase-3 .phase-time { background: rgba(233, 69, 96, 0.12); color: #e94560; }
+        .phase-card.phase-4 .phase-time { background: rgba(155, 89, 182, 0.12); color: #9b59b6; }
+        .phase-card.phase-5 .phase-time { background: rgba(46, 204, 113, 0.12); color: #2ecc71; }
+        .phase-card.phase-6 .phase-time { background: rgba(26, 188, 156, 0.12); color: #1abc9c; }
+
+        /* ===== SLA TABLE ===== */
+        .sla-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+            margin: 16px 0;
+        }
+
+        .sla-card {
+            background: #0f1a30;
+            border: 1px solid #2a3a5c;
+            border-radius: 12px;
+            padding: 18px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sla-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+        }
+
+        .sla-card.sla-critical::before { background: #e94560; }
+        .sla-card.sla-high::before { background: #e67e22; }
+        .sla-card.sla-medium::before { background: #f39c12; }
+        .sla-card.sla-low::before { background: #3498db; }
+
+        .sla-card:hover {
+            transform: translateY(-3px);
+            border-color: #4a9eff;
+            box-shadow: 0 8px 25px rgba(74, 158, 255, 0.15);
+        }
+
+        .sla-priority {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .priority-critical { background: #e94560; color: #fff; }
+        .priority-high { background: #e67e22; color: #fff; }
+        .priority-medium { background: #f39c12; color: #1a1a2e; }
+        .priority-low { background: #3498db; color: #fff; }
+
+        .sla-time {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+
+        .sla-time-label {
+            color: #6a7a9a;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .sla-metrics {
+            display: flex;
+            justify-content: space-around;
+            padding-top: 12px;
+            border-top: 1px solid #2a3a5c;
+            font-size: 0.8rem;
+        }
+
+        .sla-metric {
+            text-align: center;
+        }
+
+        .sla-metric-value {
+            color: #4a9eff;
+            font-weight: 700;
+            display: block;
+            font-size: 0.95rem;
+        }
+
+        .sla-metric-label {
+            color: #6a7a9a;
+            font-size: 0.72rem;
+        }
+
+        /* ===== ESCALATION LEVELS ===== */
+        .escalation-container {
+            display: grid;
+            gap: 14px;
+            margin: 20px 0;
+        }
+
+        .escalation-level {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 16px;
+            background: #0f1a30;
+            border: 1px solid #2a3a5c;
+            border-radius: 12px;
+            padding: 18px 20px;
+            transition: all 0.3s ease;
+            align-items: center;
+        }
+
+        .escalation-level:hover {
+            border-color: #4a9eff;
+            background: #131e38;
+        }
+
+        .level-badge {
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 800;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .level-l1 { background: rgba(74, 158, 255, 0.15); color: #4a9eff; border: 1px solid rgba(74, 158, 255, 0.3); }
+        .level-l2 { background: rgba(230, 126, 34, 0.15); color: #e67e22; border: 1px solid rgba(230, 126, 34, 0.3); }
+        .level-l3 { background: rgba(233, 69, 96, 0.15); color: #e94560; border: 1px solid rgba(233, 69, 96, 0.3); }
+        .level-mgmt { background: rgba(155, 89, 182, 0.15); color: #9b59b6; border: 1px solid rgba(155, 89, 182, 0.3); }
+
+        .level-content {
+            flex: 1;
+        }
+
+        .level-title {
+            color: #ffffff;
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .level-desc {
+            color: #b8c5d6;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .level-contacts {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            font-size: 0.85rem;
+        }
+
+        .contact-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            background: rgba(74, 158, 255, 0.08);
+            border: 1px solid rgba(74, 158, 255, 0.2);
+            border-radius: 20px;
+            color: #b8c5d6;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .contact-chip:hover {
+            background: rgba(74, 158, 255, 0.15);
+            color: #4a9eff;
+        }
+
+        .contact-chip .chip-icon {
+            font-size: 0.9rem;
+        }
+
+        /* ===== CONTACT CARDS ===== */
+        .contacts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 14px;
+            margin: 20px 0;
+        }
+
+        .contact-card {
+            background: #0f1a30;
+            border: 1px solid #2a3a5c;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+        }
+
+        .contact-card.channel-phone::before { background: #2ecc71; }
+        .contact-card.channel-email::before { background: #4a9eff; }
+        .contact-card.channel-telegram::before { background: #1abc9c; }
+        .contact-card.channel-portal::before { background: #9b59b6; }
+
+        .contact-card:hover {
+            border-color: #4a9eff;
+            background: #131e38;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(74, 158, 255, 0.15);
+        }
+
+        .contact-card-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+        }
+
+        .channel-phone .contact-card-icon { background: rgba(46, 204, 113, 0.15); color: #2ecc71; }
+        .channel-email .contact-card-icon { background: rgba(74, 158, 255, 0.15); color: #4a9eff; }
+        .channel-telegram .contact-card-icon { background: rgba(26, 188, 156, 0.15); color: #1abc9c; }
+        .channel-portal .contact-card-icon { background: rgba(155, 89, 182, 0.15); color: #9b59b6; }
+
+        .contact-card-title {
+            color: #ffffff;
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .contact-card-value {
+            color: #4a9eff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            word-break: break-all;
+        }
+
+        .contact-card-desc {
+            color: #8a9ab0;
+            font-size: 0.85rem;
+        }
+
+        .contact-card-hours {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 3px 10px;
+            background: rgba(46, 204, 113, 0.12);
+            border-radius: 10px;
+            font-size: 0.78rem;
+            color: #2ecc71;
+            font-weight: 700;
+        }
+
+        /* ===== INCIDENT FORM ===== */
+        .incident-form {
+            background: #0f1a30;
+            border: 1px solid #2a3a5c;
+            border-radius: 14px;
+            padding: 28px;
+            margin: 20px 0;
+        }
+
+        .form-header {
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #2a3a5c;
+        }
+
+        .form-title {
+            color: #ffffff;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .form-subtitle {
+            color: #8a9ab0;
+            font-size: 0.9rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            color: #b8c5d6;
+            font-size: 0.88rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .form-label .required {
+            color: #e94560;
+            font-weight: 800;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            padding: 11px 14px;
+            background: #16213e;
+            border: 1px solid #2a3a5c;
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #4a9eff;
+            background: #1a2540;
+            box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.15);
+        }
+
+        .form-input::placeholder,
+        .form-textarea::placeholder {
+            color: #6a7a9a;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 110px;
+            font-family: inherit;
+        }
+
+        .form-select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234a9eff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+            padding-right: 38px;
+        }
+
+        .form-hint {
+            color: #6a7a9a;
+            font-size: 0.78rem;
+            margin-top: 4px;
+        }
+
+        .priority-selector {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .priority-option {
+            position: relative;
+        }
+
+        .priority-option input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .priority-option label {
+            display: block;
+            padding: 10px;
+            text-align: center;
+            background: #16213e;
+            border: 1px solid #2a3a5c;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .priority-option label:hover {
+            border-color: #4a9eff;
+        }
+
+        .priority-option input:checked + label.p-critical {
+            background: #e94560;
+            color: #fff;
+            border-color: #e94560;
+        }
+
+        .priority-option input:checked + label.p-high {
+            background: #e67e22;
+            color: #fff;
+            border-color: #e67e22;
+        }
+
+        .priority-option input:checked + label.p-medium {
+            background: #f39c12;
+            color: #1a1a2e;
+            border-color: #f39c12;
+        }
+
+        .priority-option input:checked + label.p-low {
+            background: #3498db;
+            color: #fff;
+            border-color: #3498db;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            padding-top: 20px;
+            border-top: 1px solid #2a3a5c;
+            margin-top: 10px;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: #4a9eff;
+            color: #1a1a2e;
+        }
+
+        .btn-primary:hover {
+            background: #5aadff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 158, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #b8c5d6;
+            border: 1px solid #2a3a5c;
+        }
+
+        .btn-secondary:hover {
+            border-color: #4a9eff;
+            color: #4a9eff;
+        }
+
+        .btn-emergency {
+            background: #e94560;
+            color: #fff;
+        }
+
+        .btn-emergency:hover {
+            background: #ff5577;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(233, 69, 96, 0.3);
+        }
+
+        .form-success {
+            display: none;
+            background: rgba(46, 204, 113, 0.08);
+            border: 1px solid rgba(46, 204, 113, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .form-success.visible {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .form-success-icon {
+            width: 54px;
+            height: 54px;
+            background: #2ecc71;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin: 0 auto 12px;
+        }
+
+        .form-success-title {
+            color: #2ecc71;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .form-success-text {
+            color: #d0d8e8;
+            font-size: 0.9rem;
+        }
+
+        .form-success-id {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 6px 14px;
+            background: rgba(46, 204, 113, 0.12);
+            border-radius: 8px;
+            color: #2ecc71;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* ===== POST-INCIDENT ===== */
+        .report-structure {
+            background: #0f1a30;
+            border: 1px solid #2a3a5c;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        .report-section {
+            padding: 12px 16px;
+            border-left: 3px solid #4a9eff;
+            background: #131e38;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .report-section:hover {
+            border-left-color: #5aadff;
+            background: #1a2540;
+            transform: translateX(4px);
+        }
+
+        .report-section-title {
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.98rem;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .report-section-num {
+            min-width: 26px;
+            height: 26px;
+            background: #4a9eff;
+            color: #1a1a2e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 800;
+        }
+
+        .report-section-desc {
+            color: #8a9ab0;
+            font-size: 0.88rem;
+            padding-left: 34px;
+        }
+
+        /* ===== METRICS CARDS ===== */
+        .metrics-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 14px;
+            margin: 16px 0;
+        }
+
+        .metric-block {
+            background: #0f1a30;
+            border: 1px solid #2a3a5c;
+            border-radius: 12px;
+            padding: 18px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .metric-block:hover {
+            border-color: #4a9eff;
+            transform: translateY(-3px);
+        }
+
+        .metric-abbr {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #4a9eff;
+            margin-bottom: 4px;
+            letter-spacing: 1px;
+        }
+
+        .metric-name {
+            color: #b8c5d6;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+        }
+
+        .metric-target {
+            display: inline-block;
+            padding: 3px 10px;
+            background: rgba(46, 204, 113, 0.12);
+            border-radius: 10px;
+            color: #2ecc71;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #2a3a5c;
+            color: #6a7a9a;
+            font-size: 0.9rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 1.5rem;
+                padding: 12px 20px;
+            }
+
+            .dropdown-menu {
+                min-width: 280px;
+            }
+
+            .content-wrapper {
+                padding: 20px 18px;
+            }
+
+            table {
+                font-size: 0.8rem;
+            }
+
+            table th, table td {
+                padding: 10px 10px;
+            }
+
+            .escalation-level {
+                grid-template-columns: 1fr;
+            }
+
+            .priority-selector {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .emergency-banner {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Навигационное меню -->
+<nav style="
+    background: #0f172a;
+    border-bottom: 1px solid #334155;
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+">
+    <div style="max-width: 1320px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+        <a href="index.html" style="color: #ef4444; font-weight: 800; font-size: 1.2rem; text-decoration: none;">
+            🛡️ Центр Кибербезопасности
+        </a>
+        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+            <a href="index.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Главная</a>
+            <a href="infrastructure.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Инфраструктура</a>
+            <a href="experts.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Эксперты</a>
+            <a href="cases.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Кейсы</a>
+            <a href="monitoring.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Мониторинг</a>
+            <a href="knowledge.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">База знаний</a>
+            <a href="incident-response.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Инциденты</a>
+            <a href="contacts.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Контакты</a>
+            <a href="calculator.html" style="color: #ef4444; text-decoration: none; font-size: 0.9rem; font-weight: 700;">Калькулятор</a>
+        </div>
+    </div>
+</nav>
+    <div class="container">
+
+        <!-- ===== HEADER WITH HOVER DROPDOWN ===== -->
+        <div class="header-area">
+            <h1 class="main-title">Реагирование на инциденты</h1>
+
+            <div class="dropdown-menu">
+                <button class="tab-btn active" data-tab="tab-1">План реагирования 24/7</button>
+                <button class="tab-btn" data-tab="tab-2">Порядок эскалации и контакты</button>
+                <button class="tab-btn" data-tab="tab-3">Сообщение об инциденте</button>
+                <button class="tab-btn" data-tab="tab-4">Пост-инцидентный анализ</button>
+                <a class="tab-link" href="https://your-calculator-url.by" target="_blank" rel="noopener noreferrer">Калькулятор тарифа <span class="link-icon">↗</span></a>
+            </div>
+        </div>
+
+        <!-- ===== EMERGENCY BANNER ===== -->
+        <div class="emergency-banner">
+            <div class="emergency-icon">!</div>
+            <div class="emergency-content">
+                <div class="emergency-title">Произошёл инцидент прямо сейчас?</div>
+                <p class="emergency-desc">Немедленно свяжитесь с дежурной сменой SOC — работаем круглосуточно, без выходных и праздников.</p>
+            </div>
+            <a href="tel:+375171234567" class="emergency-phone">📞 +375 17 123-45-67</a>
+        </div>
+
+        <!-- ===== CONTENT AREA ===== -->
+        <div class="content-wrapper">
+
+            <!-- ===== TAB 1: План реагирования 24/7 ===== -->
+            <div class="tab-content active" id="tab-1">
+                <h2 class="section-title">План реагирования на инциденты 24/7</h2>
+
+                <div class="content-section">
+                    <span class="section-label">Суть для клиента</span>
+                    <p>Центр обеспечивает полный цикл реагирования на инциденты информационной безопасности по методологии NIST SP 800-61, адаптированной под требования белорусского законодательства и специфику инфраструктуры подписчиков. Процесс работает круглосуточно, без выходных и праздников.</p>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-purple">6 фаз жизненного цикла инцидента</span>
+
+                    <div class="workflow-container">
+                        <div class="phase-card phase-1">
+                            <div class="phase-number">1</div>
+                            <div class="phase-title">Подготовка</div>
+                            <div class="phase-desc">Постоянная деятельность: обновление playbook'ов, тренинги команды, настройка средств мониторинга, интеграция с инфраструктурой клиента.</div>
+                            <span class="phase-time">Непрерывно</span>
+                        </div>
+
+                        <div class="phase-card phase-2">
+                            <div class="phase-number">2</div>
+                            <div class="phase-title">Обнаружение и анализ</div>
+                            <div class="phase-desc">Детектирование события SIEM/EDR/NDR, триаж алерта, подтверждение инцидента, определение категории и приоритета, назначение ответственного.</div>
+                            <span class="phase-time">T+0 → T+15 мин</span>
+                        </div>
+
+                        <div class="phase-card phase-3">
+                            <div class="phase-number">3</div>
+                            <div class="phase-title">Сдерживание</div>
+                            <div class="phase-desc">Немедленные меры по локализации: блокировка IOC на периметре, изоляция заражённых узлов, отзыв скомпрометированных учётных записей.</div>
+                            <span class="phase-time">T+15 → T+60 мин</span>
+                        </div>
+
+                        <div class="phase-card phase-4">
+                            <div class="phase-number">4</div>
+                            <div class="phase-title">Устранение</div>
+                            <div class="phase-desc">Полная ликвидация угрозы: удаление вредоносного кода, закрытие уязвимостей, восстановление целостности систем из доверенных источников.</div>
+                            <span class="phase-time">T+1 → T+24 часа</span>
+                        </div>
+
+                        <div class="phase-card phase-5">
+                            <div class="phase-number">5</div>
+                            <div class="phase-title">Восстановление</div>
+                            <div class="phase-desc">Возврат систем в промышленную эксплуатацию: восстановление данных из бэкапов, проверка целостности, мониторинг на предмет рецидива.</div>
+                            <span class="phase-time">T+24 → T+72 часа</span>
+                        </div>
+
+                        <div class="phase-card phase-6">
+                            <div class="phase-number">6</div>
+                            <div class="phase-title">Извлечённые уроки</div>
+                            <div class="phase-desc">Post-mortem анализ: root cause, обновление правил детектирования, доработка playbook'ов, отчёт для руководства клиента.</div>
+                            <span class="phase-time">T+72 часа → T+7 дней</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-orange">SLA по приоритетам инцидентов</span>
+
+                    <div class="sla-grid">
+                        <div class="sla-card sla-critical">
+                            <div class="sla-priority priority-critical">Critical</div>
+                            <div class="sla-time">15 мин</div>
+                            <div class="sla-time-label">Время начала реагирования</div>
+                            <div class="sla-metrics">
+                                <div class="sla-metric">
+                                    <span class="sla-metric-value">1 ч</span>
+                                    <span class="sla-metric-label">Сдерживание</span>
+                                </div>
+                                <div class="sla-metric">
+                                    <span class="sla-metric-value">4 ч</span>
+                                    <span class="sla-metric-label">Устранение</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sla-card sla-high">
+                            <div class="sla-priority priority-high">High</div>
+                            <div class="sla-time">30 мин</div>
+                            <div class="sla-time-label">Время начала реагирования</div>
+                            <div class="sla-metrics">
+                                <div class="sla-metric">
+                                    <span class="sla-metric-value">4 ч</span>
+                                    <span class="sla-metric-label">Сдерживание</span>
+                                </div>
+                                <div class="sla-metric">
+                                    <span class="sla-metric-value">24 ч</span>
+                                    <span class="sla-metric-label">Устранение</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sla-card sla-medium">
+                            <div class="sla-priority priority-medium">Medium</div>
+                            <div class="sla-time">2 ч</div>
+                            <div class="sla-time-label">Время начала реагирования</div>
+                            <div class="sla-metrics">
+                                <div class="sla-metric">
+                                    <span class="sla-metric-value">24 ч</span>
+                                    <span class="sla-metric-label">Сдерживание</span>
+                                </div>
+                                <div class="sla-metric">
+                                    <span class="sla-metric-value">72 ч</span>
+                                    <span class="sla-metric-label">Устранение</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sla-card sla-low">
+                            <div class="sla-priority priority-low">Low</div>
+                            <div class="sla-time">8 ч</div>
+                            <div class="sla-time-label">Время начала реагирования</div>
+                            <div class="sla-metrics">
+                                <div class="sla-metric">
+                                    <span class="sla-metric-value">72 ч</span>
+                                    <span class="sla-metric-label">Сдерживание</span>
+                                </div>
+                                <div class="sla-metric">
+                                    <span class="sla-metric-value">7 дн</span>
+                                    <span class="sla-metric-label">Устранение</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-green">Критерии приоритизации</span>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Приоритет</th>
+                                <th>Критерии</th>
+                                <th>Примеры</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="sla-priority priority-critical">Critical</span></td>
+                                <td>Активная компрометация критичных систем, утечка персональных/государственных данных, остановка производства, ransomware в активной фазе</td>
+                                <td>Шифрование серверов БД, компрометация АСУ ТП, массовая утечка ПДн</td>
+                            </tr>
+                            <tr>
+                                <td><span class="sla-priority priority-high">High</span></td>
+                                <td>Подтверждённая компрометация учётных записей с доступом к критичным данным, вредоносная активность в корпоративной сети, целевой фишинг</td>
+                                <td>BEC-атака на CFO, латеральное перемещение, заражение нескольких рабочих станций</td>
+                            </tr>
+                            <tr>
+                                <td><span class="sla-priority priority-medium">Medium</span></td>
+                                <td>Единичные срабатывания средств защиты, подозрительная активность без подтверждения компрометации, уязвимости с активными эксплойтами</td>
+                                <td>Попытка эксплуатации CVE на периметре, подозрительный процесс на рабочей станции</td>
+                            </tr>
+                            <tr>
+                                <td><span class="sla-priority priority-low">Low</span></td>
+                                <td>Информационные события, ложные срабатывания, плановые уведомления об уязвимостях без активных эксплойтов</td>
+                                <td>Сканирование портов извне, устаревшее ПО без публичных эксплойтов</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="highlight-box">
+                    <p><strong>Гарантия SLA:</strong> При нарушении сроков реагирования по вине Центра подписчик получает <strong>компенсацию в размере 10% месячной стоимости подписки</strong> за каждый случай нарушения. Фактические показатели SLA публикуются в личном кабинете ежемесячно.</p>
+                </div>
+            </div>
+
+            <!-- ===== TAB 2: Порядок эскалации и контакты ===== -->
+            <div class="tab-content" id="tab-2">
+                <h2 class="section-title">Порядок эскалации и контакты SOC</h2>
+
+                <div class="content-section">
+                    <span class="section-label">Суть раздела</span>
+                    <p>Чёткая иерархия эскалации обеспечивает, что каждый инцидент обрабатывается специалистом соответствующего уровня, а критичные ситуации немедленно доводятся до руководства. Контакты доступны 24/7 по всем каналам.</p>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-purple">Уровни эскалации в SOC</span>
+
+                    <div class="escalation-container">
+                        <div class="escalation-level">
+                            <div class="level-badge level-l1">L1<br>Triage</div>
+                            <div class="level-content">
+                                <div class="level-title">Дежурный аналитик (L1)</div>
+                                <div class="level-desc">Первичная обработка алертов, триаж, подтверждение/отклонение инцидента, базовое реагирование по готовым playbook'ам. Работает в режиме 24/7.</div>
+                                <div class="level-contacts">
+                                    <a href="tel:+375171234567" class="contact-chip"><span class="chip-icon">📞</span>+375 17 123-45-67</a>
+                                    <a href="mailto:soc-l1@center.by" class="contact-chip"><span class="chip-icon">✉</span>soc-l1@center.by</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="escalation-level">
+                            <div class="level-badge level-l2">L2<br>Investigator</div>
+                            <div class="level-content">
+                                <div class="level-title">Старший аналитик / Расследование (L2)</div>
+                                <div class="level-desc">Глубокий анализ инцидентов, форензик, восстановление цепочки атаки, разработка мер сдерживания для сложных сценариев. Эскалация при High/Critical приоритете.</div>
+                                <div class="level-contacts">
+                                    <a href="tel:+375171234568" class="contact-chip"><span class="chip-icon">📞</span>+375 17 123-45-68</a>
+                                    <a href="mailto:soc-l2@center.by" class="contact-chip"><span class="chip-icon">✉</span>soc-l2@center.by</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="escalation-level">
+                            <div class="level-badge level-l3">L3<br>Expert</div>
+                            <div class="level-content">
+                                <div class="level-title">Ведущий эксперт / Incident Commander (L3)</div>
+                                <div class="level-desc">Управление критичными инцидентами, координация команды, взаимодействие с внешними организациями (ОАЦ, BY-CERT, правоохранительные органы). Автоматическая эскалация при Critical.</div>
+                                <div class="level-contacts">
+                                    <a href="tel:+375291234567" class="contact-chip"><span class="chip-icon">📱</span>+375 29 123-45-67</a>
+                                    <a href="mailto:incident-commander@center.by" class="contact-chip"><span class="chip-icon">✉</span>incident-commander@center.by</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="escalation-level">
+                            <div class="level-badge level-mgmt">MGMT<br>Executive</div>
+                            <div class="level-content">
+                                <div class="level-title">Руководство Центра / CISO</div>
+                                <div class="level-desc">Стратегические решения, взаимодействие с руководством клиента на уровне C-level, принятие решений о привлечении внешних ресурсов, юридическое сопровождение.</div>
+                                <div class="level-contacts">
+                                    <a href="tel:+375291234500" class="contact-chip"><span class="chip-icon">📱</span>+375 29 123-45-00</a>
+                                    <a href="mailto:ciso@center.by" class="contact-chip"><span class="chip-icon">✉</span>ciso@center.by</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-alt">Матрица автоматической эскалации</span>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Приоритет</th>
+                                <th>Начальный уровень</th>
+                                <th>Автоэскалация на L2</th>
+                                <th>Автоэскалация на L3</th>
+                                <th>Уведомление руководства</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="sla-priority priority-critical">Critical</span></td>
+                                <td>L1 → немедленно L3</td>
+                                <td>—</td>
+                                <td>Сразу</td>
+                                <td>В течение 15 мин</td>
+                            </tr>
+                            <tr>
+                                <td><span class="sla-priority priority-high">High</span></td>
+                                <td>L1 → L2</td>
+                                <td>Через 15 мин</td>
+                                <td>Через 1 час</td>
+                                <td>В течение 1 часа</td>
+                            </tr>
+                            <tr>
+                                <td><span class="sla-priority priority-medium">Medium</span></td>
+                                <td>L1</td>
+                                <td>Через 2 часа</td>
+                                <td>По решению L2</td>
+                                <td>В ежедневной сводке</td>
+                            </tr>
+                            <tr>
+                                <td><span class="sla-priority priority-low">Low</span></td>
+                                <td>L1</td>
+                                <td>Не требуется</td>
+                                <td>Не требуется</td>
+                                <td>В еженедельном отчёте</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-green">Каналы связи с SOC</span>
+
+                    <div class="contacts-grid">
+                        <div class="contact-card channel-phone">
+                            <div class="contact-card-icon">📞</div>
+                            <div class="contact-card-title">Горячая линия SOC</div>
+                            <div class="contact-card-value">+375 17 123-45-67</div>
+                            <div class="contact-card-desc">Для экстренных сообщений о инцидентах. Приоритетный канал для Critical/High.</div>
+                            <span class="contact-card-hours">24/7/365</span>
+                        </div>
+
+                        <div class="contact-card channel-email">
+                            <div class="contact-card-icon">✉</div>
+                            <div class="contact-card-title">Email SOC</div>
+                            <div class="contact-card-value">soc@center.by</div>
+                            <div class="contact-card-desc">Для неэкстренных сообщений, запросов на анализ, отправки артефактов. Шифрование PGP обязательно.</div>
+                            <span class="contact-card-hours">24/7/365</span>
+                        </div>
+
+                        <div class="contact-card channel-telegram">
+                            <div class="contact-card-icon">✈</div>
+                            <div class="contact-card-title">Защищённый Telegram-бот</div>
+                            <div class="contact-card-value">@CenterSOC_bot</div>
+                            <div class="contact-card-desc">Быстрая отправка алертов с мобильных устройств. Поддержка прикрепления файлов и скриншотов.</div>
+                            <span class="contact-card-hours">24/7/365</span>
+                        </div>
+
+                        <div class="contact-card channel-portal">
+                            <div class="contact-card-icon">🌐</div>
+                            <div class="contact-card-title">Личный кабинет</div>
+                            <div class="contact-card-value">portal.center.by</div>
+                            <div class="contact-card-desc">Создание тикетов, отслеживание статусов, просмотр истории инцидентов, загрузка отчётности.</div>
+                            <span class="contact-card-hours">24/7/365</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-teal">Контакты клиента в Центре</span>
+                    <p>Для каждого подписчика закрепляется <strong>персональный аккаунт-менеджер</strong> и <strong>технический координатор</strong>, которые знают специфику вашей инфраструктуры и являются точкой контакта для неэкстренных вопросов:</p>
+                    <ul>
+                        <li><strong>Аккаунт-менеджер:</strong> стратегические вопросы, развитие подписки, согласование SLA, эскалация организационных вопросов.</li>
+                        <li><strong>Технический координатор:</strong> операционные вопросы по интеграции, настройке средств мониторинга, подготовке отчётности.</li>
+                        <li><strong>Дежурная смена SOC:</strong> экстренные сообщения об инцидентах 24/7 — через горячую линию или форму сообщения.</li>
+                    </ul>
+                </div>
+
+                <div class="highlight-box">
+                    <p><strong>Регламент уведомления клиента:</strong> При инцидентах уровня Critical/High клиент уведомляется <strong>не позднее 15 минут</strong> после подтверждения инцидента. Уведомление направляется через все согласованные каналы (телефон, SMS, email, Telegram) одновременно.</p>
+                </div>
+            </div>
+
+            <!-- ===== TAB 3: Сообщение об инциденте ===== -->
+            <div class="tab-content" id="tab-3">
+                <h2 class="section-title">Форма сообщения об инциденте</h2>
+
+                <div class="content-section">
+                    <span class="section-label">Суть раздела</span>
+                    <p>Централизованная форма для оперативного сообщения об инциденте или подозрительном событии. Заполнение формы занимает <strong>не более 3 минут</strong>, а информация автоматически попадает в систему тикетов SOC с присвоением приоритета и назначением ответственного.</p>
+                </div>
+
+                <div class="content-section">
+                    <form class="incident-form" id="incidentForm">
+                        <div class="form-header">
+                            <div class="form-title">🚨 Сообщение об инциденте ИБ</div>
+                            <div class="form-subtitle">Все поля, отмеченные звёздочкой, обязательны для заполнения</div>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">
+                            <span class="required">*</span> Контактное лицо
+                        </label>
+                                <input type="text" class="form-input" name="contact_name" placeholder="Иванов Иван Иванович" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">
+                            <span class="required">*</span> Телефон для связи
+                        </label>
+                                <input type="tel" class="form-input" name="contact_phone" placeholder="+375 (__) ___-__-__" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">
+                            <span class="required">*</span> Email
+                        </label>
+                                <input type="email" class="form-input" name="contact_email" placeholder="name@company.by" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Организация</label>
+                                <input type="text" class="form-input" name="organization" placeholder="Название предприятия">
+                                <span class="form-hint">Заполняется автоматически для авторизованных подписчиков</span>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label class="form-label">
+                            <span class="required">*</span> Тип инцидента
+                        </label>
+                                <select class="form-select" name="incident_type" required>
+                                    <option value="">— Выберите тип инцидента —</option>
+                                    <option value="malware">Вредоносное ПО (вирус, троян, ransomware)</option>
+                                    <option value="phishing">Фишинг / BEC / социальная инженерия</option>
+                                    <option value="unauthorized_access">Несанкционированный доступ / компрометация УЗ</option>
+                                    <option value="ddos">DDoS-атака / отказ в обслуживании</option>
+                                    <option value="data_leak">Утечка данных / подозрение на эксфильтрацию</option>
+                                    <option value="web_attack">Атака на веб-ресурс (SQLi, XSS и т.п.)</option>
+                                    <option value="ics_incident">Инцидент в АСУ ТП / промышленной сети</option>
+                                    <option value="suspicious_activity">Подозрительная активность (не подтверждено)</option>
+                                    <option value="vulnerability">Обнаружена критичная уязвимость</option>
+                                    <option value="other">Другое</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label class="form-label">
+                            <span class="required">*</span> Приоритет инцидента
+                        </label>
+                                <div class="priority-selector">
+                                    <div class="priority-option">
+                                        <input type="radio" name="priority" id="p-critical" value="critical" required>
+                                        <label for="p-critical" class="p-critical">CRITICAL</label>
+                                    </div>
+                                    <div class="priority-option">
+                                        <input type="radio" name="priority" id="p-high" value="high">
+                                        <label for="p-high" class="p-high">HIGH</label>
+                                    </div>
+                                    <div class="priority-option">
+                                        <input type="radio" name="priority" id="p-medium" value="medium">
+                                        <label for="p-medium" class="p-medium">MEDIUM</label>
+                                    </div>
+                                    <div class="priority-option">
+                                        <input type="radio" name="priority" id="p-low" value="low">
+                                        <label for="p-low" class="p-low">LOW</label>
+                                    </div>
+                                </div>
+                                <span class="form-hint">Если не уверены — выберите HIGH, дежурный аналитик скорректирует приоритет</span>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label class="form-label">
+                            <span class="required">*</span> Описание инцидента
+                        </label>
+                                <textarea class="form-textarea" name="description" placeholder="Опишите, что произошло: какие симптомы наблюдаются, когда обнаружены, какие системы затронуты. Чем больше деталей — тем быстрее реагирование." required></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Дата и время обнаружения</label>
+                                <input type="datetime-local" class="form-input" name="discovery_time">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Затронутые системы</label>
+                                <input type="text" class="form-input" name="affected_systems" placeholder="Например: SRV-DB-01, 1С:Предприятие">
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label class="form-label">Предпринятые действия</label>
+                                <textarea class="form-textarea" name="actions_taken" placeholder="Какие действия уже предприняты вашей ИТ-службой? (отключение узлов, блокировка учётных записей и т.п.)" style="min-height: 80px;"></textarea>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label class="form-label">Дополнительная информация</label>
+                                <textarea class="form-textarea" name="additional_info" placeholder="Любые дополнительные сведения: IP-адреса, хэши файлов, скриншоты, тексты фишинговых писем и т.д." style="min-height: 80px;"></textarea>
+                                <span class="form-hint">Файлы можно будет загрузить после создания тикета через личный кабинет</span>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="document.getElementById('incidentForm').reset()">Очистить форму</button>
+                            <button type="submit" class="btn btn-emergency">🚨 Отправить экстренно</button>
+                            <button type="button" class="btn btn-primary" onclick="submitForm(false)">Отправить как черновик</button>
+                        </div>
+
+                        <div class="form-success" id="formSuccess">
+                            <div class="form-success-icon">✓</div>
+                            <div class="form-success-title">Сообщение принято в обработку</div>
+                            <div class="form-success-text">Дежурный аналитик SOC свяжется с вами в течение 15 минут по указанному телефону. Номер тикета:</div>
+                            <div class="form-success-id" id="ticketId">IR-2026-000000</div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-alt">Что происходит после отправки</span>
+                    <div class="workflow-container">
+                        <div class="phase-card phase-1">
+                            <div class="phase-number">1</div>
+                            <div class="phase-title">Регистрация тикета</div>
+                            <div class="phase-desc">Система автоматически присваивает уникальный номер тикета (IR-YYYY-NNNNNN) и направляет его в очередь дежурной смены.</div>
+                            <span class="phase-time">Мгновенно</span>
+                        </div>
+
+                        <div class="phase-card phase-2">
+                            <div class="phase-number">2</div>
+                            <div class="phase-title">Триаж аналитиком</div>
+                            <div class="phase-desc">Дежурный аналитик L1 изучает сообщение, подтверждает/корректирует приоритет, связывается с заявителем для уточнения деталей.</div>
+                            <span class="phase-time">В течение 15 мин</span>
+                        </div>
+
+                        <div class="phase-card phase-3">
+                            <div class="phase-number">3</div>
+                            <div class="phase-title">Запуск реагирования</div>
+                            <div class="phase-desc">В зависимости от приоритета — запуск соответствующего playbook, назначение ответственного, эскалация при необходимости.</div>
+                            <span class="phase-time">В соответствии с SLA</span>
+                        </div>
+
+                        <div class="phase-card phase-4">
+                            <div class="phase-number">4</div>
+                            <div class="phase-title">Уведомления клиенту</div>
+                            <div class="phase-desc">Клиент получает уведомления о каждом изменении статуса тикета через личный кабинет, email и (для Critical) через SMS.</div>
+                            <span class="phase-time">В реальном времени</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tariff-note">
+                    <p><strong>Важно:</strong> При ложном срабатывании (false positive) инцидент не просто закрывается — аналитик SOC объясняет причину, обновляет правила детектирования, чтобы аналогичные события не генерировали алерты в будущем. Клиент не несёт никаких штрафов за ложные сообщения.</p>
+                </div>
+            </div>
+
+            <!-- ===== TAB 4: Пост-инцидентный анализ ===== -->
+            <div class="tab-content" id="tab-4">
+                <h2 class="section-title">Пост-инцидентный анализ и отчёты</h2>
+
+                <div class="content-section">
+                    <span class="section-label">Суть раздела</span>
+                    <p>Завершающая и наиболее ценная фаза жизненного цикла инцидента. Центр не просто «тушит пожар», а извлекает уроки: анализирует первопричины, обновляет средства защиты, делится выводами с клиентом и использует опыт для укрепления защиты всех подписчиков.</p>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-purple">Ключевые метрики эффективности</span>
+
+                    <div class="metrics-row">
+                        <div class="metric-block">
+                            <div class="metric-abbr">MTTD</div>
+                            <div class="metric-name">Mean Time To Detect</div>
+                            <div class="metric-target">Целевой: ≤ 15 мин</div>
+                        </div>
+                        <div class="metric-block">
+                            <div class="metric-abbr">MTTA</div>
+                            <div class="metric-name">Mean Time To Acknowledge</div>
+                            <div class="metric-target">Целевой: ≤ 5 мин</div>
+                        </div>
+                        <div class="metric-block">
+                            <div class="metric-abbr">MTTC</div>
+                            <div class="metric-name">Mean Time To Contain</div>
+                            <div class="metric-target">Целевой: ≤ 60 мин</div>
+                        </div>
+                        <div class="metric-block">
+                            <div class="metric-abbr">MTTR</div>
+                            <div class="metric-name">Mean Time To Recover</div>
+                            <div class="metric-target">Целевой: ≤ 4 часа</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-green">Структура итогового отчёта</span>
+                    <p>По каждому инциденту уровня High/Critical в течение <strong>7 рабочих дней</strong> после закрытия формируется итоговый отчёт следующей структуры:</p>
+
+                    <div class="report-structure">
+                        <div class="report-section">
+                            <div class="report-section-title">
+                                <span class="report-section-num">1</span>
+                                Executive Summary
+                            </div>
+                            <div class="report-section-desc">Краткое изложение для руководства: что произошло, какой ущерб предотвращён, текущий статус, ключевые выводы.</div>
+                        </div>
+
+                        <div class="report-section">
+                            <div class="report-section-title">
+                                <span class="report-section-num">2</span>
+                                Хронология инцидента (Timeline)
+                            </div>
+                            <div class="report-section-desc">Поминутное восстановление событий: от первой активности противника до полной ликвидации. Визуализация на временной шкале.</div>
+                        </div>
+
+                        <div class="report-section">
+                            <div class="report-section-title">
+                                <span class="report-section-num">3</span>
+                                Технический анализ
+                            </div>
+                            <div class="report-section-desc">Детальный разбор: использованные TTP по MITRE ATT&CK, индикаторы компрометации (IoC), методы обхода средств защиты, вредоносные артефакты.</div>
+                        </div>
+
+                        <div class="report-section">
+                            <div class="report-section-title">
+                                <span class="report-section-num">4</span>
+                                Масштаб воздействия
+                            </div>
+                            <div class="report-section-desc">Перечень затронутых систем, данных, пользователей. Оценка потенциального ущерба (финансового, репутационного, регуляторного).</div>
+                        </div>
+
+                        <div class="report-section">
+                            <div class="report-section-title">
+                                <span class="report-section-num">5</span>
+                                Действия команды SOC
+                            </div>
+                            <div class="report-section-desc">Полный лог всех действий аналитиков: кто, что, когда сделал. Обоснование принятых решений, альтернативные сценарии.</div>
+                        </div>
+
+                        <div class="report-section">
+                            <div class="report-section-title">
+                                <span class="report-section-num">6</span>
+                                Root Cause Analysis (RCA)
+                            </div>
+                            <div class="report-section-desc">Первопричина инцидента: уязвимость, ошибка конфигурации, действие пользователя, недостаточность средств защиты. Метод «5 почему».</div>
+                        </div>
+
+                        <div class="report-section">
+                            <div class="report-section-title">
+                                <span class="report-section-num">7</span>
+                                Рекомендации
+                            </div>
+                            <div class="report-section-desc">Конкретные меры по предотвращению повторения: технические (патчи, конфигурации), организационные (обучение, регламенты), процедурные (playbook'и).</div>
+                        </div>
+
+                        <div class="report-section">
+                            <div class="report-section-title">
+                                <span class="report-section-num">8</span>
+                                Обновления средств детектирования
+                            </div>
+                            <div class="report-section-desc">Перечень новых правил SIEM, сигнатур EDR, аналитических корреляций, добавленных по итогам инцидента. Показатель «покрытие ATT&CK» до/после.</div>
+                        </div>
+
+                        <div class="report-section">
+                            <div class="report-section-title">
+                                <span class="report-section-num">9</span>
+                                Lessons Learned
+                            </div>
+                            <div class="report-section-desc">Что сработало хорошо, что можно улучшить. Планы тренингов, учений, доработки процессов реагирования.</div>
+                        </div>
+
+                        <div class="report-section">
+                            <div class="report-section-title">
+                                <span class="report-section-num">10</span>
+                                Приложения
+                            </div>
+                            <div class="report-section-desc">Технические артефакты: логи, хэши, образцы вредоносного ПО, скриншоты, конфигурации. Передаются в зашифрованном виде.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-orange">Форматы и сроки предоставления отчётов</span>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Тип отчёта</th>
+                                <th>Содержание</th>
+                                <th>Срок</th>
+                                <th>Получатель</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Flash-отчёт</strong></td>
+                                <td>Краткая сводка (1-2 страницы): факты, текущий статус, первоочередные действия</td>
+                                <td>В течение <strong>24 часов</strong> после закрытия</td>
+                                <td>ИТ-руководитель, CISO</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Полный отчёт</strong></td>
+                                <td>Расширенный отчёт по структуре из 10 разделов с техническими деталями</td>
+                                <td>В течение <strong>7 рабочих дней</strong></td>
+                                <td>ИТ-служба, служба ИБ</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Executive Briefing</strong></td>
+                                <td>Презентация для руководства (15-20 слайдов): бизнес-эффекты, выводы, стратегические рекомендации</td>
+                                <td>В течение <strong>10 рабочих дней</strong></td>
+                                <td>Топ-менеджмент, Совет директоров</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Регуляторный отчёт</strong></td>
+                                <td>Отчёт в формате, пригодном для предоставления в ОАЦ / надзорные органы (при необходимости)</td>
+                                <td>По запросу, с учётом регуляторных сроков</td>
+                                <td>Служба комплаенс</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-teal">Использование результатов анализа</span>
+                    <ul>
+                        <li><strong>Обогащение базы знаний:</strong> выводы по инцидентам (с обезличиванием) используются для обновления методических материалов и обучающих курсов.</li>
+                        <li><strong>Улучшение playbook'ов:</strong> каждый инцидент — повод пересмотреть и доработать процедуры реагирования.</li>
+                        <li><strong>Обновление правил SIEM:</strong> новые IoC и TTP конвертируются в правила детектирования для всех подписчиков Центра.</li>
+                        <li><strong>Threat Intelligence:</strong> информация об атаках передаётся в BY-CERT и отраслевые ISAC для защиты экосистемы в целом.</li>
+                        <li><strong>Обучающие кейсы:</strong> реальные инциденты (анонимизированные) становятся основой для тренингов и учебных тревог.</li>
+                    </ul>
+                </div>
+
+                <div class="highlight-box">
+                    <p><strong>Прозрачность как стандарт:</strong> Все отчёты, включая полные технические детали, доступны подписчику в личном кабинете. Клиент имеет право запросить дополнительную встречу с командой SOC для разбора отчёта и обсуждения рекомендаций — такая встреча предоставляется <strong>бесплатно</strong> в рамках базового тарифа.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            Центр кибербезопасности
+        </div>
+    </div>
+
+    <script>
+        // Tab switching logic
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                const targetId = this.getAttribute('data-tab');
+                document.getElementById(targetId).classList.add('active');
+            });
+        });
+
+        // Incident form submission
+        const form = document.getElementById('incidentForm');
+        const formSuccess = document.getElementById('formSuccess');
+        const ticketIdEl = document.getElementById('ticketId');
+
+        function generateTicketId() {
+            const year = new Date().getFullYear();
+            const num = String(Math.floor(Math.random() * 999999)).padStart(6, '0');
+            return `IR-${year}-${num}`;
+        }
+
+        function submitForm(isEmergency) {
+            // Простая валидация
+            const required = form.querySelectorAll('[required]');
+            let valid = true;
+            required.forEach(field => {
+                if (!field.value || (field.type === 'radio' && !form.querySelector(`input[name="${field.name}"]:checked`))) {
+                    valid = false;
+                    field.style.borderColor = '#e94560';
+                } else {
+                    field.style.borderColor = '';
+                }
+            });
+
+            // Проверка radio
+            const priorityChecked = form.querySelector('input[name="priority"]:checked');
+            if (!priorityChecked) {
+                valid = false;
+                document.querySelectorAll('.priority-option label').forEach(l => l.style.borderColor = '#e94560');
+            }
+
+            if (!valid) {
+                alert('Пожалуйста, заполните все обязательные поля');
+                return;
+            }
+
+            // Генерация номера тикета
+            const ticketId = generateTicketId();
+            ticketIdEl.textContent = ticketId;
+
+            // Показ сообщения об успехе
+            formSuccess.classList.add('visible');
+            formSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            // Сброс формы через 3 секунды
+            setTimeout(() => {
+                if (!isEmergency) {
+                    form.reset();
+                }
+            }, 3000);
+        }
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            submitForm(true);
+        });
+
+        // Сброс подсветки ошибок при вводе
+        form.querySelectorAll('input, select, textarea').forEach(field => {
+            field.addEventListener('input', () => {
+                field.style.borderColor = '';
+            });
+            field.addEventListener('change', () => {
+                field.style.borderColor = '';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мониторинг и проактивный поиск угроз</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a2e;
+            color: #e0e0e0;
+            line-height: 1.7;
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ===== HEADER WITH HOVER MENU ===== */
+        .header-area {
+            position: relative;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .main-title {
+            display: inline-block;
+            color: #ffffff;
+            font-size: 2.2rem;
+            padding: 15px 40px;
+            border-bottom: 3px solid #4a9eff;
+            cursor: default;
+            position: relative;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .main-title:hover {
+            color: #4a9eff;
+            text-shadow: 0 0 20px rgba(74, 158, 255, 0.4);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            background: #16213e;
+            border: 1px solid #2a3a5c;
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 340px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            z-index: 99;
+        }
+
+        .header-area:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .dropdown-menu::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid #16213e;
+        }
+
+        .tab-btn {
+            display: block;
+            width: 100%;
+            padding: 12px 20px;
+            margin-bottom: 4px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: #b8c5d6;
+            font-size: 1rem;
+            font-family: inherit;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-btn:last-child {
+            margin-bottom: 0;
+        }
+
+        .tab-btn:hover {
+            background: #1e2a4a;
+            color: #4a9eff;
+            padding-left: 28px;
+        }
+
+        .tab-btn.active {
+            background: #4a9eff;
+            color: #1a1a2e;
+            font-weight: 700;
+        }
+
+        .tab-btn.active:hover {
+            background: #5aadff;
+            color: #1a1a2e;
+        }
+
+        /* Ссылка-вкладка */
+        .tab-link {
+            display: block;
+            width: 100%;
+            padding: 12px 20px;
+            margin-bottom: 4px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: #b8c5d6;
+            font-size: 1rem;
+            font-family: inherit;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.25s ease;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-link:last-child {
+            margin-bottom: 0;
+        }
+
+        .tab-link:hover {
+            background: #1e2a4a;
+            color: #2ecc71;
+            padding-left: 28px;
+        }
+
+        .tab-link .link-icon {
+            margin-left: 6px;
+            font-size: 0.85rem;
+            opacity: 0.7;
+        }
+
+        /* ===== CONTENT AREA ===== */
+        .content-wrapper {
+            background: #16213e;
+            border: 1px solid #2a3a5c;
+            border-radius: 16px;
+            padding: 30px 35px;
+            min-height: 400px;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            color: #4a9eff;
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #2a3a5c;
+        }
+
+        .content-section {
+            margin-bottom: 24px;
+        }
+
+        .content-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-label {
+            display: inline-block;
+            background: #4a9eff;
+            color: #1a1a2e;
+            padding: 5px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .section-label-alt { background: #e94560; }
+        .section-label-green { background: #2ecc71; }
+        .section-label-purple { background: #9b59b6; }
+        .section-label-orange { background: #e67e22; }
+        .section-label-teal { background: #1abc9c; }
+        .section-label-blue { background: #3498db; }
+
+        p {
+            color: #b8c5d6;
+            margin-bottom: 12px;
+        }
+
+        p strong {
+            color: #ffffff;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            position: relative;
+            padding-left: 22px;
+            margin-bottom: 8px;
+            color: #b8c5d6;
+        }
+
+        ul li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #4a9eff;
+            font-weight: bold;
+        }
+
+        /* ===== TABLES ===== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        table thead {
+            background: #4a9eff;
+            color: #1a1a2e;
+        }
+
+        table th {
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #2a3a5c;
+            color: #b8c5d6;
+            vertical-align: top;
+        }
+
+        table tbody tr {
+            background: #0f1a30;
+            transition: background 0.3s ease;
+        }
+
+        table tbody tr:nth-child(even) {
+            background: #131e38;
+        }
+
+        table tbody tr:hover {
+            background: #1e2a4a;
+        }
+
+        table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ===== HIGHLIGHT BOXES ===== */
+        .highlight-box {
+            background: rgba(74, 158, 255, 0.08);
+            border-left: 4px solid #4a9eff;
+            padding: 16px 20px;
+            border-radius: 0 10px 10px 0;
+            margin: 16px 0;
+        }
+
+        .highlight-box p {
+            margin: 0;
+            color: #d0d8e8;
+        }
+
+        .highlight-box strong {
+            color: #4a9eff;
+        }
+
+        .highlight-box ul {
+            margin-top: 8px;
+        }
+
+        .tariff-note {
+            background: rgba(233, 69, 96, 0.08);
+            border-left: 4px solid #e94560;
+            padding: 16px 20px;
+            border-radius: 0 10px 10px 0;
+            margin: 16px 0;
+        }
+
+        .tariff-note p {
+            margin: 0;
+            color: #d0d8e8;
+        }
+
+        .tariff-note strong {
+            color: #e94560;
+        }
+
+        /* ===== THREAT FEED CARDS ===== */
+        .threat-card {
+            background: #0f1a30;
+            border: 1px solid #2a3a5c;
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin-bottom: 14px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .threat-card:hover {
+            border-color: #4a9eff;
+            background: #131e38;
+            transform: translateX(4px);
+        }
+
+        .threat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            border-radius: 12px 0 0 12px;
+        }
+
+        .threat-card.critical::before { background: #e94560; }
+        .threat-card.high::before { background: #e67e22; }
+        .threat-card.medium::before { background: #f39c12; }
+        .threat-card.info::before { background: #3498db; }
+
+        .threat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .threat-title {
+            color: #ffffff;
+            font-size: 1.05rem;
+            font-weight: 700;
+        }
+
+        .threat-meta {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .threat-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-critical { background: #e94560; color: #fff; }
+        .badge-high { background: #e67e22; color: #fff; }
+        .badge-medium { background: #f39c12; color: #1a1a2e; }
+        .badge-info { background: #3498db; color: #fff; }
+        .badge-date { background: #2a3a5c; color: #b8c5d6; }
+
+        .threat-body {
+            color: #b8c5d6;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+
+        .threat-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .threat-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            background: rgba(74, 158, 255, 0.12);
+            border: 1px solid rgba(74, 158, 255, 0.3);
+            border-radius: 6px;
+            font-size: 0.78rem;
+            color: #4a9eff;
+        }
+
+        /* ===== DASHBOARD METRICS ===== */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .metric-card {
+            background: #0f1a30;
+            border: 1px solid #2a3a5c;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card:hover {
+            border-color: #4a9eff;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(74, 158, 255, 0.15);
+        }
+
+        .metric-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #4a9eff;
+            line-height: 1.2;
+            margin-bottom: 6px;
+        }
+
+        .metric-value.green { color: #2ecc71; }
+        .metric-value.red { color: #e94560; }
+        .metric-value.orange { color: #e67e22; }
+        .metric-value.purple { color: #9b59b6; }
+
+        .metric-label {
+            color: #8a9ab0;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-delta {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 2px 8px;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        .delta-up { background: rgba(233, 69, 96, 0.15); color: #e94560; }
+        .delta-down { background: rgba(46, 204, 113, 0.15); color: #2ecc71; }
+        .delta-neutral { background: rgba(74, 158, 255, 0.15); color: #4a9eff; }
+
+        /* ===== PROGRESS BAR ===== */
+        .progress-item {
+            margin-bottom: 16px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .progress-label {
+            color: #b8c5d6;
+            font-size: 0.9rem;
+        }
+
+        .progress-value {
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #0f1a30;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.6s ease;
+        }
+
+        .fill-blue { background: linear-gradient(90deg, #4a9eff, #5aadff); }
+        .fill-green { background: linear-gradient(90deg, #2ecc71, #27ae60); }
+        .fill-orange { background: linear-gradient(90deg, #e67e22, #f39c12); }
+        .fill-red { background: linear-gradient(90deg, #e94560, #c0392b); }
+        .fill-purple { background: linear-gradient(90deg, #9b59b6, #8e44ad); }
+
+        /* ===== STEPS ===== */
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 14px;
+            padding: 14px 16px;
+            background: #0f1a30;
+            border-radius: 10px;
+            border: 1px solid #2a3a5c;
+            transition: all 0.3s ease;
+        }
+
+        .step-item:hover {
+            border-color: #4a9eff;
+            background: #131e38;
+        }
+
+        .step-number {
+            min-width: 36px;
+            height: 36px;
+            background: #4a9eff;
+            color: #1a1a2e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-right: 14px;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-content strong {
+            color: #ffffff;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .step-content span {
+            color: #b8c5d6;
+            font-size: 0.95rem;
+        }
+
+        /* ===== TIMELINE ===== */
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #2a3a5c;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+            padding: 14px 18px;
+            background: #0f1a30;
+            border: 1px solid #2a3a5c;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item:hover {
+            border-color: #4a9eff;
+            background: #131e38;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -25px;
+            top: 18px;
+            width: 12px;
+            height: 12px;
+            background: #4a9eff;
+            border-radius: 50%;
+            border: 2px solid #16213e;
+        }
+
+        .timeline-time {
+            color: #4a9eff;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .timeline-title {
+            color: #ffffff;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .timeline-desc {
+            color: #b8c5d6;
+            font-size: 0.9rem;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #2a3a5c;
+            color: #6a7a9a;
+            font-size: 0.9rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 1.5rem;
+                padding: 12px 20px;
+            }
+
+            .dropdown-menu {
+                min-width: 280px;
+            }
+
+            .content-wrapper {
+                padding: 20px 18px;
+            }
+
+            table {
+                font-size: 0.8rem;
+            }
+
+            table th, table td {
+                padding: 10px 10px;
+            }
+
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .metric-value {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Навигационное меню -->
+<nav style="
+    background: #0f172a;
+    border-bottom: 1px solid #334155;
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+">
+    <div style="max-width: 1320px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+        <a href="index.html" style="color: #ef4444; font-weight: 800; font-size: 1.2rem; text-decoration: none;">
+            🛡️ Центр Кибербезопасности
+        </a>
+        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+            <a href="index.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Главная</a>
+            <a href="infrastructure.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Инфраструктура</a>
+            <a href="experts.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Эксперты</a>
+            <a href="cases.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Кейсы</a>
+            <a href="monitoring.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Мониторинг</a>
+            <a href="knowledge.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">База знаний</a>
+            <a href="incident-response.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Инциденты</a>
+            <a href="contacts.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Контакты</a>
+            <a href="calculator.html" style="color: #ef4444; text-decoration: none; font-size: 0.9rem; font-weight: 700;">Калькулятор</a>
+        </div>
+    </div>
+</nav>
+    <div class="container">
+
+        <!-- ===== HEADER WITH HOVER DROPDOWN ===== -->
+        <div class="header-area">
+            <h1 class="main-title">Мониторинг и проактивный поиск угроз</h1>
+
+            <div class="dropdown-menu">
+                <button class="tab-btn active" data-tab="tab-1">Лента актуальных киберугроз</button>
+                <button class="tab-btn" data-tab="tab-2">Проактивный поиск угроз</button>
+                <button class="tab-btn" data-tab="tab-3">Дашборд эффектов для клиентов</button>
+                <button class="tab-btn" data-tab="tab-4">Отчётность по инцидентам</button>
+                <a class="tab-link" href="https://your-calculator-url.by" target="_blank" rel="noopener noreferrer">Калькулятор тарифа <span class="link-icon">↗</span></a>
+            </div>
+        </div>
+
+        <!-- ===== CONTENT AREA ===== -->
+        <div class="content-wrapper">
+
+            <!-- ===== TAB 1: Лента актуальных киберугроз ===== -->
+            <div class="tab-content active" id="tab-1">
+                <h2 class="section-title">Лента актуальных киберугроз</h2>
+
+                <div class="content-section">
+                    <span class="section-label">Суть для клиента</span>
+                    <p>Подписчик получает не просто «новости об угрозах», а структурированную ленту, в которой каждая запись привязана к его инфраструктуре. Центр анализирует глобальные угрозы через призму конкретного ландшафта клиента и указывает, что актуально именно для него, а что — нет.</p>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-purple">Принцип формирования ленты</span>
+                    <ul>
+                        <li><strong>Агрегация из множества источников:</strong> BY-CERT, коммерческие Threat Intelligence фиды, открытые репозитории (MITRE ATT&CK, AlienVault OTX), собственные IOC Центра.</li>
+                        <li><strong>Автоматическая фильтрация по релевантности:</strong> лента не содержит «шума» — только угрозы, имеющие отношение к технологическому стеку, отрасли и географии клиента.</li>
+                        <li><strong>Приоритизация по CVSS и контексту:</strong> уязвимость с CVSS 9.8, но не затрагивающая инфраструктуру клиента, автоматически уходит в архив.</li>
+                        <li><strong>Обогащение контекстом:</strong> к каждой угрозе прилагается описание TTP (тактик, техник и процедур), индикаторов компрометации (IoC) и рекомендуемых действий.</li>
+                    </ul>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-alt">Пример записи в ленте</span>
+
+                    <div class="threat-card critical">
+                        <div class="threat-header">
+                            <div class="threat-title">Эксплуатация уязвимости CVE-2026-XXXX в шлюзах удалённого доступа</div>
+                            <div class="threat-meta">
+                                <span class="threat-badge badge-critical">Critical</span>
+                                <span class="threat-badge badge-date">29.06.2026</span>
+                            </div>
+                        </div>
+                        <div class="threat-body">
+                            Обнаружена активная эксплуатация уязвимости нулевого дня в VPN-шлюзах. Атакующие используют цепочку обхода аутентификации для получения доступа к внутренней сети. Зафиксированы атаки на предприятия РБ.
+                        </div>
+                        <div class="threat-tags">
+                            <span class="threat-tag">Initial Access</span>
+                            <span class="threat-tag">T1190</span>
+                            <span class="threat-tag">VPN</span>
+                            <span class="threat-tag">0-day</span>
+                            <span class="threat-tag">APT</span>
+                        </div>
+                    </div>
+
+                    <div class="threat-card high">
+                        <div class="threat-header">
+                            <div class="threat-title">Кампания фишинговых рассылок с имперсонацией госорганов РБ</div>
+                            <div class="threat-meta">
+                                <span class="threat-badge badge-high">High</span>
+                                <span class="threat-badge badge-date">28.06.2026</span>
+                            </div>
+                        </div>
+                        <div class="threat-body">
+                            Массовая рассылка писем с вложениями (архивы .zip), маскирующихся под уведомления налоговых органов. Вложение содержит загрузчикinfo-stealer, нацеленный на кражу учётных данных и сессионных токенов.
+                        </div>
+                        <div class="threat-tags">
+                            <span class="threat-tag">Phishing</span>
+                            <span class="threat-tag">T1566.001</span>
+                            <span class="threat-tag">Credential Theft</span>
+                            <span class="threat-tag">BY-targeted</span>
+                        </div>
+                    </div>
+
+                    <div class="threat-card medium">
+                        <div class="threat-header">
+                            <div class="threat-title">Новый вариант ransomware-семейства BlackCat/ALPHV</div>
+                            <div class="threat-meta">
+                                <span class="threat-badge badge-medium">Medium</span>
+                                <span class="threat-badge badge-date">27.06.2026</span>
+                            </div>
+                        </div>
+                        <div class="threat-body">
+                            Зафиксирована модификация с обходом EDR через уязвимость в драйвере ядра. Нацелена на промышленные предприятия. Методы доставки — скомпрометированные RDP-учётные данные.
+                        </div>
+                        <div class="threat-tags">
+                            <span class="threat-tag">Ransomware</span>
+                            <span class="threat-tag">T1486</span>
+                            <span class="threat-tag">EDR Evasion</span>
+                            <span class="threat-tag">ICS-targeted</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-green">Как это работает для подписчика</span>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Уровень подписки</th>
+                                <th>Формат ленты</th>
+                                <th>Частота обновлений</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Базовый</strong> (1 800 BYN/мес)</td>
+                                <td>Еженедельный дайджест + критические алерты</td>
+                                <td>Критические — мгновенно, обзор — 1 раз в неделю</td>
+                                <td>Просмотр в личном кабинете</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Расширенный</strong></td>
+                                <td>Полная лента в реальном времени + API-доступ</td>
+                                <td>Real-time</td>
+                                <td>Личный кабинет, API, интеграция с SIEM клиента</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Премиум</strong></td>
+                                <td>Персонализированная лента + аналитические записки</td>
+                                <td>Real-time + еженедельный разбор трендов</td>
+                                <td>Личный кабинет, API, отчёты для руководства</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="tariff-note">
+                    <p><strong>Эффект:</strong> Клиент перестаёт «тонуть» в новостях об угрозах и получает только то, что требует его внимания. Среднее время реакции на актуальную угрозу сокращается с <strong>72 часов</strong> (при самостоятельном мониторинге) до <strong>15 минут</strong>.</p>
+                </div>
+            </div>
+
+            <!-- ===== TAB 2: Проактивный поиск угроз ===== -->
+            <div class="tab-content" id="tab-2">
+                <h2 class="section-title">Проактивный поиск угроз</h2>
+
+                <div class="content-section">
+                    <span class="section-label">Суть для клиента</span>
+                    <p>Проактивный поиск угроз (Threat Hunting) — это не ожидание срабатывания сигнализации, а активный «обход периметра» аналитиками Центра. Команда ищет следы присутствия противника, которые ещё не детектируются автоматическими средствами.</p>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-purple">Почему это необходимо</span>
+                    <div class="highlight-box" style="border-left-color: #9b59b6; background: rgba(155, 89, 182, 0.08);">
+                        <p><strong style="color: #9b59b6;">Ключевая статистика:</strong></p>
+                        <ul style="margin-top: 8px;">
+                            <li>Среднее время пребывания противника в сети до обнаружения (dwell time) — <strong>от 3 до 9 месяцев</strong> (данные Mandiant, 2025).</li>
+                            <li>До <strong>40%</strong> компрометаций не детектируются SIEM/EDR из-за отсутствия сигнатур под целевые атаки.</li>
+                            <li>Проактивный hunting сокращает dwell time до <strong>24-72 часов</strong>.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-green">Методология Центра</span>
+                    <p>Hunting строится по циклической модели, основанной на фреймворке MITRE ATT&CK и адаптированной под специфику белорусских предприятий:</p>
+
+                    <div class="step-item">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <strong>Формулирование гипотез</strong>
+                            <span>На основе анализа threat intelligence, отраслевых трендов и специфики инфраструктуры клиента аналитик формулирует гипотезу: «Если противник уже внутри, он, вероятно, использует технику T1078 (Valid Accounts) для перемещения».</span>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <strong>Сбор и корреляция данных</strong>
+                            <span>Аналитик запрашивает из SIEM/коллекторов данные по гипотезе: логи аутентификации, сетевые подключения, процессы на конечных точках. Применяется статистический и поведенческий анализ.</span>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <strong>Верификация и расследование</strong>
+                            <span>Обнаруженные аномалии проверяются вручную: исключаются ложные срабатывания, восстанавливается цепочка действий противника (kill chain), определяется масштаб компрометации.</span>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <strong>Реагирование и обогащение правил</strong>
+                            <span>Если угроза подтверждена — запускается процесс инцидент-реагирования. Результаты hunting конвертируются в новые правила детектирования SIEM, чтобы аналогичная атака выявлялась автоматически в будущем.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-orange">Типовые сценарии hunting</span>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Сценарий</th>
+                                <th>Что ищем</th>
+                                <th>Источники данных</th>
+                                <th>Периодичность</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Скрытое присутствие</strong></td>
+                                <td>Long-term persistence: запланированные задачи, модификации реестра, service-аккаунты</td>
+                                <td>EDR, логи ОС, AD</td>
+                                <td>Еженедельно</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Латеральное перемещение</strong></td>
+                                <td>Аномальные RDP/PSExec/WMI-сессии между сегментами</td>
+                                <td>Сетевые логи, AD, NDR</td>
+                                <td>Ежедневно</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Эксфильтрация данных</strong></td>
+                                <td>Нехарактерно большие исходящие потоки, DNS-туннелирование, HTTPS в нестандартные порты</td>
+                                <td>Прокси, DNS, DLP, NDR</td>
+                                <td>Ежедневно</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Компрометация учётных записей</strong></td>
+                                <td>Impossible travel, аномальное время активности, массовые обращения к файловым ресурсам</td>
+                                <td>AD, VPN, почта</td>
+                                <td>Ежедневно</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Атаки на АСУ ТП</strong></td>
+                                <td>Несанкционированные команды в промышленных протоколах, аномалии в технологических параметрах</td>
+                                <td>Industrial IDS, OPC UA логи</td>
+                                <td>Еженедельно</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-teal">Что получает подписчик</span>
+                    <ul>
+                        <li><strong>Ежемесячный отчёт о hunting-сессиях:</strong> какие гипотезы проверялись, что обнаружено, какие правила добавлены.</li>
+                        <li><strong>Метрика «покрытие ATT&CK»:</strong> процент техник MITRE, по которым активны правила детектирования (целевой показатель — не менее <strong>75%</strong> релевантных для клиента техник).</li>
+                        <li><strong>Рекомендации по улучшению:</strong> конкретные действия по закрытию пробелов в мониторинге.</li>
+                    </ul>
+                </div>
+
+                <div class="highlight-box">
+                    <p><strong>Важно:</strong> Проактивный hunting входит в расширенный и премиальный тарифы. В базовом тарифе доступны только реактивные расследования по алертам SIEM. Переход на hunting увеличивает вероятность обнаружения целевых атак на <strong>60-80%</strong>.</p>
+                </div>
+            </div>
+
+            <!-- ===== TAB 3: Дашборд эффектов для клиентов ===== -->
+            <div class="tab-content" id="tab-3">
+                <h2 class="section-title">Дашборд эффектов для клиентов</h2>
+
+                <div class="content-section">
+                    <span class="section-label">Суть для клиента</span>
+                    <p>Дашборд — это не «красивые графики», а инструмент, который переводит работу SOC на язык бизнес-эффектов. Руководитель видит не «обработано 12 000 событий», а «предотвращено 3 инцидента с потенциальным ущербом 450 000 BYN».</p>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-green">Ключевые метрики на дашборде</span>
+
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-value">14</div>
+                            <div class="metric-label">Инцидентов предотвращено</div>
+                            <span class="metric-delta delta-down">▼ 35% к пред. кварталу</span>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value green">12 мин</div>
+                            <div class="metric-label">Средний MTTR</div>
+                            <span class="metric-delta delta-down">▼ 18% к пред. месяцу</span>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value orange">99.7%</div>
+                            <div class="metric-label">Uptime защищённой среды</div>
+                            <span class="metric-delta delta-neutral">= SLA выполнено</span>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value purple">450K</div>
+                            <div class="metric-label">Предотвращённый ущерб, BYN</div>
+                            <span class="metric-delta delta-down">Расчётный эффект</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-purple">Покрытие угроз (MITRE ATT&CK)</span>
+
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span class="progress-label">Initial Access</span>
+                            <span class="progress-value">87%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill fill-green" style="width: 87%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span class="progress-label">Execution</span>
+                            <span class="progress-value">72%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill fill-blue" style="width: 72%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span class="progress-label">Persistence</span>
+                            <span class="progress-value">68%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill fill-blue" style="width: 68%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span class="progress-label">Privilege Escalation</span>
+                            <span class="progress-value">54%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill fill-orange" style="width: 54%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span class="progress-label">Lateral Movement</span>
+                            <span class="progress-value">79%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill fill-green" style="width: 79%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span class="progress-label">Exfiltration</span>
+                            <span class="progress-value">41%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill fill-red" style="width: 41%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-alt">Структура дашборда</span>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Блок</th>
+                                <th>Что показывает</th>
+                                <th>Для кого</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Executive Summary</strong></td>
+                                <td>Ключевые эффекты в деньгах и времени: предотвращённый ущерб, MTTR, соответствие SLA</td>
+                                <td>Руководитель, CIO, CISO</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Операционная обстановка</strong></td>
+                                <td>Текущий уровень угрозы, активные инциденты, статус реагирования</td>
+                                <td>ИТ-директор, SOC-менеджер</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Покрытие ATT&CK</strong></td>
+                                <td>Heatmap техник MITRE с индикацией пробелов в мониторинге</td>
+                                <td>Служба ИБ, аналитики</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Тренды и динамика</strong></td>
+                                <td>Изменение метрик во времени: сезонность, рост/снижение угроз, эффективность мер</td>
+                                <td>Все уровни управления</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Комплаенс-статус</strong></td>
+                                <td>Соответствие требованиям ОАЦ, СТБ 34.101, внутренним политикам</td>
+                                <td>Служба ИБ, комплаенс</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-teal">Принципы визуализации</span>
+                    <ul>
+                        <li><strong>Один экран — один вопрос:</strong> каждый блок отвечает на конкретный управленческий вопрос, без «украшательств ради графики».</li>
+                        <li><strong>Drill-down до события:</strong> от сводной метрики можно «провалиться» до конкретного инцидента, лога и действия аналитика.</li>
+                        <li><strong>Экспорт в одном клике:</strong> любой блок выгружается в PDF/PPTX для включения в отчётность руководству.</li>
+                        <li><strong>Ролевой доступ:</strong> руководитель видит эффекты, аналитик — детали, комплаенс — сертификаты. Один дашборд — три представления.</li>
+                    </ul>
+                </div>
+
+                <div class="highlight-box">
+                    <p><strong>Доступность:</strong> Дашборд доступен в личном кабинете подписчика 24/7. Данные обновляются в реальном времени (задержка — не более <strong>5 минут</strong>). На мобильных устройствах — адаптированная версия с ключевыми метриками.</p>
+                </div>
+            </div>
+
+            <!-- ===== TAB 4: Отчётность по инцидентам ===== -->
+            <div class="tab-content" id="tab-4">
+                <h2 class="section-title">Отчётность по инцидентам (в реальном времени)</h2>
+
+                <div class="content-section">
+                    <span class="section-label">Суть для клиента</span>
+                    <p>Клиент видит каждый инцидент в момент его обнаружения и на всех этапах обработки. Никаких «отчётов раз в месяц постфактум» — полная прозрачность процесса реагирования в реальном времени.</p>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-purple">Жизненный цикл инцидента в отчётности</span>
+
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-time">T+0 — Обнаружение</div>
+                            <div class="timeline-title">Автоматическое детектирование или сообщение от hunting-аналитика</div>
+                            <div class="timeline-desc">Инцидент регистрируется в системе, присваивается приоритет (Critical / High / Medium / Low), создаётся карточка. Клиент получает уведомление в личном кабинете и (при необходимости) по SMS/email.</div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-time">T+5 мин — Триаж</div>
+                            <div class="timeline-title">Первичная классификация и назначение ответственного</div>
+                            <div class="timeline-desc">Дежурный аналитик подтверждает/отклоняет инцидент, определяет категорию (вредоносное ПО, фишинг, несанкционированный доступ и т.д.), назначает ведущего специалиста. Клиент видит обновление статуса.</div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-time">T+15 мин — Сдерживание</div>
+                            <div class="timeline-title">Первичные меры по локализации</div>
+                            <div class="timeline-desc">Блокировка IOC на периметре, изоляция заражённых узлов, отзыв скомпрометированных учётных записей. Все действия логируются и отображаются в карточке инцидента.</div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-time">T+1-4 часа — Расследование</div>
+                            <div class="timeline-title">Глубокий анализ и восстановление цепочки атаки</div>
+                            <div class="timeline-desc">Форензик-анализ, определение точки входа, масштаба компрометации, затронутых данных. Клиент видит ход расследования в режиме реального времени.</div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-time">T+4-24 часа — Устранение</div>
+                            <div class="timeline-title">Полная ликвидация угрозы и восстановление</div>
+                            <div class="timeline-desc">Удаление вредоносного кода, закрытие уязвимостей, восстановление из резервных копий. Клиент подтверждает восстановление работоспособности.</div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-time">T+24-72 часа — Пост-анализ</div>
+                            <div class="timeline-title">Итоговый отчёт и lessons learned</div>
+                            <div class="timeline-desc">Формируется финальный отчёт с root cause analysis, рекомендациями по предотвращению повторения, обновлёнными правилами детектирования. Отчёт доступен в личном кабинете.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-green">Форматы отчётности</span>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Формат</th>
+                                <th>Содержание</th>
+                                <th>Частота</th>
+                                <th>Получатель</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Real-time алерт</strong></td>
+                                <td>Критический инцидент: краткое описание, текущий статус, необходимые действия со стороны клиента</td>
+                                <td>По событию (мгновенно)</td>
+                                <td>ИТ-дежурный, CISO</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ежедневная сводка</strong></td>
+                                <td>Все инциденты за сутки, статусы, ключевые метрики (MTTD, MTTR)</td>
+                                <td>Ежедневно, 08:00</td>
+                                <td>ИТ-руководитель</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Еженедельный отчёт</strong></td>
+                                <td>Тренды, топ-угроз, эффективность реагирования, выполнение SLA</td>
+                                <td>Еженедельно, понедельник</td>
+                                <td>CIO, руководитель ИБ</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ежеквартальный аналитический отчёт</strong></td>
+                                <td>Стратегический анализ: динамика угроз, ROI подписки, roadmap улучшений, комплаенс-статус</td>
+                                <td>Ежеквартально</td>
+                                <td>Топ-менеджмент</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Инцидентный отчёт (post-mortem)</strong></td>
+                                <td>Детальный разбор конкретного инцидента: хронология, root cause, выводы, рекомендации</td>
+                                <td>В течение 72 часов после закрытия инцидента</td>
+                                <td>Заказчик, ИБ-служба</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-alt">Что содержит итоговый отчёт по инциденту</span>
+                    <ul>
+                        <li><strong>Executive summary:</strong> краткое описание для руководства — что произошло, какой ущерб предотвращён, текущий статус.</li>
+                        <li><strong>Хронология (timeline):</strong> пошаговое восстановление событий от точки входа до ликвидации.</li>
+                        <li><strong>Технический анализ:</strong> использованные TTP по MITRE ATT&CK, индикаторы компрометации (IoC), методы обхода средств защиты.</li>
+                        <li><strong>Масштаб воздействия:</strong> затронутые системы, данные, пользователи.</li>
+                        <li><strong>Действия SOC:</strong> что было сделано, кем, в какое время.</li>
+                        <li><strong>Root cause analysis:</strong> первопричина инцидента.</li>
+                        <li><strong>Рекомендации:</strong> конкретные меры по предотвращению повторения — технические, организационные, процедурные.</li>
+                        <li><strong>Обновления правил детектирования:</strong> новые сигнатуры и аналитические правила, добавленные в SIEM по итогам инцидента.</li>
+                    </ul>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-teal">Интеграция отчётности</span>
+                    <ul>
+                        <li><strong>API для SIEM/SOAR клиента:</strong> инциденты и их статусы автоматически синхронизируются с внутренними системами заказчика.</li>
+                        <li><strong>STIX/TAXII:</strong> индикаторы компрометации экспортируются в стандартных форматах для обмена с отраслевыми ISAC.</li>
+                        <li><strong>Webhook-уведомления:</strong> настраиваемые алерты в Telegram, Slack, email, SMS.</li>
+                        <li><strong>Экспорт в PDF/PPTX/Excel:</strong> для включения в внутреннюю отчётность и презентации руководству.</li>
+                    </ul>
+                </div>
+
+                <div class="tariff-note">
+                    <p><strong>Прозрачность как стандарт:</strong> Все отчёты, включая real-time данные, входят в базовый тариф. Клиент не платит дополнительно за «прозрачность» — это базовое право подписчика, а не премиальная опция.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            Центр кибербезопасности
+        </div>
+    </div>
+
+    <script>
+        // Tab switching logic
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                const targetId = this.getAttribute('data-tab');
+                document.getElementById(targetId).classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

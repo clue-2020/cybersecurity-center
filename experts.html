@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Эксперты и консалтинг</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a2e;
+            color: #e0e0e0;
+            line-height: 1.7;
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ===== HEADER WITH HOVER MENU ===== */
+        .header-area {
+            position: relative;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .main-title {
+            display: inline-block;
+            color: #ffffff;
+            font-size: 2.2rem;
+            padding: 15px 40px;
+            border-bottom: 3px solid #4a9eff;
+            cursor: default;
+            position: relative;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .main-title:hover {
+            color: #4a9eff;
+            text-shadow: 0 0 20px rgba(74, 158, 255, 0.4);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            background: #16213e;
+            border: 1px solid #2a3a5c;
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 360px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            z-index: 99;
+        }
+
+        .header-area:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .dropdown-menu::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid #16213e;
+        }
+
+        .tab-btn {
+            display: block;
+            width: 100%;
+            padding: 12px 20px;
+            margin-bottom: 4px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: #b8c5d6;
+            font-size: 1rem;
+            font-family: inherit;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-btn:last-child {
+            margin-bottom: 0;
+        }
+
+        .tab-btn:hover {
+            background: #1e2a4a;
+            color: #4a9eff;
+            padding-left: 28px;
+        }
+
+        .tab-btn.active {
+            background: #4a9eff;
+            color: #1a1a2e;
+            font-weight: 700;
+        }
+
+        .tab-btn.active:hover {
+            background: #5aadff;
+            color: #1a1a2e;
+        }
+
+        /* ===== CONTENT AREA ===== */
+        .content-wrapper {
+            background: #16213e;
+            border: 1px solid #2a3a5c;
+            border-radius: 16px;
+            padding: 30px 35px;
+            min-height: 400px;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            color: #4a9eff;
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #2a3a5c;
+        }
+
+        .content-section {
+            margin-bottom: 24px;
+        }
+
+        .content-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-label {
+            display: inline-block;
+            background: #4a9eff;
+            color: #1a1a2e;
+            padding: 5px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .section-label-alt { background: #e94560; }
+        .section-label-green { background: #2ecc71; }
+        .section-label-purple { background: #9b59b6; }
+        .section-label-orange { background: #e67e22; }
+        .section-label-teal { background: #1abc9c; }
+        .section-label-blue { background: #3498db; }
+
+        p {
+            color: #b8c5d6;
+            margin-bottom: 12px;
+        }
+
+        p strong {
+            color: #ffffff;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            position: relative;
+            padding-left: 22px;
+            margin-bottom: 8px;
+            color: #b8c5d6;
+        }
+
+        ul li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #4a9eff;
+            font-weight: bold;
+        }
+
+        /* ===== TABLES ===== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        table thead {
+            background: #4a9eff;
+            color: #1a1a2e;
+        }
+
+        table th {
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #2a3a5c;
+            color: #b8c5d6;
+            vertical-align: top;
+        }
+
+        table tbody tr {
+            background: #0f1a30;
+            transition: background 0.3s ease;
+        }
+
+        table tbody tr:nth-child(even) {
+            background: #131e38;
+        }
+
+        table tbody tr:hover {
+            background: #1e2a4a;
+        }
+
+        table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ===== HIGHLIGHT BOXES ===== */
+        .highlight-box {
+            background: rgba(74, 158, 255, 0.08);
+            border-left: 4px solid #4a9eff;
+            padding: 16px 20px;
+            border-radius: 0 10px 10px 0;
+            margin: 16px 0;
+        }
+
+        .highlight-box p {
+            margin: 0;
+            color: #d0d8e8;
+        }
+
+        .highlight-box strong {
+            color: #4a9eff;
+        }
+
+        .highlight-box ul {
+            margin-top: 8px;
+        }
+
+        .tariff-note {
+            background: rgba(233, 69, 96, 0.08);
+            border-left: 4px solid #e94560;
+            padding: 16px 20px;
+            border-radius: 0 10px 10px 0;
+            margin: 16px 0;
+        }
+
+        .tariff-note p {
+            margin: 0;
+            color: #d0d8e8;
+        }
+
+        .tariff-note strong {
+            color: #e94560;
+        }
+
+        /* ===== STEPS ===== */
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 14px;
+            padding: 14px 16px;
+            background: #0f1a30;
+            border-radius: 10px;
+            border: 1px solid #2a3a5c;
+            transition: all 0.3s ease;
+        }
+
+        .step-item:hover {
+            border-color: #4a9eff;
+            background: #131e38;
+        }
+
+        .step-number {
+            min-width: 36px;
+            height: 36px;
+            background: #4a9eff;
+            color: #1a1a2e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-right: 14px;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-content strong {
+            color: #ffffff;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .step-content span {
+            color: #b8c5d6;
+            font-size: 0.95rem;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #2a3a5c;
+            color: #6a7a9a;
+            font-size: 0.9rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 1.5rem;
+                padding: 12px 20px;
+            }
+
+            .dropdown-menu {
+                min-width: 280px;
+            }
+
+            .content-wrapper {
+                padding: 20px 18px;
+            }
+
+            table {
+                font-size: 0.8rem;
+            }
+
+            table th, table td {
+                padding: 10px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Навигационное меню -->
+<nav style="
+    background: #0f172a;
+    border-bottom: 1px solid #334155;
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+">
+    <div style="max-width: 1320px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+        <a href="index.html" style="color: #ef4444; font-weight: 800; font-size: 1.2rem; text-decoration: none;">
+            🛡️ Центр Кибербезопасности
+        </a>
+        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+            <a href="index.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Главная</a>
+            <a href="infrastructure.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Инфраструктура</a>
+            <a href="experts.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Эксперты</a>
+            <a href="cases.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Кейсы</a>
+            <a href="monitoring.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Мониторинг</a>
+            <a href="knowledge.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">База знаний</a>
+            <a href="incident-response.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Инциденты</a>
+            <a href="contacts.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Контакты</a>
+            <a href="calculator.html" style="color: #ef4444; text-decoration: none; font-size: 0.9rem; font-weight: 700;">Калькулятор</a>
+        </div>
+    </div>
+</nav>
+    <div class="container">
+
+        <!-- ===== HEADER WITH HOVER DROPDOWN ===== -->
+        <div class="header-area">
+            <h1 class="main-title">Эксперты и консалтинг</h1>
+
+            <div class="dropdown-menu">
+                <button class="tab-btn active" data-tab="tab-1">Команда Центра</button>
+                <button class="tab-btn" data-tab="tab-2">Личная консультация</button>
+                <button class="tab-btn" data-tab="tab-3">Аудит архитектуры и модель угроз</button>
+                <button class="tab-btn" data-tab="tab-4">Построение KPI и метрик эффективности</button>
+                <button class="tab-btn" data-tab="tab-5">Пост-внедренческое сопровождение</button>
+            </div>
+        </div>
+
+        <!-- ===== CONTENT AREA ===== -->
+        <div class="content-wrapper">
+
+            <!-- ===== TAB 1: Команда Центра ===== -->
+            <div class="tab-content active" id="tab-1">
+                <h2 class="section-title">Команда Центра</h2>
+
+                <div class="content-section">
+                    <span class="section-label">Общая концепция раздела</span>
+                    <p>Раздел решает две задачи: доверие (кто защищает) и ценообразование (почему эти люди стоят своих денег). В модели «Подписки на эффект» клиент платит не за FTE (полные ставки), а за результат — но результат обеспечивается конкретной экспертизой команды.</p>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-green">Архитектура команды (12 человек)</span>
+                    <p>Оптимальная структура SOC уровня L1-L3 для обслуживания 30-50 клиентов (целевой масштаб Центра) с учетом требований ОАЦ к режиму 24/7 и разделению обязанностей.</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Функциональный блок</th>
+                                <th>Количество</th>
+                                <th>Роль в обеспечении эффектов</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Руководитель Центра</strong></td>
+                                <td>1</td>
+                                <td>Стратегия, взаимодействие с ОАЦ, BY-CERT, страховщиками. Финальная ответственность за KPI подписчиков.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Архитектор ИБ / Руководитель SOC</strong></td>
+                                <td>1</td>
+                                <td>Проектирование защиты под заявленные эффекты, выбор технологического стека, аудит инфраструктуры клиентов.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ведущий аналитик (Threat Hunting, L3)</strong></td>
+                                <td>2</td>
+                                <td>Проактивный поиск угроз, расследование сложных инцидентов, разработка детектирующих правил. Требование ОАЦ: глубокая экспертиза для расследования инцидентов с ГТ.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Аналитики SOC (L2)</strong></td>
+                                <td>3</td>
+                                <td>Оперативный анализ алертов, корреляция событий, первичное реагирование. Ключевые для эффекта «SLA 15 минут».</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Инженеры мониторинга (L1, дежурные смены)</strong></td>
+                                <td>4</td>
+                                <td>Круглосуточный мониторинг (2 человека в смену x 2 смены + резерв). Требование ОАЦ: непрерывное наблюдение за аттестованными системами.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Специалист по комплаенсу и аттестации</strong></td>
+                                <td>1</td>
+                                <td>Поддержание аттестации ОАЦ, подготовка отчетности по СТБ 34.101, взаимодействие с регуляторами.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-purple">Почему именно 12 человек (экономическое обоснование)</span>
+                    <ul>
+                        <li>4 инженера L1 обеспечивают непрерывное дежурство 24/7/365 с учетом отпусков, больничных и обучения (коэффициент резерва 1.5). Это минимум для гарантированного SLA.</li>
+                        <li>3 аналитика L2 + 2 эксперта L3 — соотношение 1:1.5, оптимальное по практике NIST SP 800-61 (аналитик не должен тонуть в рутине L1, но и не должен сидеть без инцидентов).</li>
+                        <li>1 специалист по комплаенсу — требование ОАЦ к выделенному должностному лицу за информационную безопасность в аттестованной организации.</li>
+                        <li>Архитектор и руководитель — обеспечивают преемственность и масштабируемость: при росте до 60 клиентов команда расширяется пропорционально, без перестройки процессов.</li>
+                    </ul>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-alt">Требования ОАЦ к персоналу (как мы их реализуем)</span>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Требование ОАЦ</th>
+                                <th>Как реализовано в Центре</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Проверка надежности</strong></td>
+                                <td>Все сотрудники с допуском к ГТ проходят проверку. Для коммерческих клиентов — базовая проверка (без ГТ).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Регулярное обучение</strong></td>
+                                <td>72 часа в год на человека (требование ОАЦ). Сертификация BY-CERT, курсы вендоров, симуляции инцидентов.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Разделение обязанностей</strong></td>
+                                <td>L1 не имеет прав на изменение правил корреляции; L3 не имеет прав на доступ к бэкапам клиентов.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Преемственность</strong></td>
+                                <td>Дублирование компетенций: каждый эффект «закреплен» минимум за 2 специалистами.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ===== TAB 2: Личная консультация ===== -->
+            <div class="tab-content" id="tab-2">
+                <h2 class="section-title">Личная консультация</h2>
+
+                <div class="content-section">
+                    <span class="section-label">Модель консультирования в логике «эффекта»</span>
+                    <p>Консультация — не «продажный звонок», а бесплатный аудит ценности. Цель: перевести технические проблемы клиента в измеримые бизнес-эффекты, которые потом войдут в тариф.</p>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-green">Форматы консультации</span>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Формат</th>
+                                <th>Длительность</th>
+                                <th>Что получает клиент</th>
+                                <th>Когда назначается</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Экспресс-оценка</strong></td>
+                                <td>30 мин, онлайн</td>
+                                <td>Первичный мэппинг рисков → 1-2 потенциальных эффекта.</td>
+                                <td>По заявке с сайта, в течение 24 часов.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Глубокий аудит</strong></td>
+                                <td>2-4 часа, на площадке клиента</td>
+                                <td>Модель угроз, инвентаризация активов, расчет ожидаемого ущерба, предварительный тариф.</td>
+                                <td>По результатам экспресс-оценки, если клиент заинтересован.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Стратегическая сессия</strong></td>
+                                <td>1 день, с участием C-level</td>
+                                <td>Дорожная карта ИБ на 12-24 месяца, приоритизация эффектов, план интеграции.</td>
+                                <td>Для крупных клиентов (КИИ, промышленность, финансы).</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label">Что происходит на консультации (поэтапно)</span>
+                    <div class="step-item">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <strong>Диагностика боли</strong>
+                            <span>— не «что у вас с ИБ?», а «сколько стоит час простоя вашего производства?», «были ли попытки BEC?», «как прошла последняя проверка ОАЦ?»</span>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <strong>Количественная оценка</strong>
+                            <span>— вместе с клиентом считаем: вероятность инцидента x ущерб = ожидаемый годовой убыток.</span>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <strong>Мэппинг на эффекты</strong>
+                            <span>— из 5 доступных эффектов выбираем 1-3 релевантных, показываем, какой компонент команды и технологий за них отвечает.</span>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <strong>Предварительный тариф</strong>
+                            <span>— клиент видит цифру до подписания договора, с разбивкой по составляющим (базовая ставка + надбавки x коэффициенты).</span>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <strong>Пилотное предложение</strong>
+                            <span>— возможность 2-4 недель тестового подключения с фиксированной ставкой (без долгосрочных обязательств).</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-purple">Кто проводит</span>
+                    <ul>
+                        <li>Экспресс-оценку — любой аналитик L2 (подготовлен скрипт).</li>
+                        <li>Глубокий аудит — Архитектор ИБ + Ведущий аналитик (L3).</li>
+                        <li>Стратегическую сессию — Руководитель Центра + Архитектор.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ===== TAB 3: Аудит архитектуры и модель угроз ===== -->
+            <div class="tab-content" id="tab-3">
+                <h2 class="section-title">Аудит архитектуры и модель угроз</h2>
+
+                <div class="content-section">
+                    <span class="section-label">Что входит в услугу (входит в стоимость подписки, не отдельная услуга)</span>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Компонент</th>
+                                <th>Описание</th>
+                                <th>Результат для клиента</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Инвентаризация активов</strong></td>
+                                <td>Автоматический + ручной сбор: серверы, АРМ, сетевое оборудование, АСУ ТП, облачные ресурсы.</td>
+                                <td>Точный коэффициент масштаба для тарифа, отсутствие «слепых зон».</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Модель угроз (Threat Model)</strong></td>
+                                <td>Построение по методологии MITRE ATT&CK, адаптированной под отрасль клиента.</td>
+                                <td>Понимание: кто, как и зачем может атаковать; какие эффекты критичны.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Оценка текущей зрелости ИБ</strong></td>
+                                <td>Сравнение с NIST CSF / СТБ 34.101. Выявление пробелов.</td>
+                                <td>Понимание, что уже есть, а что нужно добавить через подписку.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Архитектурные рекомендации</strong></td>
+                                <td>План интеграции с Центром: что оставить, что усилить, что заменить.</td>
+                                <td>Дорожная карта без «выброса всего на помойку».</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-orange">Особенности для разных отраслей</span>
+                    <ul>
+                        <li>Промышленность / АСУ ТП — акцент на сегментацию OT/IT, выявление устаревших протоколов, оценку риска остановки производства.</li>
+                        <li>Финансы — акцент на защиту платежных шлюзов, BEC, инсайдерский контроль.</li>
+                        <li>R&D — акцент на защиту интеллектуальной собственности, VDI, DLP.</li>
+                        <li>Ритейл / логистика — акцент на защиту ПДн, доступность e-commerce, DDoS-устойчивость.</li>
+                    </ul>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-teal">Частота обновления</span>
+                    <ul>
+                        <li>Первичный аудит — при подключении.</li>
+                        <li>Переоценка — ежегодно или при значимых изменениях инфраструктуры (слияния, цифровизация).</li>
+                        <li>Экспресс-проверка — ежеквартально (входит в подписку, без доплаты).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ===== TAB 4: Построение KPI и метрик эффективности ===== -->
+            <div class="tab-content" id="tab-4">
+                <h2 class="section-title">Построение KPI и метрик эффективности</h2>
+
+                <div class="content-section">
+                    <span class="section-label">Принцип</span>
+                    <p>Клиент платит за эффект — значит, эффект должен быть измерим. KPI строятся совместно на этапе аудита и фиксируются в приложении к договору.</p>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-green">Категории KPI</span>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Категория</th>
+                                <th>Примеры метрик</th>
+                                <th>Как измеряется</th>
+                                <th>Частота отчетности</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Операционные</strong></td>
+                                <td>MTTD (время до обнаружения), MTTR (время реагирования), количество ложных срабатываний</td>
+                                <td>SIEM, SOC-дашборд</td>
+                                <td>Еженедельно</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Рисковые</strong></td>
+                                <td>Снижение вероятности инцидента, остаточный риск, предотвращенный ущерб</td>
+                                <td>Расчетная модель калькулятора</td>
+                                <td>Ежемесячно</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Комплаенсные</strong></td>
+                                <td>Соответствие СТБ 34.101, готовность к проверке ОАЦ, % выполненных мероприятий</td>
+                                <td>Чек-листы, автоматические отчеты</td>
+                                <td>Ежеквартально</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Бизнесовые</strong></td>
+                                <td>Экономия на страховке, снижение затрат на ИБ (TCO), ROI подписки</td>
+                                <td>Финансовый расчет</td>
+                                <td>Ежегодно</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-alt">Примеры целевых KPI по эффектам</span>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Заявленный эффект</th>
+                                <th>KPI</th>
+                                <th>Целевое значение</th>
+                                <th>Что происходит при невыполнении</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Непрерывность АСУ ТП</strong></td>
+                                <td>Время простоя из-за кибератаки</td>
+                                <td>&lt; 1 час в год</td>
+                                <td>Пересмотр архитектуры за счет Центра, скидка 20% на следующий месяц</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Нулевая утечка</strong></td>
+                                <td>Количество подтвержденных утечек</td>
+                                <td>0</td>
+                                <td>Расследование за счет Центра, усиление DLP без доплаты</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SLA 15 минут</strong></td>
+                                <td>MTTR для критичных инцидентов</td>
+                                <td>&lt; 15 мин в 95% случаев</td>
+                                <td>Компенсация 50% месячной платы за каждый превышенный случай</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Снижение страховой премии</strong></td>
+                                <td>Экономия на киберполисе</td>
+                                <td>&gt; 9 000 BYN/год (чистая)</td>
+                                <td>Помощь в переговорах со страховщиком, аудит соответствия</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-purple">Инструменты отчетности</span>
+                    <ul>
+                        <li>Дашборд эффектов — реальное время, доступ CEO и руководителю ИБ.</li>
+                        <li>Ежемесячный отчет SOC — аналитика инцидентов, тренды, рекомендации.</li>
+                        <li>Ежеквартальный отчет комплаенс — готовность к проверкам, статус мероприятий.</li>
+                        <li>Годовой отчет ROI — сопоставление предотвращенного ущерба и затрат на подписку.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ===== TAB 5: Пост-внедренческое сопровождение ===== -->
+            <div class="tab-content" id="tab-5">
+                <h2 class="section-title">Пост-внедренческое сопровождение</h2>
+
+                <div class="content-section">
+                    <span class="section-label">Что это значит в модели подписки</span>
+                    <p>Подписка — не «поставили и забыли». Это постоянная адаптация защиты под меняющиеся угрозы и бизнес клиента.</p>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-green">Уровни сопровождения (включены в тариф)</span>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Уровень</th>
+                                <th>Что входит</th>
+                                <th>Кто отвечает</th>
+                                <th>Частота</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>L1: Оперативная поддержка</strong></td>
+                                <td>Ответы на запросы, устранение сбоев агентов, консультации по алертам</td>
+                                <td>Инженеры мониторинга</td>
+                                <td>24/7, SLA 15 мин (при выбранном эффекте)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>L2: Тюнинг правил</strong></td>
+                                <td>Настройка корреляций, снижение ложных срабатываний, адаптация под новые системы клиента</td>
+                                <td>Аналитики SOC</td>
+                                <td>По мере необходимости, в рамках подписки</td>
+                            </tr>
+                            <tr>
+                                <td><strong>L3: Развитие защиты</strong></td>
+                                <td>Новые детектирующие правила, threat hunting под изменившиеся угрозы, обновление модели угроз</td>
+                                <td>Ведущие аналитики</td>
+                                <td>Ежемесячно (планово) + по сигналам разведки</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Архитектурный уровень</strong></td>
+                                <td>Пересмотр эффектов при изменении бизнеса клиента (M&A, новые продукты, выход на рынки)</td>
+                                <td>Архитектор ИБ</td>
+                                <td>По запросу, ежеквартально</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-alt">Что происходит при инциденте (пост-инцидентное сопровождение)</span>
+                    <ul>
+                        <li>Немедленное реагирование — по процедуре SOC (входит в подписку).</li>
+                        <li>Расследование — Digital Forensics, если требуется (входит в подписку для подтвержденных инцидентов).</li>
+                        <li>Отчет об инциденте — технический + управленческий, с рекомендациями.</li>
+                        <li>Усиление защиты — внесение изменений в правила, дополнительный hunting, обучение персонала клиента (входит в подписку, без доплаты за «патчи»).</li>
+                        <li>Работа с регуляторами — при необходимости, Центр готовит материалы для ОАЦ / BY-CERT / правоохранителей (входит в подписку).</li>
+                    </ul>
+                </div>
+
+                <div class="content-section">
+                    <span class="section-label section-label-teal">Программа повышения осведомленности (Security Awareness)</span>
+                    <p>Входит в подписку как скрытый эффект:</p>
+                    <ul>
+                        <li>Ежемесячные разборы фишинговых писем, актуальных для отрасли клиента.</li>
+                        <li>Квартальные тренинги для ключевых сотрудников (топ-менеджмент, бухгалтерия, инженеры АСУ ТП).</li>
+                        <li>Имитационные фишинговые кампании с метрикой «процент кликнувших».</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            Центр кибербезопасности
+        </div>
+    </div>
+
+    <script>
+        // Tab switching logic
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                const targetId = this.getAttribute('data-tab');
+                document.getElementById(targetId).classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
