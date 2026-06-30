@@ -912,6 +912,12 @@
                 grid-template-columns: 1fr;
             }
         }
+.nav-link { color: #94a3b8; text-decoration: none; font-size: 0.9rem; position: relative; padding: 5px 0; transition: color 0.3s; font-weight: 500; }
+.nav-link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: #ef4444; transition: width 0.3s ease; }
+.nav-link:hover { color: #ef4444; }
+.nav-link:hover::after { width: 100%; }
+.nav-link.active { color: #ef4444; font-weight: 700; }
+.nav-link.active::after { width: 100%; }
     </style>
 </head>
 <body>
@@ -929,15 +935,15 @@
             🛡️ Центр Кибербезопасности
         </a>
         <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-            <a href="index.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Главная</a>
-            <a href="infrastructure.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Инфраструктура</a>
-            <a href="experts.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Эксперты</a>
-            <a href="cases.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Кейсы</a>
-            <a href="monitoring.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Мониторинг</a>
-            <a href="catalog.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">База знаний</a>
-            <a href="incident-response.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Инциденты</a>
-            <a href="contacts.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Контакты</a>
-            <a href="calculator.html" style="color: #ef4444; text-decoration: none; font-size: 0.9rem; font-weight: 700;">Калькулятор</a>
+            <a href="index.html" class="nav-link" data-page="index">Главная</a>
+            <a href="infrastructure.html" class="nav-link" data-page="infrastructure">Инфраструктура</a>
+            <a href="experts.html" class="nav-link" data-page="experts">Эксперты</a>
+            <a href="cases.html" class="nav-link" data-page="cases">Кейсы</a>
+            <a href="monitoring.html" class="nav-link" data-page="monitoring">Мониторинг</a>
+            <a href="catalog.html" class="nav-link" data-page="catalog">База знаний</a>
+            <a href="incident-response.html" class="nav-link" data-page="incident">Инциденты</a>
+            <a href="contacts.html" class="nav-link" data-page="contacts">Контакты</a>
+            <a href="calculator.html" class="nav-link" data-page="calculator">Калькулятор</a>
         </div>
     </div>
 </nav>
@@ -1253,7 +1259,7 @@
 
                         <div class="article-card">
                             <span class="article-type type-guide">Руководство</span>
-                            <div class="article-title">Реагирование на инцидент: playbook для ИТ-службы заказчика</div>
+                            <div class="article-title">Реагирование на инцидент: сценарий действий для ИТ-службы заказчика</div>
                             <div class="article-desc">Что делать в первые 15 минут после обнаружения инцидента: кому звонить, что сохранять, чего не делать. Готовый шаблон для включения в внутренний регламент.</div>
                             <div class="article-footer">
                                 <span>Автор: Incident Response</span>
@@ -1306,7 +1312,7 @@
                             <div class="video-meta">
                                 <span class="video-badge level-beginner">Начальный</span>
                                 <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">Фишинг</span>
-                                <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">Social Engineering</span>
+                                <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">Социальная инженерия</span>
                             </div>
                         </div>
                     </div>
@@ -1337,8 +1343,8 @@
                             <div class="video-desc">Безопасное использование смартфонов в рабочих целях, риски публичных Wi-Fi, настройка VPN, защита корпоративных данных на личных устройствах (BYOD).</div>
                             <div class="video-meta">
                                 <span class="video-badge level-beginner">Начальный</span>
-                                <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">Mobile</span>
-                                <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">Remote Work</span>
+                                <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">Мобильные устройства</span>
+                                <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">Удалённая работа</span>
                             </div>
                         </div>
                     </div>
@@ -1373,7 +1379,7 @@
                             <div class="video-desc">Первичные действия при обнаружении подозрительной активности, изоляция заражённой системы, сбор артефактов для анализа, взаимодействие с SOC Центра.</div>
                             <div class="video-meta">
                                 <span class="video-badge level-intermediate">Средний</span>
-                                <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">Malware</span>
+                                <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">Вредоносное ПО</span>
                                 <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">IR</span>
                             </div>
                         </div>
@@ -1389,8 +1395,8 @@
                             <div class="video-desc">Практические подходы к сегментации корпоративной сети, изоляция критичных систем, настройка межсетевого экранирования, мониторинг сетевого трафика.</div>
                             <div class="video-meta">
                                 <span class="video-badge level-intermediate">Средний</span>
-                                <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">Network</span>
-                                <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">Firewall</span>
+                                <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">Сеть</span>
+                                <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">Межсетевой экран</span>
                             </div>
                         </div>
                     </div>
@@ -1426,7 +1432,7 @@
                             <div class="video-meta">
                                 <span class="video-badge level-advanced">Продвинутый</span>
                                 <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">IR</span>
-                                <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">Forensics</span>
+                                <span class="video-badge" style="background: rgba(74, 158, 255, 0.15); color: #4a9eff;">Форензика</span>
                             </div>
                         </div>
                     </div>
@@ -1683,7 +1689,7 @@
                         <label class="checklist-item">
                             <input type="checkbox">
                             <span class="checklist-text">
-                                Проводятся учебные тревоги (tabletop exercises) не реже 2 раз в год
+                                Проводятся учебные тревоги не реже 2 раз в год
                             </span>
                         </label>
                         <label class="checklist-item">
@@ -2047,6 +2053,9 @@
                 }
             });
         });
+    </script>
+    <script>
+    (function(){var p=window.location.pathname.split('/').pop()||'index.html';var m={'index.html':'index','infrastructure.html':'infrastructure','experts.html':'experts','cases.html':'cases','monitoring.html':'monitoring','catalog.html':'catalog','incident-response.html':'incident','contacts.html':'contacts','calculator.html':'calculator'};var a=m[p]||'index';document.querySelectorAll('.nav-link').forEach(function(l){if(l.getAttribute('data-page')===a)l.classList.add('active');});})();
     </script>
 </body>
 </html>

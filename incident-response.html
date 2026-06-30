@@ -1170,6 +1170,12 @@
                 text-align: center;
             }
         }
+.nav-link { color: #94a3b8; text-decoration: none; font-size: 0.9rem; position: relative; padding: 5px 0; transition: color 0.3s; font-weight: 500; }
+.nav-link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: #ef4444; transition: width 0.3s ease; }
+.nav-link:hover { color: #ef4444; }
+.nav-link:hover::after { width: 100%; }
+.nav-link.active { color: #ef4444; font-weight: 700; }
+.nav-link.active::after { width: 100%; }
     </style>
 </head>
 <body>
@@ -1187,15 +1193,15 @@
             🛡️ Центр Кибербезопасности
         </a>
         <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-            <a href="index.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Главная</a>
-            <a href="infrastructure.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Инфраструктура</a>
-            <a href="experts.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Эксперты</a>
-            <a href="cases.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Кейсы</a>
-            <a href="monitoring.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Мониторинг</a>
-            <a href="catalog.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">База знаний</a>
-            <a href="incident-response.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Инциденты</a>
-            <a href="contacts.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Контакты</a>
-            <a href="calculator.html" style="color: #ef4444; text-decoration: none; font-size: 0.9rem; font-weight: 700;">Калькулятор</a>
+            <a href="index.html" class="nav-link" data-page="index">Главная</a>
+            <a href="infrastructure.html" class="nav-link" data-page="infrastructure">Инфраструктура</a>
+            <a href="experts.html" class="nav-link" data-page="experts">Эксперты</a>
+            <a href="cases.html" class="nav-link" data-page="cases">Кейсы</a>
+            <a href="monitoring.html" class="nav-link" data-page="monitoring">Мониторинг</a>
+            <a href="catalog.html" class="nav-link" data-page="catalog">База знаний</a>
+            <a href="incident-response.html" class="nav-link" data-page="incident">Инциденты</a>
+            <a href="contacts.html" class="nav-link" data-page="contacts">Контакты</a>
+            <a href="calculator.html" class="nav-link" data-page="calculator">Калькулятор</a>
         </div>
     </div>
 </nav>
@@ -1243,7 +1249,7 @@
                         <div class="phase-card phase-1">
                             <div class="phase-number">1</div>
                             <div class="phase-title">Подготовка</div>
-                            <div class="phase-desc">Постоянная деятельность: обновление playbook'ов, тренинги команды, настройка средств мониторинга, интеграция с инфраструктурой клиента.</div>
+                            <div class="phase-desc">Постоянная деятельность: обновление сценариев действий, тренинги команды, настройка средств мониторинга, интеграция с инфраструктурой клиента.</div>
                             <span class="phase-time">Непрерывно</span>
                         </div>
 
@@ -1278,7 +1284,7 @@
                         <div class="phase-card phase-6">
                             <div class="phase-number">6</div>
                             <div class="phase-title">Извлечённые уроки</div>
-                            <div class="phase-desc">Post-mortem анализ: root cause, обновление правил детектирования, доработка playbook'ов, отчёт для руководства клиента.</div>
+                            <div class="phase-desc">Постанализ: анализ корневой причины, обновление правил детектирования, доработка сценариев действий, отчёт для руководства клиента.</div>
                             <span class="phase-time">T+72 часа → T+7 дней</span>
                         </div>
                     </div>
@@ -1408,10 +1414,10 @@
 
                     <div class="escalation-container">
                         <div class="escalation-level">
-                            <div class="level-badge level-l1">L1<br>Triage</div>
+                            <div class="level-badge level-l1">L1<br>Триаж</div>
                             <div class="level-content">
                                 <div class="level-title">Дежурный аналитик (L1)</div>
-                                <div class="level-desc">Первичная обработка алертов, триаж, подтверждение/отклонение инцидента, базовое реагирование по готовым playbook'ам. Работает в режиме 24/7.</div>
+                                <div class="level-desc">Первичная обработка алертов, триаж, подтверждение/отклонение инцидента, базовое реагирование по готовым сценариям действий. Работает в режиме 24/7.</div>
                                 <div class="level-contacts">
                                     <a href="tel:+375171234567" class="contact-chip"><span class="chip-icon">📞</span>+375 17 123-45-67</a>
                                     <a href="mailto:soc-l1@center.by" class="contact-chip"><span class="chip-icon">✉</span>soc-l1@center.by</a>
@@ -1434,7 +1440,7 @@
                         <div class="escalation-level">
                             <div class="level-badge level-l3">L3<br>Expert</div>
                             <div class="level-content">
-                                <div class="level-title">Ведущий эксперт / Incident Commander (L3)</div>
+                                <div class="level-title">Ведущий эксперт / Руководитель реагирования (L3)</div>
                                 <div class="level-desc">Управление критичными инцидентами, координация команды, взаимодействие с внешними организациями (ОАЦ, BY-CERT, правоохранительные органы). Автоматическая эскалация при Critical.</div>
                                 <div class="level-contacts">
                                     <a href="tel:+375291234567" class="contact-chip"><span class="chip-icon">📱</span>+375 29 123-45-67</a>
@@ -1707,7 +1713,7 @@
                         <div class="phase-card phase-3">
                             <div class="phase-number">3</div>
                             <div class="phase-title">Запуск реагирования</div>
-                            <div class="phase-desc">В зависимости от приоритета — запуск соответствующего playbook, назначение ответственного, эскалация при необходимости.</div>
+                            <div class="phase-desc">В зависимости от приоритета — запуск соответствующего сценария действий, назначение ответственного, эскалация при необходимости.</div>
                             <span class="phase-time">В соответствии с SLA</span>
                         </div>
 
@@ -1721,7 +1727,7 @@
                 </div>
 
                 <div class="tariff-note">
-                    <p><strong>Важно:</strong> При ложном срабатывании (false positive) инцидент не просто закрывается — аналитик SOC объясняет причину, обновляет правила детектирования, чтобы аналогичные события не генерировали алерты в будущем. Клиент не несёт никаких штрафов за ложные сообщения.</p>
+                    <p><strong>Важно:</strong> При ложном срабатывании инцидент не просто закрывается — аналитик SOC объясняет причину, обновляет правила детектирования, чтобы аналогичные события не генерировали алерты в будущем. Клиент не несёт никаких штрафов за ложные сообщения.</p>
                 </div>
             </div>
 
@@ -1769,7 +1775,7 @@
                         <div class="report-section">
                             <div class="report-section-title">
                                 <span class="report-section-num">1</span>
-                                Executive Summary
+                                Сводка для руководства
                             </div>
                             <div class="report-section-desc">Краткое изложение для руководства: что произошло, какой ущерб предотвращён, текущий статус, ключевые выводы.</div>
                         </div>
@@ -1809,7 +1815,7 @@
                         <div class="report-section">
                             <div class="report-section-title">
                                 <span class="report-section-num">6</span>
-                                Root Cause Analysis (RCA)
+                                Анализ корневой причины (RCA)
                             </div>
                             <div class="report-section-desc">Первопричина инцидента: уязвимость, ошибка конфигурации, действие пользователя, недостаточность средств защиты. Метод «5 почему».</div>
                         </div>
@@ -1819,7 +1825,7 @@
                                 <span class="report-section-num">7</span>
                                 Рекомендации
                             </div>
-                            <div class="report-section-desc">Конкретные меры по предотвращению повторения: технические (патчи, конфигурации), организационные (обучение, регламенты), процедурные (playbook'и).</div>
+                            <div class="report-section-desc">Конкретные меры по предотвращению повторения: технические (патчи, конфигурации), организационные (обучение, регламенты), процедурные (сценарии действий).</div>
                         </div>
 
                         <div class="report-section">
@@ -1873,7 +1879,7 @@
                                 <td>ИТ-служба, служба ИБ</td>
                             </tr>
                             <tr>
-                                <td><strong>Executive Briefing</strong></td>
+                                <td><strong>Краткая сводка для руководства</strong></td>
                                 <td>Презентация для руководства (15-20 слайдов): бизнес-эффекты, выводы, стратегические рекомендации</td>
                                 <td>В течение <strong>10 рабочих дней</strong></td>
                                 <td>Топ-менеджмент, Совет директоров</td>
@@ -1892,9 +1898,9 @@
                     <span class="section-label section-label-teal">Использование результатов анализа</span>
                     <ul>
                         <li><strong>Обогащение базы знаний:</strong> выводы по инцидентам (с обезличиванием) используются для обновления методических материалов и обучающих курсов.</li>
-                        <li><strong>Улучшение playbook'ов:</strong> каждый инцидент — повод пересмотреть и доработать процедуры реагирования.</li>
+                        <li><strong>Улучшение сценариев действий:</strong> каждый инцидент — повод пересмотреть и доработать процедуры реагирования.</li>
                         <li><strong>Обновление правил SIEM:</strong> новые IoC и TTP конвертируются в правила детектирования для всех подписчиков Центра.</li>
-                        <li><strong>Threat Intelligence:</strong> информация об атаках передаётся в BY-CERT и отраслевые ISAC для защиты экосистемы в целом.</li>
+                        <li><strong>Разведка угроз:</strong> информация об атаках передаётся в BY-CERT и отраслевые ISAC для защиты экосистемы в целом.</li>
                         <li><strong>Обучающие кейсы:</strong> реальные инциденты (анонимизированные) становятся основой для тренингов и учебных тревог.</li>
                     </ul>
                 </div>
@@ -1990,6 +1996,9 @@
                 field.style.borderColor = '';
             });
         });
+    </script>
+    <script>
+    (function(){var p=window.location.pathname.split('/').pop()||'index.html';var m={'index.html':'index','infrastructure.html':'infrastructure','experts.html':'experts','cases.html':'cases','monitoring.html':'monitoring','catalog.html':'catalog','incident-response.html':'incident','contacts.html':'contacts','calculator.html':'calculator'};var a=m[p]||'index';document.querySelectorAll('.nav-link').forEach(function(l){if(l.getAttribute('data-page')===a)l.classList.add('active');});})();
     </script>
 </body>
 </html>

@@ -914,6 +914,12 @@
                 grid-template-columns: repeat(2, 1fr);
             }
         }
+.nav-link { color: #94a3b8; text-decoration: none; font-size: 0.9rem; position: relative; padding: 5px 0; transition: color 0.3s; font-weight: 500; }
+.nav-link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: #ef4444; transition: width 0.3s ease; }
+.nav-link:hover { color: #ef4444; }
+.nav-link:hover::after { width: 100%; }
+.nav-link.active { color: #ef4444; font-weight: 700; }
+.nav-link.active::after { width: 100%; }
     </style>
 </head>
 <body>
@@ -931,15 +937,15 @@
             🛡️ Центр Кибербезопасности
         </a>
         <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-            <a href="index.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Главная</a>
-            <a href="infrastructure.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Инфраструктура</a>
-            <a href="experts.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Эксперты</a>
-            <a href="cases.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Кейсы</a>
-            <a href="monitoring.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Мониторинг</a>
-            <a href="catalog.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">База знаний</a>
-            <a href="incident-response.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Инциденты</a>
-            <a href="contacts.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Контакты</a>
-            <a href="calculator.html" style="color: #ef4444; text-decoration: none; font-size: 0.9rem; font-weight: 700;">Калькулятор</a>
+            <a href="index.html" class="nav-link" data-page="index">Главная</a>
+            <a href="infrastructure.html" class="nav-link" data-page="infrastructure">Инфраструктура</a>
+            <a href="experts.html" class="nav-link" data-page="experts">Эксперты</a>
+            <a href="cases.html" class="nav-link" data-page="cases">Кейсы</a>
+            <a href="monitoring.html" class="nav-link" data-page="monitoring">Мониторинг</a>
+            <a href="catalog.html" class="nav-link" data-page="catalog">База знаний</a>
+            <a href="incident-response.html" class="nav-link" data-page="incident">Инциденты</a>
+            <a href="contacts.html" class="nav-link" data-page="contacts">Контакты</a>
+            <a href="calculator.html" class="nav-link" data-page="calculator">Калькулятор</a>
         </div>
     </div>
 </nav>
@@ -1341,6 +1347,9 @@
                 document.getElementById('demo-form').scrollIntoView({ behavior: 'smooth' });
             });
         });
+    </script>
+    <script>
+    (function(){var p=window.location.pathname.split('/').pop()||'index.html';var m={'index.html':'index','infrastructure.html':'infrastructure','experts.html':'experts','cases.html':'cases','monitoring.html':'monitoring','catalog.html':'catalog','incident-response.html':'incident','contacts.html':'contacts','calculator.html':'calculator'};var a=m[p]||'index';document.querySelectorAll('.nav-link').forEach(function(l){if(l.getAttribute('data-page')===a)l.classList.add('active');});})();
     </script>
 </body>
 </html>

@@ -677,6 +677,12 @@
                 font-size: 1.6rem;
             }
         }
+.nav-link { color: #94a3b8; text-decoration: none; font-size: 0.9rem; position: relative; padding: 5px 0; transition: color 0.3s; font-weight: 500; }
+.nav-link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: #ef4444; transition: width 0.3s ease; }
+.nav-link:hover { color: #ef4444; }
+.nav-link:hover::after { width: 100%; }
+.nav-link.active { color: #ef4444; font-weight: 700; }
+.nav-link.active::after { width: 100%; }
     </style>
 </head>
 <body>
@@ -694,15 +700,15 @@
             🛡️ Центр Кибербезопасности
         </a>
         <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-            <a href="index.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Главная</a>
-            <a href="infrastructure.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Инфраструктура</a>
-            <a href="experts.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Эксперты</a>
-            <a href="cases.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Кейсы</a>
-            <a href="monitoring.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Мониторинг</a>
-            <a href="catalog.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">База знаний</a>
-            <a href="incident-response.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Инциденты</a>
-            <a href="contacts.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Контакты</a>
-            <a href="calculator.html" style="color: #ef4444; text-decoration: none; font-size: 0.9rem; font-weight: 700;">Калькулятор</a>
+            <a href="index.html" class="nav-link" data-page="index">Главная</a>
+            <a href="infrastructure.html" class="nav-link" data-page="infrastructure">Инфраструктура</a>
+            <a href="experts.html" class="nav-link" data-page="experts">Эксперты</a>
+            <a href="cases.html" class="nav-link" data-page="cases">Кейсы</a>
+            <a href="monitoring.html" class="nav-link" data-page="monitoring">Мониторинг</a>
+            <a href="catalog.html" class="nav-link" data-page="catalog">База знаний</a>
+            <a href="incident-response.html" class="nav-link" data-page="incident">Инциденты</a>
+            <a href="contacts.html" class="nav-link" data-page="contacts">Контакты</a>
+            <a href="calculator.html" class="nav-link" data-page="calculator">Калькулятор</a>
         </div>
     </div>
 </nav>
@@ -826,13 +832,13 @@
                             <tr>
                                 <td><strong>Расширенный</strong></td>
                                 <td>Полная лента в реальном времени + API-доступ</td>
-                                <td>Real-time</td>
+                                <td>в реальном времени</td>
                                 <td>Личный кабинет, API, интеграция с SIEM клиента</td>
                             </tr>
                             <tr>
                                 <td><strong>Премиум</strong></td>
                                 <td>Персонализированная лента + аналитические записки</td>
-                                <td>Real-time + еженедельный разбор трендов</td>
+                                <td>в реальном времени + еженедельный разбор трендов</td>
                                 <td>Личный кабинет, API, отчёты для руководства</td>
                             </tr>
                         </tbody>
@@ -1003,7 +1009,7 @@
 
                     <div class="progress-item">
                         <div class="progress-header">
-                            <span class="progress-label">Initial Access</span>
+                            <span class="progress-label">Первичный доступ</span>
                             <span class="progress-value">87%</span>
                         </div>
                         <div class="progress-bar">
@@ -1013,7 +1019,7 @@
 
                     <div class="progress-item">
                         <div class="progress-header">
-                            <span class="progress-label">Execution</span>
+                            <span class="progress-label">Выполнение</span>
                             <span class="progress-value">72%</span>
                         </div>
                         <div class="progress-bar">
@@ -1023,7 +1029,7 @@
 
                     <div class="progress-item">
                         <div class="progress-header">
-                            <span class="progress-label">Persistence</span>
+                            <span class="progress-label">Персистентность</span>
                             <span class="progress-value">68%</span>
                         </div>
                         <div class="progress-bar">
@@ -1033,7 +1039,7 @@
 
                     <div class="progress-item">
                         <div class="progress-header">
-                            <span class="progress-label">Privilege Escalation</span>
+                            <span class="progress-label">Повышение привилегий</span>
                             <span class="progress-value">54%</span>
                         </div>
                         <div class="progress-bar">
@@ -1043,7 +1049,7 @@
 
                     <div class="progress-item">
                         <div class="progress-header">
-                            <span class="progress-label">Lateral Movement</span>
+                            <span class="progress-label">Латеральное перемещение</span>
                             <span class="progress-value">79%</span>
                         </div>
                         <div class="progress-bar">
@@ -1053,7 +1059,7 @@
 
                     <div class="progress-item">
                         <div class="progress-header">
-                            <span class="progress-label">Exfiltration</span>
+                            <span class="progress-label">Эксфильтрация</span>
                             <span class="progress-value">41%</span>
                         </div>
                         <div class="progress-bar">
@@ -1074,7 +1080,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td><strong>Executive Summary</strong></td>
+                                <td><strong>Сводка для руководства</strong></td>
                                 <td>Ключевые эффекты в деньгах и времени: предотвращённый ущерб, MTTR, соответствие SLA</td>
                                 <td>Руководитель, CIO, CISO</td>
                             </tr>
@@ -1085,7 +1091,7 @@
                             </tr>
                             <tr>
                                 <td><strong>Покрытие ATT&CK</strong></td>
-                                <td>Heatmap техник MITRE с индикацией пробелов в мониторинге</td>
+                                <td>Тепловая карта техник MITRE с индикацией пробелов в мониторинге</td>
                                 <td>Служба ИБ, аналитики</td>
                             </tr>
                             <tr>
@@ -1106,7 +1112,7 @@
                     <span class="section-label section-label-teal">Принципы визуализации</span>
                     <ul>
                         <li><strong>Один экран — один вопрос:</strong> каждый блок отвечает на конкретный управленческий вопрос, без «украшательств ради графики».</li>
-                        <li><strong>Drill-down до события:</strong> от сводной метрики можно «провалиться» до конкретного инцидента, лога и действия аналитика.</li>
+                        <li><strong>Детализация до события:</strong> от сводной метрики можно «провалиться» до конкретного инцидента, лога и действия аналитика.</li>
                         <li><strong>Экспорт в одном клике:</strong> любой блок выгружается в PDF/PPTX для включения в отчётность руководству.</li>
                         <li><strong>Ролевой доступ:</strong> руководитель видит эффекты, аналитик — детали, комплаенс — сертификаты. Один дашборд — три представления.</li>
                     </ul>
@@ -1163,7 +1169,7 @@
                         <div class="timeline-item">
                             <div class="timeline-time">T+24-72 часа — Пост-анализ</div>
                             <div class="timeline-title">Итоговый отчёт и lessons learned</div>
-                            <div class="timeline-desc">Формируется финальный отчёт с root cause analysis, рекомендациями по предотвращению повторения, обновлёнными правилами детектирования. Отчёт доступен в личном кабинете.</div>
+                            <div class="timeline-desc">Формируется финальный отчёт с анализом корневой причины, рекомендациями по предотвращению повторения, обновлёнными правилами детектирования. Отчёт доступен в личном кабинете.</div>
                         </div>
                     </div>
                 </div>
@@ -1181,7 +1187,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td><strong>Real-time алерт</strong></td>
+                                <td><strong>Алерт в реальном времени</strong></td>
                                 <td>Критический инцидент: краткое описание, текущий статус, необходимые действия со стороны клиента</td>
                                 <td>По событию (мгновенно)</td>
                                 <td>ИТ-дежурный, CISO</td>
@@ -1205,7 +1211,7 @@
                                 <td>Топ-менеджмент</td>
                             </tr>
                             <tr>
-                                <td><strong>Инцидентный отчёт (post-mortem)</strong></td>
+                                <td><strong>Инцидентный отчёт (постанализ)</strong></td>
                                 <td>Детальный разбор конкретного инцидента: хронология, root cause, выводы, рекомендации</td>
                                 <td>В течение 72 часов после закрытия инцидента</td>
                                 <td>Заказчик, ИБ-служба</td>
@@ -1217,12 +1223,12 @@
                 <div class="content-section">
                     <span class="section-label section-label-alt">Что содержит итоговый отчёт по инциденту</span>
                     <ul>
-                        <li><strong>Executive summary:</strong> краткое описание для руководства — что произошло, какой ущерб предотвращён, текущий статус.</li>
+                        <li><strong>Сводка для руководства:</strong> краткое описание для руководства — что произошло, какой ущерб предотвращён, текущий статус.</li>
                         <li><strong>Хронология (timeline):</strong> пошаговое восстановление событий от точки входа до ликвидации.</li>
                         <li><strong>Технический анализ:</strong> использованные TTP по MITRE ATT&CK, индикаторы компрометации (IoC), методы обхода средств защиты.</li>
                         <li><strong>Масштаб воздействия:</strong> затронутые системы, данные, пользователи.</li>
                         <li><strong>Действия SOC:</strong> что было сделано, кем, в какое время.</li>
-                        <li><strong>Root cause analysis:</strong> первопричина инцидента.</li>
+                        <li><strong>Анализ корневой причины:</strong> первопричина инцидента.</li>
                         <li><strong>Рекомендации:</strong> конкретные меры по предотвращению повторения — технические, организационные, процедурные.</li>
                         <li><strong>Обновления правил детектирования:</strong> новые сигнатуры и аналитические правила, добавленные в SIEM по итогам инцидента.</li>
                     </ul>
@@ -1264,6 +1270,9 @@
                 document.getElementById(targetId).classList.add('active');
             });
         });
+    </script>
+    <script>
+    (function(){var p=window.location.pathname.split('/').pop()||'index.html';var m={'index.html':'index','infrastructure.html':'infrastructure','experts.html':'experts','cases.html':'cases','monitoring.html':'monitoring','catalog.html':'catalog','incident-response.html':'incident','contacts.html':'contacts','calculator.html':'calculator'};var a=m[p]||'index';document.querySelectorAll('.nav-link').forEach(function(l){if(l.getAttribute('data-page')===a)l.classList.add('active');});})();
     </script>
 </body>
 </html>

@@ -49,6 +49,112 @@
             z-index: 1;
         }
 
+        /* ===== НАВИГАЦИЯ С КРАСНОЙ ЛИНИЕЙ ===== */
+        .main-nav {
+            background: #0f172a;
+            border-bottom: 1px solid #334155;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 10000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .nav-container {
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .nav-logo {
+            color: #ef4444;
+            font-weight: 800;
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .nav-logo:hover {
+            color: #ff6b6b;
+            transform: scale(1.02);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            position: relative;
+            padding: 5px 0;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #ef4444;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #ef4444;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: #ef4444;
+            font-weight: 700;
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        .nav-link-highlight {
+            background: #ef4444;
+            color: #fff !important;
+            padding: 8px 16px !important;
+            border-radius: 6px;
+            font-weight: 700;
+        }
+
+        .nav-link-highlight::after {
+            display: none;
+        }
+
+        .nav-link-highlight:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 12px;
+            }
+            .nav-link {
+                font-size: 0.85rem;
+            }
+        }
+
         /* ===== HERO SECTION ===== */
         .hero {
             min-height: 90vh;
@@ -577,32 +683,27 @@
     </style>
 </head>
 <body>
-<!-- Навигационное меню -->
-<nav style="
-    background: #0f172a;
-    border-bottom: 1px solid #334155;
-    padding: 15px 0;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-">
-    <div style="max-width: 1320px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
-        <a href="index.html" style="color: #ef4444; font-weight: 800; font-size: 1.2rem; text-decoration: none;">
+
+<!-- ===== НАВИГАЦИОННОЕ МЕНЮ ===== -->
+<nav class="main-nav">
+    <div class="nav-container">
+        <a href="index.html" class="nav-logo">
             🛡️ Центр Кибербезопасности
         </a>
-        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-            <a href="index.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Главная</a>
-            <a href="infrastructure.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Инфраструктура</a>
-            <a href="experts.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Эксперты</a>
-            <a href="cases.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Кейсы</a>
-            <a href="monitoring.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Мониторинг</a>
-            <a href="catalog.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">База знаний</a>
-            <a href="incident-response.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Инциденты</a>
-            <a href="contacts.html" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Контакты</a>
-            <a href="calculator.html" style="color: #ef4444; text-decoration: none; font-size: 0.9rem; font-weight: 700;">Калькулятор</a>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link active" data-page="index">Главная</a>
+            <a href="infrastructure.html" class="nav-link" data-page="infrastructure">Инфраструктура</a>
+            <a href="experts.html" class="nav-link" data-page="experts">Эксперты</a>
+            <a href="cases.html" class="nav-link" data-page="cases">Кейсы</a>
+            <a href="monitoring.html" class="nav-link" data-page="monitoring">Мониторинг</a>
+            <a href="catalog.html" class="nav-link" data-page="catalog">База знаний</a>
+            <a href="incident-response.html" class="nav-link" data-page="incident">Инциденты</a>
+            <a href="contacts.html" class="nav-link" data-page="contacts">Контакты</a>
+            <a href="calculator.html" class="nav-link nav-link-highlight" data-page="calculator">🧮 Калькулятор</a>
         </div>
     </div>
 </nav>
+
     <!-- ===== HERO SECTION ===== -->
     <section class="hero">
         <div class="container">
@@ -628,8 +729,8 @@
             </div>
 
             <div class="cta-buttons">
-                <a href="#calculator" class="btn btn-primary">🧮 Рассчитать тариф</a>
-                <a href="#demo" class="btn btn-secondary">📊 Получить демодоступ</a>
+                <a href="calculator.html" class="btn btn-primary">🧮 Рассчитать тариф</a>
+                <a href="contacts.html#demo" class="btn btn-secondary">📊 Получить демодоступ</a>
             </div>
         </div>
     </section>
@@ -644,60 +745,60 @@
             </div>
 
             <div class="nav-grid">
-                <a href="/infrastructure" class="nav-card">
+                <a href="infrastructure.html" class="nav-card">
                     <div class="nav-card-icon">🏛️</div>
                     <div class="nav-card-title">Инфраструктура и аттестация</div>
                     <div class="nav-card-desc">Аттестация ОАЦ, дата-центр, доверенный периметр, комплаенс и сертификаты</div>
                     <div class="nav-card-link">/infrastructure →</div>
                 </a>
 
-                <a href="/experts" class="nav-card">
+                <a href="experts.html" class="nav-card">
                     <div class="nav-card-icon">👥</div>
                     <div class="nav-card-title">Эксперты и консалтинг</div>
                     <div class="nav-card-desc">Команда CERT, методологи экономики ИБ, Red Team, персональный сервис</div>
                     <div class="nav-card-link">/expert-hub →</div>
                 </a>
 
-                <a href="/cases" class="nav-card">
+                <a href="cases.html" class="nav-card">
                     <div class="nav-card-icon">📈</div>
                     <div class="nav-card-title">Кейсы и эффекты</div>
                     <div class="nav-card-desc">Реальные примеры: АСУ ТП, R&D, финансовый сектор. ROI и метрики эффективности</div>
                     <div class="nav-card-link">/solutions/cases →</div>
                 </a>
 
-                <a href="/monitoring" class="nav-card">
+                <a href="monitoring.html" class="nav-card">
                     <div class="nav-card-icon">🔍</div>
                     <div class="nav-card-title">Мониторинг и проактивный поиск угроз</div>
                     <div class="nav-card-desc">Лента киберугроз, threat hunting, дашборд эффектов, отчётность в реальном времени</div>
                     <div class="nav-card-link">/live-monitor →</div>
                 </a>
 
-                <a href="/incident-response" class="nav-card">
+                <a href="catalog.html" class="nav-card">
                     <div class="nav-card-icon">📚</div>
                     <div class="nav-card-title">База знаний</div>
                     <div class="nav-card-desc">Нормативная база, статьи, видеолекции, чек-листы самодиагностики, словарь терминов</div>
-                    <div class="nav-card-link">/academy →</div>
+                    <div class="nav-card-link">/catalog →</div>
                 </a>
 
-                <a href="/incident-response" class="nav-card">
+                <a href="incident-response.html" class="nav-card">
                     <div class="nav-card-icon">🚨</div>
                     <div class="nav-card-title">Реагирование на инциденты</div>
                     <div class="nav-card-desc">План реагирования 24/7, эскалация, форма сообщения, пост-инцидентный анализ</div>
                     <div class="nav-card-link">/incident-response →</div>
                 </a>
 
-                <a href="/contacts" class="nav-card">
+                <a href="contacts.html" class="nav-card">
                     <div class="nav-card-icon">📞</div>
                     <div class="nav-card-title">Контакты</div>
                     <div class="nav-card-desc">Руководитель Центра, адрес и реквизиты, каналы связи, запрос на консультацию</div>
                     <div class="nav-card-link">/contacts →</div>
                 </a>
 
-                <a href="/calculator" class="nav-card">
+                <a href="calculator.html" class="nav-card">
                     <div class="nav-card-icon">🧮</div>
                     <div class="nav-card-title">Калькулятор тарифа</div>
                     <div class="nav-card-desc">Рассчитайте стоимость подписки на эффект за 3 минуты под ваши задачи</div>
-                    <div class="nav-card-link">/price-calc →</div>
+                    <div class="nav-card-link">/calculator →</div>
                 </a>
             </div>
         </div>
@@ -889,9 +990,9 @@
                     Аттестованная защита через подписку на эффект — это не расход, а инвестиция в стабильность и конкурентное преимущество. <strong>Заявите свой эффект — получите тариф.</strong>
                 </p>
                 <div class="cta-buttons" style="justify-content: center;">
-                    <a href="/calculator" class="btn btn-primary">🧮 Рассчитать тариф</a>
-                    <a href="/contacts#demo" class="btn btn-secondary">📊 Получить демодоступ</a>
-                    <a href="/contacts" class="btn btn-secondary">💬 Записаться на консультацию</a>
+                    <a href="calculator.html" class="btn btn-primary">🧮 Рассчитать тариф</a>
+                    <a href="contacts.html#demo" class="btn btn-secondary">📊 Получить демодоступ</a>
+                    <a href="contacts.html" class="btn btn-secondary">💬 Записаться на консультацию</a>
                 </div>
             </div>
         </div>
@@ -912,20 +1013,20 @@
 
                 <div class="footer-section">
                     <h4>Разделы</h4>
-                    <a href="/infrastructure">Инфраструктура и аттестация</a>
-                    <a href="/experts">Эксперты и консалтинг</a>
-                    <a href="/cases">Кейсы и эффекты</a>
-                    <a href="/monitoring">Мониторинг угроз</a>
-                    <a href="/incident-response">База знаний</a>
-                    <a href="/incident-response">Реагирование на инциденты</a>
+                    <a href="infrastructure.html">Инфраструктура и аттестация</a>
+                    <a href="experts.html">Эксперты и консалтинг</a>
+                    <a href="cases.html">Кейсы и эффекты</a>
+                    <a href="monitoring.html">Мониторинг угроз</a>
+                    <a href="catalog.html">База знаний</a>
+                    <a href="incident-response.html">Реагирование на инциденты</a>
                 </div>
 
                 <div class="footer-section">
                     <h4>Сервисы</h4>
-                    <a href="/calculator">Калькулятор тарифа</a>
-                    <a href="/contacts#demo">Демодоступ</a>
-                    <a href="/contacts">Консультация</a>
-                    <a href="/incident-response">Обучение</a>
+                    <a href="calculator.html">Калькулятор тарифа</a>
+                    <a href="contacts.html#demo">Демодоступ</a>
+                    <a href="contacts.html">Консультация</a>
+                    <a href="catalog.html">Обучение</a>
                 </div>
 
                 <div class="footer-section">
@@ -942,5 +1043,25 @@
             </div>
         </div>
     </footer>
+
+<script>
+    // ===== АКТИВНАЯ ССЫЛКА В МЕНЮ =====
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+        const pageName = currentPage.replace('.html', '');
+        
+        document.querySelectorAll('.nav-link').forEach(link => {
+            const linkPage = link.getAttribute('data-page');
+            
+            // Сбрасываем активный класс у всех ссылок
+            link.classList.remove('active');
+            
+            // Подсвечиваем текущую страницу
+            if (linkPage === pageName || (pageName === '' && linkPage === 'index')) {
+                link.classList.add('active');
+            }
+        });
+    });
+</script>
 </body>
 </html>
